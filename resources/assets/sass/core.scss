@@ -1,0 +1,23 @@
+// Variables
+@import "variables";
+
+// Bootstrap
+@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+
+// Font awesome
+@import "~font-awesome/scss/font-awesome";
+
+// Login
+@import "login";
+
+// DNS
+@import "dns";
+
+table.table {
+    th, td {
+        &.fit {
+            white-space: nowrap;
+            width: 1%;
+        }
+    }
+}

@@ -1,0 +1,8 @@
+table.table-dns {
+    td {
+        &.zone-name {
+            vertical-align: middle;
+            font-size: $font-size-large;
+        }
+    }
+}
