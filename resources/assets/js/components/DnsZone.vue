@@ -13,7 +13,7 @@
         </template>
 
         <template v-else>
-            <td class="zone-admin">{{ zone_admin }}</td>
+            <td class="zone-admin">{{ zone.admin }}</td>
             <td class="zone-refresh">{{ zone.refresh }}</td>
             <td class="zone-retry">{{ zone.retry }}</td>
             <td class="zone-expire">{{ zone.expire }}</td>
@@ -21,12 +21,12 @@
         </template>
 
         <td class="fit">
-            <sa-button @click.native="toggleEdit" :type="editMode ? 'success' : 'default'"
-                       :icon="editMode ? 'check' : 'pencil'" size="sm" :loading="processing"></sa-button>
+            <sa-button @click.native="editZone" :type="editMode ? 'success' : 'default'"
+                       :icon="editMode ? 'check' : 'pencil'" size="sm" :loading="updating"></sa-button>
             <sa-button @click.native="toggleEnabled" :icon="zone.enabled ? 'toggle-on' : 'toggle-off'" size="sm"
-                       :loading="processing"></sa-button>
+                       :loading="toggling"></sa-button>
             <sa-button @click.native="deleteZone" type="danger" icon="trash" size="sm"
-                       :loading="processing"></sa-button>
+                       :loading="deleting"></sa-button>
         </td>
     </tr>
 </template>
@@ -36,38 +36,40 @@
         props: ['zone'],
         data() {
             return {
-                interactionDisabled: true,
-                processing: false,
-                editMode: false
+                editMode: false,
+
+                updating: false,
+                toggling: false,
+                deleting: false
             };
         },
         methods: {
+            editZone() {
+                if (this.editMode) {
+                    this.updating = true;
+                    axios.put('/api/dns_zones/' + this.zone.id, this.zone).then(response => {
+                        this.$emit('onZoneUpdate', response.data.data);
+                        this.updating = false;
+                    }).catch(error => {
+                        this.updating = false;
+                        console.error(error);
+                    });
+                }
+
+                this.editMode = !this.editMode;
+            },
             deleteZone() {
-                this.processing = true;
+                this.deleting = true;
                 axios.delete('/api/dns_zones/' + this.zone.id).then(response => {
                     this.$emit('onZoneDestroy', this.zone);
-                    console.log('Success!');
-                    // call bind config reload
                 }).catch(error => {
+                    this.deleting = false;
                     console.error(error);
                 });
             },
             toggleEnabled() {
-                this.zone.enabled = !this.zone.enabled;
+                // TODO
             },
-            toggleEdit() {
-                if (this.editMode) {
-                    // submit form
-                }
-
-                this.editMode = !this.editMode;
-            }
-        },
-        computed: {
-            zone_admin() {
-                return this.zone.admin.replace('.', '@');
-                // TODO: Mutators, Accessors
-            }
         }
     }
 </script>

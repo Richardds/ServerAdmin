@@ -30,11 +30,11 @@ class DnsZoneController extends Controller
         $this->validate($request, [
             'name' => 'required|min:1|max:63',
             'admin' => 'required|min:1|max:253',
-            'serial' => 'required|number',
-            'refresh' => 'required|number',
-            'retry' => 'required|number',
-            'expire' => 'required|number',
-            'ttl' => 'required|number',
+            'serial' => 'required|numeric',
+            'refresh' => 'required|numeric',
+            'retry' => 'required|numeric',
+            'expire' => 'required|numeric',
+            'ttl' => 'required|numeric',
             'enabled' => 'boolean',
         ]);
 
@@ -62,11 +62,11 @@ class DnsZoneController extends Controller
         $rules = [
             'name' => 'min:1|max:63',
             'admin' => 'min:1|max:253',
-            'serial' => 'number',
-            'refresh' => 'number',
-            'retry' => 'number',
-            'expire' => 'number',
-            'ttl' => 'number',
+            'serial' => 'numeric',
+            'refresh' => 'numeric',
+            'retry' => 'numeric',
+            'expire' => 'numeric',
+            'ttl' => 'numeric',
             'enabled' => 'boolean',
         ];
 

@@ -12,11 +12,8 @@
         </tr>
         </thead>
         <tbody>
-        <sa-dns-zone v-for="zone in manager.zones"
-                  :key="zone.id"
-                  :zone="zone"
-                  @onZoneDestroy="manager.remove(zone)">
-        </sa-dns-zone>
+        <sa-dns-zone v-for="zone in manager.zones" :key="zone.id" :zone="zone" @onZoneDestroy="manager.remove(zone)"
+                     @onZoneUpdate="manager.update(zone)"></sa-dns-zone>
         </tbody>
     </table>
 </template>
@@ -29,6 +26,12 @@
 
         add(zone) {
             this.zones.push(zone);
+        }
+
+        update(zone) {
+            console.log(this.zones.indexOf(zone));
+            console.log(zone);
+            this.zones[this.zones.indexOf(zone)] = zone;
         }
 
         remove(zone) {
