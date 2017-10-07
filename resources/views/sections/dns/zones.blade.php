@@ -8,10 +8,11 @@
                     <div class="panel-heading">DNS Zones</div>
 
                     <div class="panel-body">
-                        <status v-if="showStatus" @close="showStatus = false" type="warning">Birb nests where birb want!</status>
+                        <sa-status v-if="showStatus" @close="showStatus = false" type="warning">
+                            Birb nests where birb want!
+                        </sa-status>
                     </div>
-
-                    <dns_zones></dns_zones>
+                    <sa-dns-zones></sa-dns-zones>
                 </div>
             </div>
         </div>

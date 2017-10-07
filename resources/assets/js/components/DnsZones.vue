@@ -1,17 +1,22 @@
 <template>
-    <table class="table table-striped table-dns">
+    <table class="table table-striped table-controls table-dns">
         <thead>
         <tr>
-            <th colspan="2">Name</th>
-            <th colspan="3">Options</th>
+            <th>Name</th>
+            <th>Admin</th>
+            <th>Refresh</th>
+            <th>Retry</th>
+            <th>Expire</th>
+            <th>TTL</th>
+            <th>Options</th>
         </tr>
         </thead>
         <tbody>
-        <dns_zone v-for="zone in manager.zones"
+        <sa-dns-zone v-for="zone in manager.zones"
                   :key="zone.id"
                   :zone="zone"
                   @onZoneDestroy="manager.remove(zone)">
-        </dns_zone>
+        </sa-dns-zone>
         </tbody>
     </table>
 </template>

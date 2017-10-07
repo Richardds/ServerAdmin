@@ -29,7 +29,10 @@ class AppServiceProvider extends ServiceProvider
     {
         if ($this->app->environment() !== 'production') {
             $this->app->register(IdeHelperServiceProvider::class);
-            $this->app->register(DebugbarServiceProvider::class);
+
+            if (env('DEBUGBAR_ENABLED', false)) {
+                $this->app->register(DebugbarServiceProvider::class);
+            }
         }
 
         App::bind('Command', function () {

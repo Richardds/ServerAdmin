@@ -6,12 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name') }}</title>
-    <link href="{{ url('/css/app.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ url('/css/core.css') }}" type="text/css" rel="stylesheet">
     @yield('styles')
 </head>
 <body>
 <div id="root">
-    <modal v-if="showModal">Are you sure?</modal>
     @yield('body')
 </div>
 <script src="{{ url('/js/core.js') }}" type="application/javascript"></script>

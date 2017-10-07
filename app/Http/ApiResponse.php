@@ -129,7 +129,7 @@ class ApiResponse
         if (! is_null($this->exception)) {
             $responseData['exception'] = [
                 'message' => $this->exception->getMessage(),
-                'type' => get_class($this->exception),
+                'class' => get_class($this->exception),
                 'file' => $this->exception->getFile(),
                 'line' => $this->exception->getLine(),
                 'trace' => collect($this->exception->getTrace())->map(function ($trace) {

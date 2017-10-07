@@ -1,5 +1,6 @@
-Vue.component('status', require('./components/Status.vue'));
-Vue.component('modal', require('./components/Modal.vue'));
+Vue.component('sa-status', require('./components/Status.vue'));
+Vue.component('sa-modal', require('./components/Modal.vue'));
+Vue.component('sa-button', require('./components/Button.vue'));
 
-Vue.component('dns_zones', require('./components/DNS/Zones.vue'));
-Vue.component('dns_zone', require('./components/DNS/Zone.vue'));
+Vue.component('sa-dns-zones', require('./components/DnsZones.vue'));
+Vue.component('sa-dns-zone', require('./components/DnsZone.vue'));

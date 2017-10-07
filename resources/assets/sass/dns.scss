@@ -1,8 +1,13 @@
 table.table-dns {
-    td {
+    tr.zone-disabled {
+        color: lighten($text-color, 30%);
+    }
+    th, td {
         &.zone-name {
-            vertical-align: middle;
-            font-size: $font-size-large;
+            //
+        }
+        &.zone-refresh, &.zone-retry, &.zone-expire, &.zone-ttl {
+            width: 120px;
         }
     }
 }
