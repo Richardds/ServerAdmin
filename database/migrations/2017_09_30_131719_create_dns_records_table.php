@@ -18,8 +18,8 @@ class CreateDnsRecordsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('zone_id');
             $table->enum('type', DnsRecord::availableTypes());
-            $table->string('name');
-            $table->string('value');
+            $table->string('name', 253);
+            $table->text('attrs');
             $table->unsignedInteger('ttl');
             $table->boolean('enabled')->default(true);
             $table->timestamps();

@@ -20,12 +20,13 @@ use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsTXTRecordAttributes;
  * @property int $zone_id
  * @property string $type
  * @property string $name
- * @property array $value
+ * @property DnsRecordAttributes $attrs
  * @property int $ttl
  * @property bool $enabled
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read \Richardds\ServerAdmin\DnsZone $dnsZone
+ * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsRecord whereAttrs($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsRecord whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsRecord whereEnabled($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsRecord whereId($value)
@@ -33,7 +34,6 @@ use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsTXTRecordAttributes;
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsRecord whereTtl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsRecord whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsRecord whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsRecord whereValue($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsRecord whereZoneId($value)
  * @mixin \Eloquent
  */
@@ -78,7 +78,7 @@ class DnsRecord extends Model
     protected $casts = [
         'type' => 'string',
         'name' => 'string',
-        'value' => 'array',
+        'attrs' => 'string',
         'ttl' => 'integer',
         'enabled' => 'boolean',
         'created_at' => 'date',
@@ -103,29 +103,31 @@ class DnsRecord extends Model
         return $this->belongsTo(DnsZone::class);
     }
 
-    public function getValueAttribute($value): DnsRecordAttributes
+    public function getAttrsAttribute($value): DnsRecordAttributes
     {
+        $attrs = json_decode($value, true);
         switch ($this->type) {
             case self::DNS_A_RECORD:
-                return DnsARecordAttributes::fromArray($value);
+                return DnsARecordAttributes::fromArray($attrs);
             case self::DNS_AAAA_RECORD:
-                return DnsAAAARecordAttributes::fromArray($value);
+                return DnsAAAARecordAttributes::fromArray($attrs);
             case self::DNS_CNAME_RECORD:
-                return DnsCNAMERecordAttributes::fromArray($value);
+                return DnsCNAMERecordAttributes::fromArray($attrs);
             case self::DNS_MX_RECORD:
-                return DnsMXRecordAttributes::fromArray($value);
+                return DnsMXRecordAttributes::fromArray($attrs);
             case self::DNS_SRV_RECORD:
-                return DnsSRVRecordAttributes::fromArray($value);
+                return DnsSRVRecordAttributes::fromArray($attrs);
             case self::DNS_TXT_RECORD:
-                return DnsTXTRecordAttributes::fromArray($value);
+                return DnsTXTRecordAttributes::fromArray($attrs);
             case self::DNS_NS_RECORD:
-                return DnsNSRecordAttributes::fromArray($value);
+                return DnsNSRecordAttributes::fromArray($attrs);
             default:
                 throw new Exception('Invalid DNS type');
         }
     }
 
-    public function setValueAttribute(DnsRecordAttributes $value) {
-        $this->attributes['value'] = $value->toArray();
+    public function setAttrsAttribute(DnsRecordAttributes $value)
+    {
+        $this->attributes['attrs'] = json_encode($value->toArray());
     }
 }

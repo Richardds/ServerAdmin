@@ -1,0 +1,6 @@
+/etc/bind
+  - named.conf.local: zones config
+    - fully controlled by serveradmin
+  - named.conf.options: dns server config
+    - fully controlled by serveradmin
+  

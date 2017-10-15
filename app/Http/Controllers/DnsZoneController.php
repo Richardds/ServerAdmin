@@ -3,6 +3,7 @@
 namespace Richardds\ServerAdmin\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Richardds\ServerAdmin\Core\Dns\Manager as DnsManager;
 use Richardds\ServerAdmin\DnsZone;
 use Richardds\ServerAdmin\Http\CrudAssistance;
 
@@ -15,8 +16,11 @@ class DnsZoneController extends Controller
         $this->middleware('auth');
     }
 
-    public function showZones()
+    public function showZones(DnsManager $manager)
     {
+        //Command::output('sudo sh -c "service nginx reload"');
+        $manager->updateZones();
+
         return view('sections.dns.zones');
     }
 
@@ -28,7 +32,7 @@ class DnsZoneController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|min:1|max:63',
+            'name' => 'required|min:1|max:253',
             'admin' => 'required|min:1|max:253',
             'serial' => 'required|numeric',
             'refresh' => 'required|numeric',
@@ -60,7 +64,7 @@ class DnsZoneController extends Controller
     public function update(Request $request, DnsZone $dnsZone)
     {
         $rules = [
-            'name' => 'min:1|max:63',
+            'name' => 'min:1|max:253',
             'admin' => 'min:1|max:253',
             'serial' => 'numeric',
             'refresh' => 'numeric',

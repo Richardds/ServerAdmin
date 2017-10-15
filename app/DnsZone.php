@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $enabled
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Richardds\ServerAdmin\DnsRecord[] $dnsRecords
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsZone whereAdmin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsZone whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsZone whereEnabled($value)
@@ -76,6 +77,6 @@ class DnsZone extends Model
 
     public function dnsRecords()
     {
-        return $this->hasMany(DnsRecord::class);
+        return $this->hasMany(DnsRecord::class, 'zone_id');
     }
 }

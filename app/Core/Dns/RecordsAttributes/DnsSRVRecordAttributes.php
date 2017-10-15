@@ -2,7 +2,7 @@
 
 namespace Richardds\ServerAdmin\Core\Dns\RecordsAttributes;
 
-use Richardds\ServerAdmin\Core\Dns\DnsAttributesException;
+use Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException;
 use Richardds\ServerAdmin\DnsRecord;
 
 class DnsSRVRecordAttributes implements DnsRecordAttributes
@@ -27,6 +27,17 @@ class DnsSRVRecordAttributes implements DnsRecordAttributes
         $this->priority = $priority;
         $this->weight = $weight;
         $this->port = $port;
+    }
+
+    public static function fromArray(array $attributes): DnsRecordAttributes
+    {
+        if (! array_has($attributes, ['service', 'protocol', 'host', 'priority', 'weight', 'port'])) {
+            throw new InvalidParameterException('Cannot create DnsRecordAttributes class from given array', [
+                'attributes' => $attributes,
+            ]);
+        }
+
+        return new self($attributes['service'], $attributes['protocol'], $attributes['host'], $attributes['priority'], $attributes['weight'], $attributes['port']);
     }
 
     public function getService(): string
@@ -104,14 +115,5 @@ class DnsSRVRecordAttributes implements DnsRecordAttributes
             'weight' => $this->weight,
             'port' => $this->port,
         ];
-    }
-
-    public static function fromArray(array $attributes): DnsRecordAttributes
-    {
-        if (! array_has($attributes, ['service', 'protocol', 'host', 'priority', 'weight', 'port'])) {
-            throw new DnsAttributesException('Cannot create DnsRecordAttributes class from given array');
-        }
-
-        return new self($attributes['service'], $attributes['protocol'], $attributes['host'], $attributes['priority'], $attributes['weight'], $attributes['port']);
     }
 }

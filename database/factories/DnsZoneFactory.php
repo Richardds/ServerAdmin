@@ -3,6 +3,9 @@
 use Faker\Generator as Faker;
 use Richardds\ServerAdmin\DnsZone;
 
+/**
+ * @var $factory Illuminate\Database\Eloquent\Factory
+ */
 $factory->define(DnsZone::class, function (Faker $faker) {
     $name = $faker->domainName;
 

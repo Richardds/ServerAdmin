@@ -2,7 +2,7 @@
 
 namespace Richardds\ServerAdmin\Core\Dns\RecordsAttributes;
 
-use Richardds\ServerAdmin\Core\Dns\DnsAttributesException;
+use Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException;
 use Richardds\ServerAdmin\DnsRecord;
 
 class DnsCNAMERecordAttributes implements DnsRecordAttributes
@@ -12,6 +12,17 @@ class DnsCNAMERecordAttributes implements DnsRecordAttributes
     public function __construct(string $host)
     {
         $this->host = $host;
+    }
+
+    public static function fromArray(array $attributes): DnsRecordAttributes
+    {
+        if (! array_has($attributes, ['host'])) {
+            throw new InvalidParameterException('Cannot create DnsRecordAttributes class from given array', [
+                'attributes' => $attributes,
+            ]);
+        }
+
+        return new self($attributes['host']);
     }
 
     public function getHost()
@@ -34,14 +45,5 @@ class DnsCNAMERecordAttributes implements DnsRecordAttributes
         return [
             'host' => $this->host,
         ];
-    }
-
-    public static function fromArray(array $attributes): DnsRecordAttributes
-    {
-        if (! array_has($attributes, ['host'])) {
-            throw new DnsAttributesException('Cannot create DnsRecordAttributes class from given array');
-        }
-
-        return new self($attributes['host']);
     }
 }

@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Richardds\ServerAdmin\DnsRecord;
+use Richardds\ServerAdmin\DnsZone;
 
-class DnsZonesTableSeeder extends Seeder
+class DnsZoneTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +13,8 @@ class DnsZonesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(\Richardds\ServerAdmin\DnsZone::class, 10)->create();
+        factory(DnsZone::class, 10)->create()->each(function (DnsZone $dnsZone) {
+            factory(DnsRecord::class, 5)->create(['zone_id' => $dnsZone->id]);
+        });
     }
 }

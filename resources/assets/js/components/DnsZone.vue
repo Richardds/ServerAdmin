@@ -5,11 +5,11 @@
         </td>
 
         <template v-if="editMode">
-            <td class="zone-admin"><input class="form-control input-sm" type="text" v-model="zone.admin"></td>
-            <td class="zone-refresh"><input class="form-control input-sm" type="number" v-model="zone.refresh"></td>
-            <td class="zone-retry"><input class="form-control input-sm" type="number" v-model="zone.retry"></td>
-            <td class="zone-expire"><input class="form-control input-sm" type="number" v-model="zone.expire"></td>
-            <td class="zone-ttl"><input class="form-control input-sm" type="number" v-model="zone.ttl"></td>
+            <td class="zone-admin"><input @input="onChange" class="form-control input-sm" type="text" v-model="zone.admin"></td>
+            <td class="zone-refresh"><input @input="onChange" class="form-control input-sm" type="number" v-model="zone.refresh"></td>
+            <td class="zone-retry"><input @input="onChange" class="form-control input-sm" type="number" v-model="zone.retry"></td>
+            <td class="zone-expire"><input @input="onChange" class="form-control input-sm" type="number" v-model="zone.expire"></td>
+            <td class="zone-ttl"><input @input="onChange" class="form-control input-sm" type="number" v-model="zone.ttl"></td>
         </template>
 
         <template v-else>
@@ -21,8 +21,8 @@
         </template>
 
         <td class="fit">
-            <sa-button @click.native="editZone" :type="editMode ? 'success' : 'default'"
-                       :icon="editMode ? 'check' : 'pencil'" size="sm" :loading="updating"></sa-button>
+            <sa-button @click.native="editZone" :type="editButtonType"
+                       :icon="editButtonIcon" size="sm" :loading="updating"></sa-button>
             <sa-button @click.native="toggleEnabled" :icon="zone.enabled ? 'toggle-on' : 'toggle-off'" size="sm"
                        :loading="toggling"></sa-button>
             <sa-button @click.native="deleteZone" type="danger" icon="trash" size="sm"
@@ -37,19 +37,23 @@
         data() {
             return {
                 editMode: false,
-
                 updating: false,
                 toggling: false,
-                deleting: false
+                deleting: false,
+                changed: false
             };
         },
         methods: {
+            onChange() {
+                this.changed = true;
+            },
             editZone() {
-                if (this.editMode) {
+                if (this.editMode && this.changed) {
                     this.updating = true;
                     axios.put('/api/dns_zones/' + this.zone.id, this.zone).then(response => {
                         this.$emit('onZoneUpdate', response.data.data);
                         this.updating = false;
+                        this.changed = false;
                     }).catch(error => {
                         this.updating = false;
                         console.error(error);
@@ -68,8 +72,34 @@
                 });
             },
             toggleEnabled() {
-                // TODO
+                this.toggling = true;
+                let nextStatus = !this.zone.enabled;
+                axios.patch('/api/dns_zones/' + this.zone.id, {enabled: nextStatus}).then(response => {
+                    this.$emit('onZoneUpdate', response.data.data);
+                    this.toggling = false;
+
+                    // TODO: Fix me!
+                }).catch(error => {
+                    this.toggling = false;
+                    console.error(error);
+                });
             },
+        },
+        computed: {
+            editButtonIcon() {
+                if (this.editMode) {
+                    return this.changed ? 'check' : 'times';
+                }
+
+                return 'pencil';
+            },
+            editButtonType() {
+                if (this.editMode) {
+                    return this.changed ? 'success' : 'danger';
+                }
+
+                return 'default';
+            }
         }
     }
 </script>
