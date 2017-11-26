@@ -1,5 +1,5 @@
 <template>
-    <button :class="['btn', size ? 'btn-' + size : '', type ? 'btn-' + type : '']" :disabled="loading">
+    <button :class="['btn', size ? 'btn-' + size : '', type ? 'btn-' + type : '']" :disabled="disabled || loading">
         <i v-if="icon" :class="['fa', 'fa-' + (loading ? 'cog' : icon), {'fa-spin' : loading}]" aria-hidden="true"></i>
         <slot></slot>
     </button>
@@ -10,8 +10,9 @@
         props: {
             type: {default: 'default'}, // default, primary, success, info, warning, danger
             size: {default: false}, // lg, sm, xs
+            disabled: {default: false},
             loading: {default: false},
-            icon: {default: false}
+            icon: {default: false},
         }
     }
 </script>

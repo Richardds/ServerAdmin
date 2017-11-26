@@ -1,7 +1,7 @@
 <template>
     <tr :class="[zone.enabled ? '' : 'zone-disabled']">
         <td class="zone-name">
-            {{ zone.name }}
+            <a :href="'/dns/zones/' + zone.id" :title="'Edit zone ' + zone.name + ' records'">{{ zone.name }}</a>
         </td>
 
         <template v-if="editMode">
@@ -25,8 +25,7 @@
                        :icon="editButtonIcon" size="sm" :loading="updating"></sa-button>
             <sa-button @click.native="toggleEnabled" :icon="zone.enabled ? 'toggle-on' : 'toggle-off'" size="sm"
                        :loading="toggling"></sa-button>
-            <sa-button @click.native="deleteZone" type="danger" icon="trash" size="sm"
-                       :loading="deleting"></sa-button>
+            <sa-button @click.native="deleteZone" type="danger" icon="trash" size="sm" :loading="deleting"></sa-button>
         </td>
     </tr>
 </template>

@@ -35,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
             }
         }
 
-        App::bind('Command', function () {
+        App::bind('Execute', function () {
             return new CommandExecuter();
         });
     }

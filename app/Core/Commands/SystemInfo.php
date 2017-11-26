@@ -3,13 +3,13 @@
 namespace Richardds\ServerAdmin\Core\Commands;
 
 use Richardds\ServerAdmin\Core\Exceptions\InvalidCommandOutputException;
-use Richardds\ServerAdmin\Facades\Command;
+use Richardds\ServerAdmin\Facades\Execute;
 
 class SystemInfo
 {
     public static function uptime()
     {
-        $raw_output = Command::output('cat /proc/uptime');
+        $raw_output = Execute::output('cat /proc/uptime');
         $ex = explode(' ', $raw_output);
 
         if (2 != count($ex) || !is_numeric($ex[0])) {
@@ -21,12 +21,12 @@ class SystemInfo
 
     public static function hostname()
     {
-        return Command::output('hostname');
+        return Execute::output('hostname');
     }
 
     public static function os()
     {
-        $raw_output = Command::output('lsb_release --description');
+        $raw_output = Execute::output('lsb_release --description');
         $ex = explode(':', $raw_output);
 
         if (2 != count($ex)) {

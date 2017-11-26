@@ -2,7 +2,8 @@
 
 namespace Richardds\ServerAdmin\Core;
 
-use Richardds\ServerAdmin\Facades\Command;
+use Richardds\ServerAdmin\Core\Commands\Command;
+use Richardds\ServerAdmin\Facades\Execute;
 
 class ConfigIo
 {
@@ -14,7 +15,7 @@ class ConfigIo
     /**
      * ConfigIo constructor.
      *
-     * @param $path
+     * @param string $path
      */
     public function __construct(string $path)
     {
@@ -26,22 +27,22 @@ class ConfigIo
      */
     public function truncate()
     {
-        Command::executeWithoutOutput("echo -n > {$this->path}", true);
+        Execute::withoutOutput("echo -n > {$this->path}", true);
     }
 
     /**
      * Read data from config file.
      *
      * @param int $length
-     * @return mixed
+     * @return string
      */
-    public function read(int $length = -1)
+    public function read(int $length = -1): string
     {
         if ($length > 0) {
-            return Command::output("head -c {$length} {$this->path}", true);
+            return Execute::output("head -c {$length} {$this->path}", true);
         }
 
-        return Command::output("cat {$this->path}", true);
+        return Execute::output("cat {$this->path}", true);
     }
 
     /**
@@ -51,8 +52,7 @@ class ConfigIo
      */
     public function write(string $content)
     {
-        $content = escapeshellarg($content);
-        Command::executeWithoutOutput("echo -e -n {$content} >> {$this->path}", true);
+        Execute::withoutOutput(Command::create("cat >> {$this->path}", $content), true);
     }
 
     /**
@@ -62,8 +62,7 @@ class ConfigIo
      */
     public function writeln(string $content)
     {
-        $content = escapeshellarg($content);
-        Command::executeWithoutOutput("echo -e {$content} >> {$this->path}", true);
+        $this->write($content . "\n");
     }
 
     /**
@@ -71,6 +70,6 @@ class ConfigIo
      */
     public function nextline()
     {
-        Command::executeWithoutOutput("echo >> {$this->path}", true);
+        Execute::withoutOutput("echo >> {$this->path}", true);
     }
 }

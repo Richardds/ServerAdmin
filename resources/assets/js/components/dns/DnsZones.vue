@@ -8,7 +8,7 @@
             <th>Retry</th>
             <th>Expire</th>
             <th>TTL</th>
-            <th>Options</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>

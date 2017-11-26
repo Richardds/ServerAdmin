@@ -7,9 +7,9 @@ use Richardds\ServerAdmin\Core\CommandExecuter;
 
 /**
  * @method static output(string $command, bool $superuser = false)
- * @method static executeWithoutOutput(string $command, bool $superuser = false)
+ * @method static withoutOutput(string $command, bool $superuser = false)
  */
-class Command extends Facade
+class Execute extends Facade
 {
     protected static function getFacadeAccessor()
     {
