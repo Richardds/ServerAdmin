@@ -84,8 +84,8 @@ class DnsZoneController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     * @param \Richardds\ServerAdmin\DnsZone $dnsZone
+     * @param Request $request
+     * @param DnsZone $dnsZone
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, DnsZone $dnsZone)
@@ -113,8 +113,9 @@ class DnsZoneController extends Controller
     }
 
     /**
-     * @param \Richardds\ServerAdmin\DnsZone $dnsZone
+     * @param DnsZone $dnsZone
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function destroy(DnsZone $dnsZone)
     {

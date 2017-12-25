@@ -15,7 +15,8 @@ class DashboardController extends Controller
     {
         $os = SystemInfo::os();
         $uptime = SystemInfo::uptime();
+        $id = SystemInfo::id();
 
-        return view('sections.dashboard.dashboard', compact('os', 'uptime'));
+        return view('sections.dashboard.dashboard', compact('os', 'uptime', 'id'));
     }
 }

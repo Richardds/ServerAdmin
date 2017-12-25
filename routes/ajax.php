@@ -11,3 +11,7 @@ Route::group(['prefix' => 'service'], function() {
 Route::apiResource('dns_zones', 'DnsZoneController', [
     'only' => ['index', 'show', 'store', 'update', 'destroy']
 ]);
+
+Route::apiResource('dns_records', 'DnsRecordController', [
+    'only' => ['index', 'show', 'store', 'update', 'destroy']
+]);

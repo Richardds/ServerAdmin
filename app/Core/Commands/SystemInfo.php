@@ -7,7 +7,11 @@ use Richardds\ServerAdmin\Facades\Execute;
 
 class SystemInfo
 {
-    public static function uptime()
+    /**
+     * @return int
+     * @throws InvalidCommandOutputException
+     */
+    public static function uptime(): int
     {
         $raw_output = Execute::output('cat /proc/uptime');
         $ex = explode(' ', $raw_output);
@@ -19,12 +23,19 @@ class SystemInfo
         return intval($ex[0]);
     }
 
-    public static function hostname()
+    /**
+     * @return string
+     */
+    public static function hostname(): string
     {
         return Execute::output('hostname');
     }
 
-    public static function os()
+    /**
+     * @return string
+     * @throws InvalidCommandOutputException
+     */
+    public static function os(): string
     {
         $raw_output = Execute::output('lsb_release --description');
         $ex = explode(':', $raw_output);
@@ -34,5 +45,13 @@ class SystemInfo
         }
 
         return trim($ex[1]);
+    }
+
+    /**
+     * @return string
+     */
+    public static function id(): string
+    {
+        return Execute::output('id');
     }
 }

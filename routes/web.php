@@ -12,3 +12,4 @@ Route::get('/dashboard', 'DashboardController@showDashboard')->name('dashboard')
 
 // DNS
 Route::get('/dns/zones', 'DnsZoneController@index')->name('dns_zones');
+Route::get('/dns/zones/{dnsZone}', 'DnsRecordController@index')->name('dns_records');

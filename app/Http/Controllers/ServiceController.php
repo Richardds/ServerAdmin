@@ -23,8 +23,9 @@ class ServiceController extends Controller
     /**
      * Start service and return service status.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function start(Request $request)
     {
@@ -36,8 +37,9 @@ class ServiceController extends Controller
     /**
      * Stop service and return service status.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function stop(Request $request)
     {
@@ -49,8 +51,9 @@ class ServiceController extends Controller
     /**
      * Restart service and return service status.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function restart(Request $request)
     {
@@ -62,8 +65,9 @@ class ServiceController extends Controller
     /**
      * Reload service and return service status.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function reload(Request $request)
     {
@@ -75,8 +79,9 @@ class ServiceController extends Controller
     /**
      * Get status of service.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function status(Request $request)
     {
