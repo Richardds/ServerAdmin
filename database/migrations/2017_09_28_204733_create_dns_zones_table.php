@@ -15,7 +15,7 @@ class CreateDnsZonesTable extends Migration
     {
         Schema::create('dns_zones', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 253);
+            $table->string('name', 253)->unique();
             $table->string('admin', 253);
             $table->unsignedInteger('serial');
             $table->unsignedInteger('refresh');

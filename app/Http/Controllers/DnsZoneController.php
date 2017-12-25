@@ -28,25 +28,45 @@ class DnsZoneController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request)
+    public function zones()
     {
-        if ($request->wantsJson()) {
-            return api_response()->success(DnsZone::all()->toArray())->response();
-        }
-
         return view('sections.dns.zones');
     }
 
     /**
-     * @param \Richardds\ServerAdmin\DnsZone $dnsZone
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function zone()
+    {
+        return view('sections.dns.zone');
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
+    {
+        return api_response()->success(DnsZone::all()->toArray())->response();
+    }
+
+    /**
+     * @param DnsZone $zone
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(DnsZone $dnsZone)
+    public function records(DnsZone $zone)
     {
-        return api_response()->success($dnsZone->toArray())->response();
+        return api_response()->success($zone->dnsRecords->toArray())->response();
+    }
+
+    /**
+     * @param \Richardds\ServerAdmin\DnsZone $zone
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show(DnsZone $zone)
+    {
+        return api_response()->success($zone->toArray())->response();
     }
 
     /**
@@ -66,7 +86,7 @@ class DnsZoneController extends Controller
             'enabled' => 'boolean',
         ]);
 
-        $dnsZone = DnsZone::create([
+        $zone = DnsZone::create([
             'name' => $request->get('name'),
             'admin' => $request->get('admin'),
             'serial' => $request->get('serial'),
@@ -80,15 +100,15 @@ class DnsZoneController extends Controller
         $this->manager->updateZonesConfig();
         $this->manager->reload();
 
-        return api_response()->success(['id' => $dnsZone->id])->response();
+        return api_response()->success(['id' => $zone->id])->response();
     }
 
     /**
      * @param Request $request
-     * @param DnsZone $dnsZone
+     * @param DnsZone $zone
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, DnsZone $dnsZone)
+    public function update(Request $request, DnsZone $zone)
     {
         $rules = [
             'name' => 'min:1|max:253',
@@ -102,24 +122,23 @@ class DnsZoneController extends Controller
         ];
 
         $this->validate($request, $rules);
-
-        $this->updateModel($dnsZone, $request, array_keys($rules));
-        $dnsZone->save();
+        $this->updateModel($zone, $request, array_keys($rules));
+        $zone->save();
 
         $this->manager->updateZonesConfig();
         $this->manager->reload();
 
-        return api_response()->success($dnsZone->toArray())->response();
+        return api_response()->success($zone->toArray())->response();
     }
 
     /**
-     * @param DnsZone $dnsZone
+     * @param DnsZone $zone
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    public function destroy(DnsZone $dnsZone)
+    public function destroy(DnsZone $zone)
     {
-        $dnsZone->delete();
+        $zone->delete();
 
         $this->manager->updateZonesConfig();
         $this->manager->reload();

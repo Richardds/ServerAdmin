@@ -80,6 +80,8 @@ class ServiceCommand
     }
 
     /**
+     * Check if service is running.
+     *
      * @param string $name
      * @return bool
      */

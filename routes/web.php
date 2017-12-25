@@ -3,13 +3,15 @@
 Route::get('/', 'RootController@redirect')->name('root');
 
 // Authentication
-Route::get('/login', 'AuthenticationController@showLoginForm')->name('login');
-Route::post('/login', 'AuthenticationController@login');
-Route::post('/logout', 'AuthenticationController@logout')->name('logout');
+Route::get('login', 'AuthenticationController@showLoginForm')->name('login');
+Route::post('login', 'AuthenticationController@login');
+Route::post('logout', 'AuthenticationController@logout')->name('logout');
 
 // Dashboard
-Route::get('/dashboard', 'DashboardController@showDashboard')->name('dashboard');
+Route::get('dashboard', 'DashboardController@showDashboard')->name('dashboard');
 
 // DNS
-Route::get('/dns/zones', 'DnsZoneController@index')->name('dns_zones');
-Route::get('/dns/zones/{dnsZone}', 'DnsRecordController@index')->name('dns_records');
+Route::group(['prefix' => 'dns'], function() {
+    Route::get('zones', 'DnsZoneController@zones')->name('dns_zones');
+    Route::get('zones/{dnsZone}', 'DnsZoneController@zone')->name('dns_records');
+});

@@ -8,10 +8,12 @@ Route::group(['prefix' => 'service'], function() {
     Route::post('status', 'ServiceController@status');
 });
 
-Route::apiResource('dns_zones', 'DnsZoneController', [
-    'only' => ['index', 'show', 'store', 'update', 'destroy']
-]);
+Route::group(['prefix' => 'dns'], function() {
+    Route::apiResource('zones', 'DnsZoneController', [
+        'only' => ['index', 'show', 'store', 'update', 'destroy']
+    ]);
 
-Route::apiResource('dns_records', 'DnsRecordController', [
-    'only' => ['index', 'show', 'store', 'update', 'destroy']
-]);
+    Route::apiResource('records', 'DnsRecordController', [
+        'only' => ['index', 'show', 'store', 'update', 'destroy']
+    ]);
+});

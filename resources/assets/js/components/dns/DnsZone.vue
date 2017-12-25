@@ -1,5 +1,5 @@
 <template>
-    <tr :class="[zone.enabled ? '' : 'zone-disabled']">
+    <tr :class="[zone.enabled ? '' : 'disabled']">
         <td class="zone-name">
             <a :href="'/dns/zones/' + zone.id" :title="'Edit zone ' + zone.name + ' records'">{{ zone.name }}</a>
         </td>
@@ -46,11 +46,16 @@
             onChange() {
                 this.changed = true;
             },
+            updateAttributes(zone) {
+                _.forOwn(this.zone, (value, key) => {
+                    this.zone[key] = zone[key];
+                });
+            },
             editZone() {
                 if (this.editMode && this.changed) {
                     this.updating = true;
-                    axios.put('/api/dns_zones/' + this.zone.id, this.zone).then(response => {
-                        this.$emit('onZoneUpdate', response.data.data);
+                    axios.put('/api/dns/zones/' + this.zone.id, this.zone).then(response => {
+                        this.updateAttributes(response.data.data);
                         this.updating = false;
                         this.changed = false;
                     }).catch(error => {
@@ -63,8 +68,8 @@
             },
             deleteZone() {
                 this.deleting = true;
-                axios.delete('/api/dns_zones/' + this.zone.id).then(response => {
-                    this.$emit('onZoneDestroy', this.zone);
+                axios.delete('/api/dns/zones/' + this.zone.id).then(response => {
+                    this.$emit('destroy-zone');
                 }).catch(error => {
                     this.deleting = false;
                     console.error(error);
@@ -73,11 +78,9 @@
             toggleEnabled() {
                 this.toggling = true;
                 let nextStatus = !this.zone.enabled;
-                axios.patch('/api/dns_zones/' + this.zone.id, {enabled: nextStatus}).then(response => {
-                    this.$emit('onZoneUpdate', response.data.data);
+                axios.patch('/api/dns/zones/' + this.zone.id, {enabled: nextStatus}).then(response => {
+                    this.updateAttributes(response.data.data);
                     this.toggling = false;
-
-                    // TODO: Fix me!
                 }).catch(error => {
                     this.toggling = false;
                     console.error(error);
