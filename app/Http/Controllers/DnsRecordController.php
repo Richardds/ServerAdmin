@@ -5,6 +5,7 @@ namespace Richardds\ServerAdmin\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Richardds\ServerAdmin\Core\Dns\DnsManager;
+use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsRecordAssistance;
 use Richardds\ServerAdmin\DnsRecord;
 use Richardds\ServerAdmin\DnsZone;
 use Richardds\ServerAdmin\Http\CrudAssistance;
@@ -12,6 +13,7 @@ use Richardds\ServerAdmin\Http\CrudAssistance;
 class DnsRecordController extends Controller
 {
     use CrudAssistance;
+    use DnsRecordAssistance;
 
     /**
      * @var \Richardds\ServerAdmin\Core\Dns\DnsManager
@@ -88,8 +90,7 @@ class DnsRecordController extends Controller
 
         $record->save(); // If no exception is thrown save new record
 
-        $this->manager->updateZonesConfig(); // TODO: Single zone
-        $this->manager->reload();
+        $this->manager->updateZonesConfig();
 
         return api_response()->success(['id' => $record->id])->response();
     }
@@ -98,20 +99,28 @@ class DnsRecordController extends Controller
      * @param Request $request
      * @param DnsRecord $record
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function update(Request $request, DnsRecord $record)
     {
         $rules = [
-            // ...
+            'name' => 'min:1|max:253',
+            'ttl' => 'numeric',
+            'enabled' => 'boolean',
         ];
 
         $this->validate($request, $rules);
 
         $this->updateModel($record, $request, array_keys($rules));
+
+        if ($request->has('attrs')) {
+            $record->attrs = self::createDnsRecordAttributes($record->type, $request->get('attrs'));
+            $record->attrs; // Call fromArray method to validate record attributes
+        }
+
         $record->save();
 
         $this->manager->updateZonesConfig();
-        $this->manager->reload();
 
         return api_response()->success($record->toArray())->response();
     }
@@ -126,7 +135,6 @@ class DnsRecordController extends Controller
         $record->delete();
 
         $this->manager->updateZonesConfig();
-        $this->manager->reload();
 
         return api_response()->success()->response();
     }

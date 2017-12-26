@@ -15,8 +15,7 @@
         <sa-dns-zone v-for="zone in this.zones"
                      :key="zone.id"
                      :zone="zone"
-                     @destroy-zone="destroy(zone.id)">
-        </sa-dns-zone>
+                     @destroy-zone="destroy(zone.id)" />
         </tbody>
     </table>
 </template>

@@ -5,11 +5,21 @@
         </td>
 
         <template v-if="editMode">
-            <td class="zone-admin"><input @input="onChange" class="form-control input-sm" type="text" v-model="zone.admin"></td>
-            <td class="zone-refresh"><input @input="onChange" class="form-control input-sm" type="number" v-model="zone.refresh"></td>
-            <td class="zone-retry"><input @input="onChange" class="form-control input-sm" type="number" v-model="zone.retry"></td>
-            <td class="zone-expire"><input @input="onChange" class="form-control input-sm" type="number" v-model="zone.expire"></td>
-            <td class="zone-ttl"><input @input="onChange" class="form-control input-sm" type="number" v-model="zone.ttl"></td>
+            <td class="zone-admin">
+                <input @input="onChange" class="form-control input-sm" type="text" v-model="zone.admin">
+            </td>
+            <td class="zone-refresh">
+                <input @input="onChange" class="form-control input-sm" type="number" v-model="zone.refresh">
+            </td>
+            <td class="zone-retry">
+                <input @input="onChange" class="form-control input-sm" type="number" v-model="zone.retry">
+            </td>
+            <td class="zone-expire">
+                <input @input="onChange" class="form-control input-sm" type="number" v-model="zone.expire">
+            </td>
+            <td class="zone-ttl">
+                <input @input="onChange" class="form-control input-sm" type="number" v-model="zone.ttl">
+            </td>
         </template>
 
         <template v-else>
@@ -21,11 +31,20 @@
         </template>
 
         <td class="fit">
-            <sa-button @click.native="editZone" :type="editButtonType"
-                       :icon="editButtonIcon" size="sm" :loading="updating"></sa-button>
-            <sa-button @click.native="toggleEnabled" :icon="zone.enabled ? 'toggle-on' : 'toggle-off'" size="sm"
-                       :loading="toggling"></sa-button>
-            <sa-button @click.native="deleteZone" type="danger" icon="trash" size="sm" :loading="deleting"></sa-button>
+            <sa-button @click.native="editZone"
+                       :type="editButtonType"
+                       :icon="editButtonIcon"
+                       size="sm"
+                       :loading="updating" />
+            <sa-button @click.native="toggleEnabled"
+                       :icon="zone.enabled ? 'toggle-on' : 'toggle-off'"
+                       size="sm"
+                       :loading="toggling" />
+            <sa-button @click.native="deleteZone"
+                       type="danger"
+                       icon="trash"
+                       size="sm"
+                       :loading="deleting" />
         </td>
     </tr>
 </template>

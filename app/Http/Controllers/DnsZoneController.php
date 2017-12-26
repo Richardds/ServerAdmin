@@ -99,7 +99,6 @@ class DnsZoneController extends Controller
         ]);
 
         $this->manager->updateZonesConfig();
-        $this->manager->reload();
 
         return api_response()->success(['id' => $zone->id])->response();
     }
@@ -127,7 +126,6 @@ class DnsZoneController extends Controller
         $zone->save();
 
         $this->manager->updateZonesConfig();
-        $this->manager->reload();
 
         return api_response()->success($zone->toArray())->response();
     }
@@ -142,7 +140,6 @@ class DnsZoneController extends Controller
         $zone->delete();
 
         $this->manager->updateZonesConfig();
-        $this->manager->reload();
 
         return api_response()->success()->response();
     }

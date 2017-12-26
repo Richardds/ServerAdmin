@@ -3,14 +3,20 @@
         <td class="record-type">{{ record.type }}</td>
 
         <template v-if="editMode">
-            <td class="record-name"><input @input="onChange" class="form-control input-sm" type="text" v-model="record.name"></td>
+            <td class="record-name">
+                <input @input="onChange" class="form-control input-sm" type="text" v-model="record.name">
+            </td>
             <td class="record-value">{{ record.attrs }}</td>
-            <td class="record-ttl"><input @input="onChange" class="form-control input-sm" type="number" v-model="record.ttl"></td>
+            <td class="record-ttl">
+                <input @input="onChange" class="form-control input-sm" type="number" v-model="record.ttl">
+            </td>
         </template>
 
         <template v-else>
             <td class="record-name">
-                <template v-if="'SRV' === record.type">{{ record.attrs.service }}.{{ record.attrs.protocol }}.{{ record.name }}</template>
+                <template v-if="'SRV' === record.type">
+                    {{ record.attrs.service }}.{{ record.attrs.protocol }}.{{ record.name }}
+                </template>
                 <template v-else>{{ record.name}}</template>
             </td>
             <td class="record-value">
@@ -30,11 +36,20 @@
         </template>
 
         <td class="fit">
-            <sa-button @click.native="editRecord" :type="editButtonType"
-                       :icon="editButtonIcon" size="sm" :loading="updating"></sa-button>
-            <sa-button @click.native="toggleEnabled" :icon="record.enabled ? 'toggle-on' : 'toggle-off'" size="sm"
-                       :loading="toggling"></sa-button>
-            <sa-button @click.native="deleteRecord" type="danger" icon="trash" size="sm" :loading="deleting"></sa-button>
+            <sa-button @click.native="editRecord"
+                       :type="editButtonType"
+                       :icon="editButtonIcon"
+                       size="sm"
+                       :loading="updating" />
+            <sa-button @click.native="toggleEnabled"
+                       :icon="record.enabled ? 'toggle-on' : 'toggle-off'"
+                       size="sm"
+                       :loading="toggling" />
+            <sa-button @click.native="deleteRecord"
+                       type="danger"
+                       icon="trash"
+                       size="sm"
+                       :loading="deleting" />
         </td>
     </tr>
 </template>

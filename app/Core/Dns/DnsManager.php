@@ -31,8 +31,8 @@ class DnsManager extends Service
             $this->updateZoneRecordsConfig($zone, $zonesConfigPath);
 
             $zonesConfig->writeln("zone \"{$zone->name}\" in {");
-            $zonesConfig->writeln("\ttype master;", 1);
-            $zonesConfig->writeln("\tfile \"{$zonesConfigPath}\";", 1);
+            $zonesConfig->writeln("\ttype master;");
+            $zonesConfig->writeln("\tfile \"{$zonesConfigPath}\";");
             $zonesConfig->writeln("};");
             $zonesConfig->nextline();
         }

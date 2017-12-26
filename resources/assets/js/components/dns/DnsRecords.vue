@@ -13,8 +13,7 @@
         <sa-dns-record v-for="record in this.records"
                      :key="record.id"
                      :record="record"
-                     @destroy-record="destroy(record.id)">
-        </sa-dns-record>
+                     @destroy-record="destroy(record.id)" />
         </tbody>
     </table>
 </template>

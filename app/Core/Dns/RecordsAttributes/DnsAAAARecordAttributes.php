@@ -17,7 +17,7 @@ class DnsAAAARecordAttributes implements DnsRecordAttributes
 
     public static function fromArray(array $attributes): DnsRecordAttributes
     {
-        self::validate($attributes, [
+        self::validateDnsRecordAttributes($attributes, [
             'ipv6' => 'required|ipv6'
         ]);
 

@@ -17,7 +17,7 @@ class DnsTXTRecordAttributes implements DnsRecordAttributes
 
     public static function fromArray(array $attributes): DnsRecordAttributes
     {
-        self::validate($attributes, [
+        self::validateDnsRecordAttributes($attributes, [
             'content' => 'required|min:1|max:255'
         ]);
 

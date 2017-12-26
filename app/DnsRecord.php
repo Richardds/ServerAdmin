@@ -2,16 +2,9 @@
 
 namespace Richardds\ServerAdmin;
 
-use Exception;
 use Illuminate\Database\Eloquent\Model;
-use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsAAAARecordAttributes;
-use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsARecordAttributes;
-use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsCNAMERecordAttributes;
-use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsMXRecordAttributes;
-use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsNSRecordAttributes;
+use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsRecordAssistance;
 use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsRecordAttributes;
-use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsSRVRecordAttributes;
-use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsTXTRecordAttributes;
 
 /**
  * Richardds\ServerAdmin\DnsRecord
@@ -39,6 +32,8 @@ use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsTXTRecordAttributes;
  */
 class DnsRecord extends Model
 {
+    use DnsRecordAssistance;
+
     const DNS_A_RECORD = 'A';
 
     const DNS_AAAA_RECORD = 'AAAA';
@@ -106,24 +101,8 @@ class DnsRecord extends Model
     public function getAttrsAttribute($value): DnsRecordAttributes
     {
         $attrs = json_decode($value, true);
-        switch ($this->type) {
-            case self::DNS_A_RECORD:
-                return DnsARecordAttributes::fromArray($attrs);
-            case self::DNS_AAAA_RECORD:
-                return DnsAAAARecordAttributes::fromArray($attrs);
-            case self::DNS_CNAME_RECORD:
-                return DnsCNAMERecordAttributes::fromArray($attrs);
-            case self::DNS_MX_RECORD:
-                return DnsMXRecordAttributes::fromArray($attrs);
-            case self::DNS_SRV_RECORD:
-                return DnsSRVRecordAttributes::fromArray($attrs);
-            case self::DNS_TXT_RECORD:
-                return DnsTXTRecordAttributes::fromArray($attrs);
-            case self::DNS_NS_RECORD:
-                return DnsNSRecordAttributes::fromArray($attrs);
-            default:
-                throw new Exception('Invalid DNS type');
-        }
+
+        return self::createDnsRecordAttributes($this->type, $attrs);
     }
 
     public function setAttrsAttribute(DnsRecordAttributes $value)

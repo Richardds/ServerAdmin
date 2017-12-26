@@ -32,7 +32,7 @@ class DnsSRVRecordAttributes implements DnsRecordAttributes
 
     public static function fromArray(array $attributes): DnsRecordAttributes
     {
-        self::validate($attributes, [
+        self::validateDnsRecordAttributes($attributes, [
             'service' => 'required|min:1|max:50',
             'protocol' => 'required|min:1|max:50',
             'host' => 'required|min:1|max:253',
