@@ -30,10 +30,10 @@ $factory->define(DnsRecord::class, function (Faker $faker) {
             $recordAttributes = new DnsAAAARecordAttributes($faker->ipv6);
             break;
         case DnsRecord::DNS_CNAME_RECORD:
-            $recordAttributes = new DnsCNAMERecordAttributes($faker->domainWord);
+            $recordAttributes = new DnsCNAMERecordAttributes($faker->domainName);
             break;
         case DnsRecord::DNS_MX_RECORD:
-            $recordAttributes = new DnsMXRecordAttributes($faker->domainWord, $faker->numberBetween(1, 5) * 10);
+            $recordAttributes = new DnsMXRecordAttributes($faker->domainName, $faker->numberBetween(1, 5) * 10);
             break;
         case DnsRecord::DNS_SRV_RECORD:
             $recordAttributes = new DnsSRVRecordAttributes(
