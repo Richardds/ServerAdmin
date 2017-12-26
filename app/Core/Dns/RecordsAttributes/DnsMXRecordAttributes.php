@@ -2,11 +2,12 @@
 
 namespace Richardds\ServerAdmin\Core\Dns\RecordsAttributes;
 
-use Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException;
 use Richardds\ServerAdmin\DnsRecord;
 
 class DnsMXRecordAttributes implements DnsRecordAttributes
 {
+    use DnsRecordAssistance;
+
     protected $host;
 
     protected $priority;
@@ -19,11 +20,10 @@ class DnsMXRecordAttributes implements DnsRecordAttributes
 
     public static function fromArray(array $attributes): DnsRecordAttributes
     {
-        if (! array_has($attributes, ['host', 'priority'])) {
-            throw new InvalidParameterException('Cannot create DnsRecordAttributes class from given array', [
-                'attributes' => $attributes,
-            ]);
-        }
+        self::validate($attributes, [
+            'host' => 'required|min:1|max:253',
+            'priority' => 'required|numeric'
+        ]);
 
         return new self($attributes['host'], $attributes['priority']);
     }

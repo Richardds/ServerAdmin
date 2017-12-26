@@ -1,13 +1,33 @@
-table.table-dns {
-    tr.zone-disabled {
-        color: lighten($text-color, 30%);
+table {
+    &.table-dns-zones {
+        th, td {
+            &.zone-name, &.zone-admin {
+                //
+            }
+            &.zone-refresh, &.zone-retry, &.zone-expire, &.zone-ttl {
+                width: 120px;
+            }
+        }
     }
-    th, td {
-        &.zone-name {
-            //
+
+    &.table-dns-records {
+        th, td {
+            &.record-type {
+                width: 60px;
+            }
+            &.record-name {
+                //
+            }
+            &.record-value {
+                width: 400px;
+            }
+            &.record-ttl {
+                width: 120px;
+            }
         }
-        &.zone-refresh, &.zone-retry, &.zone-expire, &.zone-ttl {
-            width: 120px;
-        }
+    }
+
+    tr.disabled {
+        color: lighten($text-color, 30%);
     }
 }

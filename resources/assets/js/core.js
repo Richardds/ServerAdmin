@@ -1,8 +1,6 @@
 require('./bootstrap');
-require('./components');
 require('./utils');
-
-window._config = require('./config');
+require('./components');
 
 const App = new Vue({
     el: '#root',

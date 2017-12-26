@@ -63,7 +63,6 @@
                         console.error(error);
                     });
                 }
-
                 this.editMode = !this.editMode;
             },
             deleteZone() {
@@ -92,14 +91,12 @@
                 if (this.editMode) {
                     return this.changed ? 'check' : 'times';
                 }
-
                 return 'pencil';
             },
             editButtonType() {
                 if (this.editMode) {
                     return this.changed ? 'success' : 'danger';
                 }
-
                 return 'default';
             }
         }

@@ -13,5 +13,5 @@ Route::get('dashboard', 'DashboardController@showDashboard')->name('dashboard');
 // DNS
 Route::group(['prefix' => 'dns'], function() {
     Route::get('zones', 'DnsZoneController@zones')->name('dns_zones');
-    Route::get('zones/{dnsZone}', 'DnsZoneController@zone')->name('dns_records');
+    Route::get('zones/{zone}', 'DnsZoneController@zone')->name('dns_records');
 });

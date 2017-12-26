@@ -3,6 +3,7 @@
 namespace Richardds\ServerAdmin\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Richardds\ServerAdmin\Core\Dns\DnsManager;
 use Richardds\ServerAdmin\DnsRecord;
 use Richardds\ServerAdmin\DnsZone;
@@ -29,54 +30,76 @@ class DnsRecordController extends Controller
     }
 
     /**
-     * @param DnsZone $dnsZone
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\View\View
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index(DnsZone $dnsZone, Request $request)
+    public function index(Request $request)
     {
-        if ($request->wantsJson()) {
-            return api_response()->success($dnsZone->dnsRecords->toArray())->response();
+        if (!is_null($zoneId = $request->query('zone'))) {
+            return api_response()->success(DnsZone::findOrFail($zoneId)->dnsRecords->toArray())->response();
         }
 
-        return view('sections.dns.zone');
+        return api_response()->success(DnsRecord::all()->toArray())->response();
     }
 
     /**
-     * @param DnsRecord $dnsRecord
+     * @param DnsRecord $record
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(DnsRecord $dnsRecord)
+    public function show(DnsRecord $record)
     {
-        return api_response()->success($dnsRecord->toArray())->response();
+        return api_response()->success($record->toArray())->response();
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws ValidationException
      */
     public function store(Request $request)
     {
         $this->validate($request, [
-            // ...
+            'zone_id' => 'required|exists:dns_records,id',
+            'type' => 'required',
+            'name' => 'required|min:1|max:253',
+            'attrs' => 'required',
+            'ttl' => 'required|numeric',
+            'enabled' => 'boolean',
         ]);
 
-        $dnsRecord = DnsRecord::create([
-            // ...
+        $type = $request->get('type');
+
+        // Record type validation
+        if (!in_array($type, DnsRecord::availableTypes())) {
+            throw ValidationException::withMessages([
+                'type' => 'Invalid type.'
+            ]);
+        }
+
+        $record = new DnsRecord([
+            'type' => $type,
+            'name' => $request->get('name'),
+            'attrs' => $request->get('attrs'),
+            'ttl' => $request->get('ttl'),
+            'enabled' => $request->get('enabled') ?? true,
         ]);
+
+        $record->attrs; // Call fromArray method to validate record attributes
+
+        $record->save(); // If no exception is thrown save new record
 
         $this->manager->updateZonesConfig(); // TODO: Single zone
         $this->manager->reload();
 
-        return api_response()->success(['id' => $dnsRecord->id])->response();
+        return api_response()->success(['id' => $record->id])->response();
     }
 
     /**
      * @param Request $request
-     * @param DnsRecord $dnsRecord
+     * @param DnsRecord $record
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, DnsRecord $dnsRecord)
+    public function update(Request $request, DnsRecord $record)
     {
         $rules = [
             // ...
@@ -84,23 +107,23 @@ class DnsRecordController extends Controller
 
         $this->validate($request, $rules);
 
-        $this->updateModel($dnsRecord, $request, array_keys($rules));
-        $dnsRecord->save();
+        $this->updateModel($record, $request, array_keys($rules));
+        $record->save();
 
         $this->manager->updateZonesConfig();
         $this->manager->reload();
 
-        return api_response()->success($dnsRecord->toArray())->response();
+        return api_response()->success($record->toArray())->response();
     }
 
     /**
-     * @param DnsRecord $dnsRecord
+     * @param DnsRecord $record
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    public function destroy(DnsRecord $dnsRecord)
+    public function destroy(DnsRecord $record)
     {
-        $dnsRecord->delete();
+        $record->delete();
 
         $this->manager->updateZonesConfig();
         $this->manager->reload();

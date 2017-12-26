@@ -11,8 +11,8 @@ class InvalidParameterException extends Exception
         parent::__construct($message);
         $parametes_str = [];
         foreach ($parameters as $name => $parameter) {
-            $parametes_str[] = is_string($name) ? '\''.$name.'\' => \''.$parameter.'\'' : '\''.$parameter.'\'';
+            $parametes_str[] = is_string($name) ? '\'' . $name . '\' => \'' . $parameter . '\'' : '\'' . $parameter . '\'';
         }
-        $this->message .= ' Parameters: '.implode(', ', $parametes_str);
+        $this->message .= ' (parameters: ' . implode(', ', $parametes_str) . ')';
     }
 }

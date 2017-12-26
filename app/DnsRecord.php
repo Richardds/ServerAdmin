@@ -56,7 +56,7 @@ class DnsRecord extends Model
     protected $fillable = [
         'type',
         'name',
-        'value',
+        'attrs',
         'ttl',
     ];
 
@@ -65,7 +65,7 @@ class DnsRecord extends Model
         'zone_id',
         'type',
         'name',
-        'value',
+        'attrs',
         'ttl',
         'enabled',
     ];
@@ -78,7 +78,7 @@ class DnsRecord extends Model
     protected $casts = [
         'type' => 'string',
         'name' => 'string',
-        'attrs' => 'string',
+        'attrs' => 'array',
         'ttl' => 'integer',
         'enabled' => 'boolean',
         'created_at' => 'date',

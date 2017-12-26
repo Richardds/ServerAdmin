@@ -36,11 +36,12 @@ class DnsZoneController extends Controller
     }
 
     /**
+     * @param DnsZone $zone
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function zone()
+    public function zone(DnsZone $zone)
     {
-        return view('sections.dns.zone');
+        return view('sections.dns.zone', compact('zone'));
     }
 
     /**
@@ -76,7 +77,7 @@ class DnsZoneController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|min:1|max:253',
+            'name' => 'required|min:1|max:253|unique:dns_zones,name',
             'admin' => 'required|min:1|max:253',
             'serial' => 'required|numeric',
             'refresh' => 'required|numeric',

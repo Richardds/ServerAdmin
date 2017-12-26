@@ -2,11 +2,12 @@
 
 namespace Richardds\ServerAdmin\Core\Dns\RecordsAttributes;
 
-use Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException;
 use Richardds\ServerAdmin\DnsRecord;
 
 class DnsAAAARecordAttributes implements DnsRecordAttributes
 {
+    use DnsRecordAssistance;
+
     protected $ipv6;
 
     public function __construct(string $ipv6)
@@ -16,11 +17,9 @@ class DnsAAAARecordAttributes implements DnsRecordAttributes
 
     public static function fromArray(array $attributes): DnsRecordAttributes
     {
-        if (! array_has($attributes, ['ipv6'])) {
-            throw new InvalidParameterException('Cannot create DnsRecordAttributes class from given array', [
-                'attributes' => $attributes,
-            ]);
-        }
+        self::validate($attributes, [
+            'ipv6' => 'required|ipv6'
+        ]);
 
         return new self($attributes['ipv6']);
     }

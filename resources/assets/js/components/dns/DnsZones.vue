@@ -1,5 +1,5 @@
 <template>
-    <table class="table table-striped table-controls table-dns-zone">
+    <table class="table table-striped table-controls table-dns-zones">
         <thead>
         <tr>
             <th>Name</th>
@@ -12,45 +12,35 @@
         </tr>
         </thead>
         <tbody>
-        <sa-dns-zone v-for="zone in manager.zones"
+        <sa-dns-zone v-for="zone in this.zones"
                      :key="zone.id"
                      :zone="zone"
-                     @destroy-zone="manager.destroy(zone)">
+                     @destroy-zone="destroy(zone.id)">
         </sa-dns-zone>
         </tbody>
     </table>
 </template>
 
 <script>
-    class Zones {
-        constructor() {
-            this.zones = [];
-        }
-
-        add(zone) {
-            this.zones.push(zone);
-        }
-
-        destroy(zone) {
-            this.zones.splice(this.zones.indexOf(zone), 1);
-        }
-
-    }
-
     export default {
+        data() {
+            return {
+                zones: []
+            };
+        },
         mounted() {
             axios.get('/api/dns/zones').then(response => {
                 for (let zone of response.data.data) {
-                    this.manager.add(zone);
+                    this.zones.push(zone);
                 }
             }).catch(error => {
                 console.error(error);
             });
         },
-        data() {
-            return {
-                manager: new Zones()
-            };
+        methods: {
+            destroy(id) {
+                this.zones = _.remove(this.zones, zone => zone.id !== id);
+            }
         }
     }
 </script>

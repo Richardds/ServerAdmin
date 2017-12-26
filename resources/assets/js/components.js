@@ -9,3 +9,5 @@ Vue.component('sa-service-controls', require('./components/core/ServiceControls.
 // DNS
 Vue.component('sa-dns-zones', require('./components/dns/DnsZones.vue'));
 Vue.component('sa-dns-zone', require('./components/dns/DnsZone.vue'));
+Vue.component('sa-dns-records', require('./components/dns/DnsRecords.vue'));
+Vue.component('sa-dns-record', require('./components/dns/DnsRecord.vue'));

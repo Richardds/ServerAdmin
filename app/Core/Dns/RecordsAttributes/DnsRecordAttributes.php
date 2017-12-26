@@ -2,9 +2,10 @@
 
 namespace Richardds\ServerAdmin\Core\Dns\RecordsAttributes;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Richardds\ServerAdmin\DnsRecord;
 
-interface DnsRecordAttributes
+interface DnsRecordAttributes extends Arrayable
 {
     public static function fromArray(array $attributes): DnsRecordAttributes;
 
