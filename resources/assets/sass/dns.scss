@@ -11,15 +11,51 @@ table {
     }
 
     &.table-dns-records {
+        tr {
+            &.type-a .record-type {
+                color: #333;
+            }
+
+            &.type-aaaa .record-type {
+                color: #7c7c7c;
+            }
+
+            &.type-cname .record-type {
+                color: #ff7900;
+            }
+
+            &.type-mx .record-type {
+                color: #d91698;
+            }
+
+            &.type-srv .record-type {
+                color: #bd2527;
+            }
+
+            &.type-txt .record-type {
+                color: #9bca3e;
+            }
+
+            &.type-ns .record-type {
+                color: #9545e5;
+            }
+        }
+
         th, td {
             &.record-type {
                 width: 60px;
+                font-weight: bold;
+                text-align: center;
             }
             &.record-name {
                 //
             }
             &.record-value {
                 width: 400px;
+
+                .input-group-addon {
+                    font-size: $font-size-small;
+                }
             }
             &.record-ttl {
                 width: 120px;
@@ -28,6 +64,31 @@ table {
     }
 
     tr.disabled {
-        color: lighten($text-color, 30%);
+        color: lighten($text-color, 30%) !important;
+
+        span.lighter {
+            color: lighten($text-color, 40%);
+        }
+    }
+}
+
+span.lighter {
+    color: lighten($text-color, 20%);
+}
+
+.top-buffer {
+    margin-top: 15px;
+}
+
+.small-gaps {
+    padding-left: 7.5px;
+    padding-right: 7.5px;
+
+    &:first-child {
+        padding-left: 15px;
+    }
+
+    &:last-child {
+        padding-right: 15px;
     }
 }

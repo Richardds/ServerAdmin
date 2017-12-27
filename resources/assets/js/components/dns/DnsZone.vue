@@ -6,19 +6,19 @@
 
         <template v-if="editMode">
             <td class="zone-admin">
-                <input @input="onChange" class="form-control input-sm" type="text" v-model="zone.admin">
+                <input @input="onChange" class="form-control input-sm" type="text" v-model="zone.admin" />
             </td>
             <td class="zone-refresh">
-                <input @input="onChange" class="form-control input-sm" type="number" v-model="zone.refresh">
+                <input @input="onChange" class="form-control input-sm" type="number" v-model="zone.refresh" />
             </td>
             <td class="zone-retry">
-                <input @input="onChange" class="form-control input-sm" type="number" v-model="zone.retry">
+                <input @input="onChange" class="form-control input-sm" type="number" v-model="zone.retry" />
             </td>
             <td class="zone-expire">
-                <input @input="onChange" class="form-control input-sm" type="number" v-model="zone.expire">
+                <input @input="onChange" class="form-control input-sm" type="number" v-model="zone.expire" />
             </td>
             <td class="zone-ttl">
-                <input @input="onChange" class="form-control input-sm" type="number" v-model="zone.ttl">
+                <input @input="onChange" class="form-control input-sm" type="number" v-model="zone.ttl" />
             </td>
         </template>
 

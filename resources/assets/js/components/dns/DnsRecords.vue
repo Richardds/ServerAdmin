@@ -10,7 +10,7 @@
         </tr>
         </thead>
         <tbody>
-        <sa-dns-record v-for="record in this.records"
+        <sa-dns-record v-for="record in this.orderedRecords"
                      :key="record.id"
                      :record="record"
                      @destroy-record="destroy(record.id)" />
@@ -38,6 +38,11 @@
         methods: {
             destroy(id) {
                 this.records = _.remove(this.records, record => record.id !== id);
+            }
+        },
+        computed: {
+            orderedRecords() {
+                return _.sortBy(this.records, 'type');
             }
         }
     }

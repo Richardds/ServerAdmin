@@ -1,12 +1,97 @@
 <template>
-    <tr :class="[record.enabled ? '' : 'disabled']">
+    <tr :class="[record.enabled ? '' : 'disabled', 'type-' + lowercaseType]">
         <td class="record-type">{{ record.type }}</td>
 
         <template v-if="editMode">
             <td class="record-name">
                 <input @input="onChange" class="form-control input-sm" type="text" v-model="record.name">
             </td>
-            <td class="record-value">{{ record.attrs }}</td>
+            <td class="record-value">
+                <template v-if="'A' === record.type">
+                    <div class="input-group">
+                        <span class="input-group-addon">IPv4</span>
+                        <input type="text" @input="onChange" class="form-control input-sm" v-model="record.attrs.ipv4" />
+                    </div>
+                </template>
+                <template v-else-if="'AAAA' === record.type">
+                    <div class="input-group">
+                        <span class="input-group-addon">IPv6</span>
+                        <input type="text" @input="onChange" class="form-control input-sm" v-model="record.attrs.ipv6" />
+                    </div>
+                </template>
+                <template v-else-if="'CNAME' === record.type">
+                    <div class="input-group">
+                        <span class="input-group-addon">Host</span>
+                        <input type="text" @input="onChange" class="form-control input-sm" v-model="record.attrs.host" />
+                    </div>
+                </template>
+                <template v-else-if="'MX' === record.type">
+                    <div class="row">
+                        <div class="col-md-7 small-gaps">
+                            <div class="input-group">
+                                <span class="input-group-addon">Host</span>
+                                <input type="text" @input="onChange" class="form-control input-sm" v-model="record.attrs.host" />
+                            </div>
+                        </div>
+                        <div class="col-md-5 small-gaps">
+                            <div class="input-group">
+                                <span class="input-group-addon">Priority</span>
+                                <input type="number" step="10" @input="onChange" class="form-control input-sm" v-model="record.attrs.priority" />
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <template v-else-if="'SRV' === record.type">
+                    <div class="row">
+                        <div class="col-md-6 small-gaps">
+                            <div class="input-group">
+                                <span class="input-group-addon">Priority</span>
+                                <input type="number" step="10" @input="onChange" class="form-control input-sm" v-model="record.attrs.priority" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 small-gaps">
+                            <div class="input-group">
+                                <span class="input-group-addon">Weight</span>
+                                <input type="number" step="10" @input="onChange" class="form-control input-sm" v-model="record.attrs.weight" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row top-buffer">
+                        <div class="col-md-7 small-gaps">
+                            <div class="input-group">
+                                <span class="input-group-addon">Host</span>
+                                <input type="text" @input="onChange" class="form-control input-sm" v-model="record.attrs.host" />
+                            </div>
+                        </div>
+                        <div class="col-md-5 small-gaps">
+                            <div class="input-group">
+                                <span class="input-group-addon">Port</span>
+                                <input type="number" @input="onChange" class="form-control input-sm" v-model="record.attrs.port" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row top-buffer">
+                        <div class="col-md-6 small-gaps">
+                            <div class="input-group">
+                                <span class="input-group-addon">Service</span>
+                                <input type="text" @input="onChange" class="form-control input-sm" v-model="record.attrs.service" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 small-gaps">
+                            <div class="input-group">
+                                <span class="input-group-addon">Protocol</span>
+                                <input type="text" @input="onChange" class="form-control input-sm" v-model="record.attrs.protocol" />
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <template v-else-if="'TXT' === record.type">
+                    <textarea @input="onChange" class="form-control input-sm" v-model="record.attrs.content" placeholder="Content"></textarea>
+                </template>
+                <template v-else-if="'NS' === record.type">
+                    <input type="text" @input="onChange" class="form-control input-sm" v-model="record.attrs.nameserver" placeholder="Nameserver" />
+                </template>
+            </td>
             <td class="record-ttl">
                 <input @input="onChange" class="form-control input-sm" type="number" v-model="record.ttl">
             </td>
@@ -20,17 +105,17 @@
                 <template v-else>{{ record.name}}</template>
             </td>
             <td class="record-value">
-                <template v-if="'A' === record.type">{{ record.attrs.ipv4}}</template>
-                <template v-else-if="'AAAA' === record.type">{{ record.attrs.ipv6 }}</template>
-                <template v-else-if="'CNAME' === record.type">{{ record.attrs.host }}</template>
+                <template v-if="'A' === record.type"><span class="lighter">points to</span> {{ record.attrs.ipv4}}</template>
+                <template v-else-if="'AAAA' === record.type"><span class="lighter">points to</span> {{ record.attrs.ipv6 }}</template>
+                <template v-else-if="'CNAME' === record.type"><span class="lighter">is an alias of</span> {{ record.attrs.host }}</template>
                 <template v-else-if="'MX' === record.type">
-                    {{ record.attrs.priority }} {{ record.attrs.host }}
+                    <span class="lighter">mail handled by</span> {{ record.attrs.host }} <span class="lighter">with priority</span> {{ record.attrs.priority }}
                 </template>
                 <template v-else-if="'SRV' === record.type">
                     {{ record.attrs.priority }} {{ record.attrs.weight }} {{ record.attrs.port }} {{ record.attrs.host }}
                 </template>
                 <template v-else-if="'TXT' === record.type">{{ record.attrs.content }}</template>
-                <template v-else-if="'NS' === record.type">{{ record.attrs.nameserver }}</template>
+                <template v-else-if="'NS' === record.type"><span class="lighter">managed by</span> {{ record.attrs.nameserver }}</template>
             </td>
             <td class="record-ttl">{{ record.ttl }}</td>
         </template>
@@ -122,6 +207,9 @@
                     return this.changed ? 'success' : 'danger';
                 }
                 return 'default';
+            },
+            lowercaseType() {
+                return this.record.type.toLowerCase();
             }
         }
     }
