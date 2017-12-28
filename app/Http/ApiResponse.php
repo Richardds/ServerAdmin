@@ -122,6 +122,10 @@ class ApiResponse
             $responseData['message'] = $this->message;
         }
 
+        if (! empty($this->errors)) {
+            $responseData['errors'] = $this->errors;
+        }
+
         if (! empty($this->data)) {
             $responseData['data'] = $this->data;
         }

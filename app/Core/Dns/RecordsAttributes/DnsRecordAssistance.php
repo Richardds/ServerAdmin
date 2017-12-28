@@ -4,7 +4,7 @@ namespace Richardds\ServerAdmin\Core\Dns\RecordsAttributes;
 
 use Exception;
 use Illuminate\Support\Facades\Validator;
-use Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException;
+use Richardds\ServerAdmin\Core\Exceptions\InvalidValidatedParameterException;
 use Richardds\ServerAdmin\DnsRecord;
 
 trait DnsRecordAssistance
@@ -12,14 +12,14 @@ trait DnsRecordAssistance
     /**
      * @param array $attributes
      * @param array $rules
-     * @throws InvalidParameterException
+     * @throws InvalidValidatedParameterException
      */
     public static function validateDnsRecordAttributes(array $attributes, array $rules)
     {
-        if (Validator::make($attributes, $rules)->fails()) {
-            throw new InvalidParameterException(
-                'Cannot create ' . class_basename(__CLASS__). ' class from given array', $attributes
-            );
+        $validator = Validator::make($attributes, $rules);
+        if ($validator->fails()) {
+            throw new InvalidValidatedParameterException(
+                'Cannot create ' . class_basename(__CLASS__) . ' class from given array', $attributes, $validator);
         }
     }
 
@@ -28,6 +28,7 @@ trait DnsRecordAssistance
      * @param array $attrs
      * @return DnsRecordAttributes
      * @throws Exception
+     * @throws InvalidValidatedParameterException
      */
     public static function createDnsRecordAttributes(string $type, array $attrs): DnsRecordAttributes
     {

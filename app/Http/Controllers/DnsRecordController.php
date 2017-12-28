@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Richardds\ServerAdmin\Core\Dns\DnsManager;
 use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsRecordAssistance;
+use Richardds\ServerAdmin\Core\Exceptions\InvalidValidatedParameterException;
 use Richardds\ServerAdmin\DnsRecord;
 use Richardds\ServerAdmin\DnsZone;
 use Richardds\ServerAdmin\Http\CrudAssistance;
@@ -79,18 +80,20 @@ class DnsRecordController extends Controller
             ]);
         }
 
-        $record = new DnsRecord([
-            'zone_id' => $request->get('zone_id'),
-            'type' => $type,
-            'name' => $request->get('name'),
-            'attrs' => self::createDnsRecordAttributes($type, $request->get('attrs')),
-            'ttl' => $request->get('ttl'),
-            'enabled' => $request->get('enabled') ?? true,
-        ]);
+        try {
+            $record = new DnsRecord([
+                'zone_id' => $request->get('zone_id'),
+                'type' => $type,
+                'name' => $request->get('name'),
+                'attrs' => self::createDnsRecordAttributes($type, $request->get('attrs')),
+                'ttl' => $request->get('ttl'),
+                'enabled' => $request->get('enabled') ?? true,
+            ]);
+        } catch (InvalidValidatedParameterException $e) {
+            throw ValidationException::withMessages($e->getErrors());
+        }
 
-        $record->attrs; // Call fromArray method to validate record attributes
-
-        $record->save(); // If no exception is thrown save new record
+        $record->save();
 
         $this->manager->updateZonesConfig();
 
