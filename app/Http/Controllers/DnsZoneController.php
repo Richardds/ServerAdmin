@@ -78,7 +78,7 @@ class DnsZoneController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|min:1|max:253|unique:dns_zones,name',
-            'admin' => 'required|min:1|max:253',
+            'admin' => 'min:1|max:253',
             'serial' => 'required|numeric',
             'refresh' => 'required|numeric',
             'retry' => 'required|numeric',
@@ -89,7 +89,7 @@ class DnsZoneController extends Controller
 
         $zone = DnsZone::create([
             'name' => $request->get('name'),
-            'admin' => $request->get('admin'),
+            'admin' => $request->get('admin') ?? 'admin.' . $request->get('name'),
             'serial' => $request->get('serial'),
             'refresh' => $request->get('refresh'),
             'retry' => $request->get('retry'),

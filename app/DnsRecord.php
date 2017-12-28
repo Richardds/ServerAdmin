@@ -49,6 +49,7 @@ class DnsRecord extends Model
     const DNS_NS_RECORD = 'NS';
 
     protected $fillable = [
+        'zone_id',
         'type',
         'name',
         'attrs',
@@ -71,6 +72,7 @@ class DnsRecord extends Model
     ];
 
     protected $casts = [
+        'zone_id' => 'integer',
         'type' => 'string',
         'name' => 'string',
         'attrs' => 'array',

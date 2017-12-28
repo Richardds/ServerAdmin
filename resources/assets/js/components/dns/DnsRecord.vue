@@ -86,10 +86,16 @@
                     </div>
                 </template>
                 <template v-else-if="'TXT' === record.type">
-                    <textarea @input="onChange" class="form-control input-sm" v-model="record.attrs.content" placeholder="Content"></textarea>
+                    <div class="input-group">
+                        <span class="input-group-addon">Content</span>
+                        <textarea @input="onChange" rows="4" class="form-control input-sm" v-model="record.attrs.content"></textarea>
+                    </div>
                 </template>
                 <template v-else-if="'NS' === record.type">
-                    <input type="text" @input="onChange" class="form-control input-sm" v-model="record.attrs.nameserver" placeholder="Nameserver" />
+                    <div class="input-group">
+                        <span class="input-group-addon">Nameserver</span>
+                        <input type="text" @input="onChange" class="form-control input-sm" v-model="record.attrs.nameserver" />
+                    </div>
                 </template>
             </td>
             <td class="record-ttl">
@@ -177,7 +183,7 @@
             deleteRecord() {
                 this.deleting = true;
                 axios.delete('/api/dns/records/' + this.record.id).then(response => {
-                    this.$emit('destroy-record');
+                    this.$emit('destroy');
                 }).catch(error => {
                     this.deleting = false;
                     console.error(error);

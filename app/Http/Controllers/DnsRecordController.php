@@ -57,11 +57,12 @@ class DnsRecordController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws ValidationException
+     * @throws \Exception
      */
     public function store(Request $request)
     {
         $this->validate($request, [
-            'zone_id' => 'required|exists:dns_records,id',
+            'zone_id' => 'required|exists:dns_zones,id',
             'type' => 'required',
             'name' => 'required|min:1|max:253',
             'attrs' => 'required',
@@ -79,9 +80,10 @@ class DnsRecordController extends Controller
         }
 
         $record = new DnsRecord([
+            'zone_id' => $request->get('zone_id'),
             'type' => $type,
             'name' => $request->get('name'),
-            'attrs' => $request->get('attrs'),
+            'attrs' => self::createDnsRecordAttributes($type, $request->get('attrs')),
             'ttl' => $request->get('ttl'),
             'enabled' => $request->get('enabled') ?? true,
         ]);
