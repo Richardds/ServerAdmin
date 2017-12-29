@@ -29,6 +29,16 @@ $factory->define(Richardds\ServerAdmin\Cron::class, function (Faker $faker) {
 
         return CronFieldInterval::single($from);
     };
+    $intervalListGenerator = function ($field) use ($faker, $intervalFields, $intervalGenerator) {
+        $count = $faker->numberBetween(2, 4);
+        $list = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            $list[] = $intervalGenerator($field);
+        }
+
+        return $list;
+    };
     $stepGenerator = function ($field) use ($faker, $intervalFields) {
         $min = $intervalFields[$field][0];
         $max = $intervalFields[$field][1];
@@ -50,7 +60,9 @@ $factory->define(Richardds\ServerAdmin\Cron::class, function (Faker $faker) {
             case '':
                 $interval->{'set' . $field . $modifier}($intervalGenerator($field));
                 break;
-            //case 'List': // Na toto sa mi kontrolu robiť nechce...
+            case 'List':
+                $interval->{'set' . $field . $modifier}($intervalListGenerator($field));
+                break;
             case 'Step':
                 $interval->{'set' . $field . $modifier}($intervalGenerator($field), $stepGenerator($field));
                 break;
