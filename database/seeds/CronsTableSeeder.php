@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Richardds\ServerAdmin\Cron;
 
-class DatabaseSeeder extends Seeder
+class CronsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,7 +12,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        //$this->call(DnsZonesTableSeeder::class);
-        $this->call(CronsTableSeeder::class);
+        factory(Cron::class, 10)->create();
     }
 }

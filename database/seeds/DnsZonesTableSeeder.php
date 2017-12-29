@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use Richardds\ServerAdmin\DnsRecord;
 use Richardds\ServerAdmin\DnsZone;
 
-class DnsZoneTableSeeder extends Seeder
+class DnsZonesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
