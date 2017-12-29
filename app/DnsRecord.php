@@ -54,6 +54,7 @@ class DnsRecord extends Model
         'name',
         'attrs',
         'ttl',
+        'enabled',
     ];
 
     protected $visible = [
@@ -100,7 +101,7 @@ class DnsRecord extends Model
         return $this->belongsTo(DnsZone::class);
     }
 
-    public function getAttrsAttribute($value): DnsRecordAttributes
+    public function getAttrsAttribute(string $value): DnsRecordAttributes
     {
         $attrs = json_decode($value, true);
 
