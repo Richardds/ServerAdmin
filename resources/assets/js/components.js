@@ -11,3 +11,7 @@ Vue.component('sa-dns-zones', require('./components/dns/DnsZones.vue'));
 Vue.component('sa-dns-zone', require('./components/dns/DnsZone.vue'));
 Vue.component('sa-dns-records', require('./components/dns/DnsRecords.vue'));
 Vue.component('sa-dns-record', require('./components/dns/DnsRecord.vue'));
+
+// Cron
+Vue.component('sa-cron-tasks', require('./components/cron/CronTasks'));
+Vue.component('sa-cron-task', require('./components/cron/CronTask'));

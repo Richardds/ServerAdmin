@@ -95,11 +95,11 @@ class CronInterval
     }
 
     /**
-     * @param CronFieldInterval $interval
+     * @param CronIntervalField $interval
      * @param bool $append
      * @throws InvalidParameterException
      */
-    public function setMinute(CronFieldInterval $interval, bool $append = false): void
+    public function setMinute(CronIntervalField $interval, bool $append = false): void
     {
         if (!$interval->isValid(0, 59)) {
             throw new InvalidParameterException('Invalid minute range values. 0 <= MINUTE <= 59, FROM < TO', [
@@ -114,11 +114,11 @@ class CronInterval
     }
 
     /**
-     * @param CronFieldInterval $interval
+     * @param CronIntervalField $interval
      * @param bool $append
      * @throws InvalidParameterException
      */
-    public function setHour(CronFieldInterval $interval, bool $append = false): void
+    public function setHour(CronIntervalField $interval, bool $append = false): void
     {
         if (!$interval->isValid(0, 23)) {
             throw new InvalidParameterException('Invalid hour range values. 0 <= HOUR <= 23, FROM < TO', [
@@ -133,11 +133,11 @@ class CronInterval
     }
 
     /**
-     * @param CronFieldInterval $interval
+     * @param CronIntervalField $interval
      * @param bool $append
      * @throws InvalidParameterException
      */
-    public function setDay(CronFieldInterval $interval, bool $append = false): void
+    public function setDay(CronIntervalField $interval, bool $append = false): void
     {
         if (!$interval->isValid(1, 31)) {
             throw new InvalidParameterException('Invalid day range values. 1 <= DAY <= 31, FROM < TO', [
@@ -152,11 +152,11 @@ class CronInterval
     }
 
     /**
-     * @param CronFieldInterval $interval
+     * @param CronIntervalField $interval
      * @param bool $append
      * @throws InvalidParameterException
      */
-    public function setMonth(CronFieldInterval $interval, bool $append = false): void
+    public function setMonth(CronIntervalField $interval, bool $append = false): void
     {
         if (!$interval->isValid(1, 12)) {
             throw new InvalidParameterException('Invalid month range values. 1 <= MONTH <= 12, FROM < TO', [
@@ -171,11 +171,11 @@ class CronInterval
     }
 
     /**
-     * @param CronFieldInterval $interval
+     * @param CronIntervalField $interval
      * @param bool $append
      * @throws InvalidParameterException
      */
-    public function setWeekday(CronFieldInterval $interval, bool $append = false): void
+    public function setWeekday(CronIntervalField $interval, bool $append = false): void
     {
         if (!$interval->isValid(1, 7)) {
             throw new InvalidParameterException('Invalid weekday range values. 1 <= WEEKDAY <= 7, FROM < TO', [
@@ -190,7 +190,7 @@ class CronInterval
     }
 
     /**
-     * @param CronFieldInterval[] $intervals
+     * @param CronIntervalField[] $intervals
      * @throws InvalidParameterException
      */
     public function setMinuteList(array $intervals): void
@@ -201,7 +201,7 @@ class CronInterval
     }
 
     /**
-     * @param CronFieldInterval[] $intervals
+     * @param CronIntervalField[] $intervals
      * @throws InvalidParameterException
      */
     public function setHourList(array $intervals): void
@@ -212,7 +212,7 @@ class CronInterval
     }
 
     /**
-     * @param CronFieldInterval[] $intervals
+     * @param CronIntervalField[] $intervals
      * @throws InvalidParameterException
      */
     public function setDayList(array $intervals): void
@@ -223,7 +223,7 @@ class CronInterval
     }
 
     /**
-     * @param CronFieldInterval[] $intervals
+     * @param CronIntervalField[] $intervals
      * @throws InvalidParameterException
      */
     public function setMonthList(array $intervals): void
@@ -234,7 +234,7 @@ class CronInterval
     }
 
     /**
-     * @param CronFieldInterval[] $intervals
+     * @param CronIntervalField[] $intervals
      * @throws InvalidParameterException
      */
     public function setWeekdayList(array $intervals): void
@@ -245,55 +245,55 @@ class CronInterval
     }
 
     /**
-     * @param CronFieldInterval $interval
+     * @param CronIntervalField $interval
      * @param int $step
      * @throws InvalidParameterException
      */
-    public function setMinuteStep(CronFieldInterval $interval, int $step): void
+    public function setMinuteStep(CronIntervalField $interval, int $step): void
     {
         $this->setMinute($interval);
         $this->minute .= '/' . $step;
     }
 
     /**
-     * @param CronFieldInterval $interval
+     * @param CronIntervalField $interval
      * @param int $step
      * @throws InvalidParameterException
      */
-    public function setHourStep(CronFieldInterval $interval, int $step): void
+    public function setHourStep(CronIntervalField $interval, int $step): void
     {
         $this->setHour($interval);
         $this->hour .= '/' . $step;
     }
 
     /**
-     * @param CronFieldInterval $interval
+     * @param CronIntervalField $interval
      * @param int $step
      * @throws InvalidParameterException
      */
-    public function setDayStep(CronFieldInterval $interval, int $step): void
+    public function setDayStep(CronIntervalField $interval, int $step): void
     {
         $this->setDay($interval);
         $this->day .= '/' . $step;
     }
 
     /**
-     * @param CronFieldInterval $interval
+     * @param CronIntervalField $interval
      * @param int $step
      * @throws InvalidParameterException
      */
-    public function setMonthStep(CronFieldInterval $interval, int $step): void
+    public function setMonthStep(CronIntervalField $interval, int $step): void
     {
         $this->setMonth($interval);
         $this->month .= '/' . $step;
     }
 
     /**
-     * @param CronFieldInterval $interval
+     * @param CronIntervalField $interval
      * @param int $step
      * @throws InvalidParameterException
      */
-    public function setWeekdayStep(CronFieldInterval $interval, int $step): void
+    public function setWeekdayStep(CronIntervalField $interval, int $step): void
     {
         $this->setWeekday($interval);
         $this->weekday .= '/' . $step;

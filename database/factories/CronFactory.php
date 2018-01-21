@@ -1,8 +1,8 @@
 <?php
 
 use Faker\Generator as Faker;
-use Richardds\ServerAdmin\Core\Cron\CronFieldInterval;
 use Richardds\ServerAdmin\Core\Cron\CronInterval;
+use Richardds\ServerAdmin\Core\Cron\CronIntervalField;
 
 /**
  * @var $factory Illuminate\Database\Eloquent\Factory
@@ -20,17 +20,17 @@ $factory->define(Richardds\ServerAdmin\Cron::class, function (Faker $faker) {
         $min = $intervalFields[$field][0];
         $max = $intervalFields[$field][1];
 
-        $from = $faker->numberBetween($min, $max);
+        $from = $faker->numberBetween($min, $max - 1);
         $to = $faker->numberBetween($from + 1, $max);
 
         if ($faker->boolean((1/3)*100)) {
-            return CronFieldInterval::range($from, $to);
+            return CronIntervalField::range($from, $to);
         }
 
-        return CronFieldInterval::single($from);
+        return CronIntervalField::single($from);
     };
     $intervalListGenerator = function ($field) use ($faker, $intervalFields, $intervalGenerator) {
-        $count = $faker->numberBetween(2, 4);
+        $count = $faker->numberBetween(2, 3);
         $list = [];
 
         for ($i = 0; $i < $count; $i++) {
@@ -43,7 +43,7 @@ $factory->define(Richardds\ServerAdmin\Cron::class, function (Faker $faker) {
         $min = $intervalFields[$field][0];
         $max = $intervalFields[$field][1];
 
-        return $faker->numberBetween($min + 1, $max / 2);
+        return $faker->numberBetween($min + 1, floor($max / 2));
     };
 
     $interval = new CronInterval();
@@ -70,7 +70,11 @@ $factory->define(Richardds\ServerAdmin\Cron::class, function (Faker $faker) {
     }
 
     return [
-        'interval' => $interval,
+        'minute' => $interval->getMinute(),
+        'hour' => $interval->getHour(),
+        'day' => $interval->getDay(),
+        'month' => $interval->getMonth(),
+        'weekday' => $interval->getWeekday(),
         'command' => $faker->randomElement([
             'ping -c ' . $faker->numberBetween(1, 5) . ' 127.0.0.1',
             'll ' . $faker->randomElement(['/', '/var', '/home']),

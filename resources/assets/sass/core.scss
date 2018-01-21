@@ -4,21 +4,26 @@
 // Bootstrap
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
 
+// Open Sans
+@import "~open-sans-fontface/open-sans";
+
 // Font awesome
 @import "~font-awesome/scss/font-awesome";
 
-// Login
-@import "login";
-
-// DNS
-@import "dns";
-
 table.table {
+    tr.disabled {
+        color: lighten($text-color, 30%) !important;
+
+        span.lighter {
+            color: lighten($text-color, 40%);
+        }
+    }
+
     &.table-controls {
         th, td {
             vertical-align: middle;
 
-            input.form-control {
+            .form-control {
                 background: transparent;
             }
         }
@@ -54,3 +59,41 @@ table.table {
         vertical-align: middle;
     }
 }
+
+.lighter {
+    color: lighten($text-color, 20%);
+}
+
+.numeric {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.top-buffer {
+    margin-top: 15px;
+}
+
+.small-gaps {
+    padding-left: 7.5px;
+    padding-right: 7.5px;
+
+    &:first-child {
+        padding-left: 15px;
+    }
+
+    &:last-child {
+        padding-right: 15px;
+    }
+}
+
+/**
+ * Screen specific imports
+ */
+
+// Login
+@import "login";
+
+// DNS
+@import "dns";
+
+// Cron
+@import "cron";

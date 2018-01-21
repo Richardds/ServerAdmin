@@ -15,9 +15,14 @@ class CreateCronsTable extends Migration
     {
         Schema::create('crons', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('interval');
-            $table->text('command');
+            $table->string('minute')->nullable();
+            $table->string('hour')->nullable();
+            $table->string('day')->nullable();
+            $table->string('month')->nullable();
+            $table->string('weekday')->nullable();
+            $table->string('command');
             $table->unsignedSmallInteger('uid');
+            $table->string('description')->nullable();
             $table->boolean('enabled')->default(true);
             $table->timestamps();
         });

@@ -7,6 +7,30 @@ use Illuminate\Http\Request;
 trait CrudAssistance
 {
     /**
+     * Strip required parameter from array of attribute rules.
+     *
+     * @param array $rules
+     * @return array
+     */
+    protected function stripRequired(array $rules)
+    {
+        $strippedRules = [];
+
+        foreach ($rules as $attributeName => $rule) {
+            $requirements = explode('|', $rule);
+
+            if (in_array('required', $requirements)) {
+                $index = array_search('required', $requirements);
+                unset($requirements[$index]);
+            }
+
+            $strippedRules[$attributeName] = implode('|', $requirements);
+        }
+
+        return $strippedRules;
+    }
+
+    /**
      * @param \Illuminate\Database\Eloquent\Model $model
      * @param \Illuminate\Http\Request $request
      * @param array $attributes

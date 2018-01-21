@@ -5,5 +5,5 @@
     <li><a href="{{ route('dns_zones') }}">DNS</a></li>
     <li><a href="#">Mail</a></li>
     <li><a href="#">Firewall</a></li>
-    <li><a href="#">Cron</a></li>
+    <li><a href="{{ route('cron') }}">Cron</a></li>
 @endauth

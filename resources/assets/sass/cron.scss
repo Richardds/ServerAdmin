@@ -1,0 +1,23 @@
+table {
+  &.table-cron-tasks {
+    th, td {
+      &.cron-interval {
+        @extend .numeric;
+        width: 150px;
+        font-size: $font-size-small;
+         &.edit-mode {
+           cursor: zoom-in;
+         }
+      }
+      &.cron-command {
+        //
+      }
+      &.cron-user {
+        width: 100px;
+      }
+      &.cron-description {
+        width: 250px;
+      }
+    }
+  }
+}

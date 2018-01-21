@@ -15,3 +15,6 @@ Route::group(['prefix' => 'dns'], function() {
     Route::get('zones', 'DnsZoneController@zones')->name('dns_zones');
     Route::get('zones/{zone}', 'DnsZoneController@zone')->name('dns_records');
 });
+
+// Cron
+Route::get('cron', 'CronController@cron_tasks')->name('cron');

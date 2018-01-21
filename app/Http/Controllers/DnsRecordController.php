@@ -87,7 +87,7 @@ class DnsRecordController extends Controller
                 'name' => $request->get('name'),
                 'attrs' => self::createDnsRecordAttributes($type, $request->get('attrs')),
                 'ttl' => $request->get('ttl'),
-                'enabled' => $request->get('enabled') ?? true,
+                'enabled' => $request->get('enabled', true),
             ]);
         } catch (InvalidValidatedParameterException $e) {
             throw ValidationException::withMessages($e->getErrors());
@@ -95,7 +95,7 @@ class DnsRecordController extends Controller
 
         $record->save();
 
-        $this->manager->updateZonesConfig();
+        $this->manager->generateZonesConfig();
 
         return api_response()->success(['id' => $record->id])->response();
     }
@@ -125,7 +125,7 @@ class DnsRecordController extends Controller
 
         $record->save();
 
-        $this->manager->updateZonesConfig();
+        $this->manager->generateZonesConfig();
 
         return api_response()->success($record->toArray())->response();
     }
@@ -139,7 +139,7 @@ class DnsRecordController extends Controller
     {
         $record->delete();
 
-        $this->manager->updateZonesConfig();
+        $this->manager->generateZonesConfig();
 
         return api_response()->success()->response();
     }

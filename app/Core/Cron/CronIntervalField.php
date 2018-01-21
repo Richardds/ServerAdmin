@@ -2,7 +2,7 @@
 
 namespace Richardds\ServerAdmin\Core\Cron;
 
-class CronFieldInterval
+class CronIntervalField
 {
     /**
      * @var int
@@ -16,21 +16,21 @@ class CronFieldInterval
 
     /**
      * @param int $number
-     * @return CronFieldInterval
+     * @return CronIntervalField
      */
-    public static function single(int $number): CronFieldInterval
+    public static function single(int $number): CronIntervalField
     {
-        return new CronFieldInterval($number);
+        return new CronIntervalField($number);
     }
 
     /**
      * @param int $from
      * @param int $to
-     * @return CronFieldInterval
+     * @return CronIntervalField
      */
-    public static function range(int $from, int $to): CronFieldInterval
+    public static function range(int $from, int $to): CronIntervalField
     {
-        return new CronFieldInterval($from, $to);
+        return new CronIntervalField($from, $to);
     }
 
     /**

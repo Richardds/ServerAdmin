@@ -17,7 +17,7 @@ class DnsManager extends Service
         parent::__construct('bind9');
     }
 
-    public function updateZonesConfig()
+    public function generateZonesConfig()
     {
         $zones = DnsZone::whereEnabled(true)->get();
         $zonesConfig = new ConfigIo($this->zonesConfigMasterFile);
@@ -28,7 +28,7 @@ class DnsManager extends Service
 
         foreach ($zones as $zone) {
             $zonesConfigPath = "{$this->zonesConfigFolder}/{$zone->name}.db";
-            $this->updateZoneRecordsConfig($zone, $zonesConfigPath);
+            $this->generateZoneRecordsConfig($zone, $zonesConfigPath);
 
             $zonesConfig->writeln("zone \"{$zone->name}\" in {");
             $zonesConfig->writeln("\ttype master;");
@@ -38,7 +38,7 @@ class DnsManager extends Service
         }
     }
 
-    public function updateZoneRecordsConfig(DnsZone $zone, string $zonesConfigPath)
+    public function generateZoneRecordsConfig(DnsZone $zone, string $zonesConfigPath)
     {
         $zoneConfig = new ConfigIo($zonesConfigPath);
         $zoneConfig->truncate();

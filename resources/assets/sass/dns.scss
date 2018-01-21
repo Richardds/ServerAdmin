@@ -5,6 +5,7 @@ table {
                 //
             }
             &.zone-refresh, &.zone-retry, &.zone-expire, &.zone-ttl {
+                @extend .numeric;
                 width: 120px;
             }
         }
@@ -58,37 +59,9 @@ table {
                 }
             }
             &.record-ttl {
+                @extend .numeric;
                 width: 120px;
             }
         }
-    }
-
-    tr.disabled {
-        color: lighten($text-color, 30%) !important;
-
-        span.lighter {
-            color: lighten($text-color, 40%);
-        }
-    }
-}
-
-span.lighter {
-    color: lighten($text-color, 20%);
-}
-
-.top-buffer {
-    margin-top: 15px;
-}
-
-.small-gaps {
-    padding-left: 7.5px;
-    padding-right: 7.5px;
-
-    &:first-child {
-        padding-left: 15px;
-    }
-
-    &:last-child {
-        padding-right: 15px;
     }
 }
