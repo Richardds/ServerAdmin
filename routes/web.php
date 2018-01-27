@@ -10,6 +10,9 @@ Route::post('logout', 'AuthenticationController@logout')->name('logout');
 // Dashboard
 Route::get('dashboard', 'DashboardController@showDashboard')->name('dashboard');
 
+// Database
+Route::get('database', 'DatabaseSchemaController@databases')->name('database');
+
 // DNS
 Route::group(['prefix' => 'dns'], function() {
     Route::get('zones', 'DnsZoneController@zones')->name('dns_zones');

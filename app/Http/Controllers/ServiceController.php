@@ -10,6 +10,7 @@ class ServiceController extends Controller
 {
     private $services = [
         'dns' => 'bind9',
+        'database' => 'mysql',
     ];
 
     /**

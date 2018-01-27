@@ -2,6 +2,7 @@
 
 namespace Richardds\ServerAdmin\Http;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 trait CrudAssistance
@@ -35,7 +36,7 @@ trait CrudAssistance
      * @param \Illuminate\Http\Request $request
      * @param array $attributes
      */
-    protected function updateModel($model, Request $request, array $attributes)
+    protected function updateModel(Model $model, Request $request, array $attributes)
     {
         foreach ($attributes as $attribute) {
             if ($request->has($attribute)) {

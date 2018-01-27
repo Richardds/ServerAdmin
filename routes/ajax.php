@@ -15,8 +15,9 @@ Route::group(['prefix' => 'service'], function() {
  * System
  */
 
-Route::group(['prefix' => 'system'], function() {
-    Route::get('users', 'SystemController@users');
+Route::group(['prefix' => 'data'], function() {
+    Route::get('system_users', 'DataController@systemUsers');
+    Route::get('database_available_collations', 'DataController@databaseAvailableCollations');
 });
 
 /**
@@ -38,5 +39,14 @@ Route::group(['prefix' => 'dns'], function() {
 Route::group(['prefix' => 'cron'], function() {
     Route::apiResource('tasks', 'CronController', [
         'only' => ['index', 'show', 'store', 'update', 'destroy']
+    ]);
+});
+
+/**
+ * Database
+ */
+Route::group(['prefix' => 'database'], function() {
+    Route::apiResource('schemas', 'DatabaseSchemaController', [
+        'only' => ['index', 'show', 'store', 'destroy']
     ]);
 });

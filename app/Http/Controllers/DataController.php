@@ -2,14 +2,15 @@
 
 namespace Richardds\ServerAdmin\Http\Controllers;
 
+use Richardds\ServerAdmin\Core\Database\DatabaseManager;
 use Richardds\ServerAdmin\Core\SystemUser;
 
-class SystemController extends Controller
+class DataController extends Controller
 {
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function users()
+    public function systemUsers()
     {
         $data = [];
         $list = SystemUser::list();
@@ -23,5 +24,14 @@ class SystemController extends Controller
         }
         
         return api_response()->success($data)->response();
+    }
+
+    /**
+     * @param DatabaseManager $manager
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function databaseAvailableCollations(DatabaseManager $manager)
+    {
+        return api_response()->success($manager->getAvailableCollations())->response();
     }
 }

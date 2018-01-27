@@ -15,3 +15,7 @@ Vue.component('sa-dns-record', require('./components/dns/DnsRecord.vue'));
 // Cron
 Vue.component('sa-cron-tasks', require('./components/cron/CronTasks'));
 Vue.component('sa-cron-task', require('./components/cron/CronTask'));
+
+// Database
+Vue.component('sa-database-schemas', require('./components/database/DatabaseSchemas'));
+Vue.component('sa-database-schema', require('./components/database/DatabaseSchema'));

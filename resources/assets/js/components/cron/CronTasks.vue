@@ -80,7 +80,7 @@
         },
         methods: {
             loadUsers() {
-                axios.get('/api/system/users').then(response => {
+                axios.get('/api/data/system_users').then(response => {
                     this.users = [];
                     for (let user of response.data.data) {
                         this.users.push(user);
