@@ -1,7 +1,7 @@
 <template>
     <tr :class="[task.enabled ? '' : 'disabled']">
         <template v-if="editMode">
-            <td class="cron-interval edit-mode" @click="$emit('editInterval', task.id)">
+            <td class="cron-interval edit-mode" @click="editTaskIntervalVisible = true">
                 {{ task.minute }} {{ task.hour }} {{ task.day }} {{ task.month }} {{ task.weekday }}
             </td>
             <td class="cron-user">
@@ -27,6 +27,44 @@
         </template>
 
         <td class="fit">
+
+            <sa-modal :visible="editTaskIntervalVisible"
+                      @close="editTaskIntervalVisible = false"
+                      title="Edit interval">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="editIntervalMinute" class="col-md-3 control-label">Minute</label>
+                        <div class="col-md-8">
+                            <input @input="onChange" type="text" class="form-control" id="editIntervalMinute" v-model="task.minute" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editIntervalHour" class="col-md-3 control-label">Hour</label>
+                        <div class="col-md-8">
+                            <input @input="onChange" type="text" class="form-control" id="editIntervalHour" v-model="task.hour" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editIntervalDay" class="col-md-3 control-label">Day</label>
+                        <div class="col-md-8">
+                            <input @input="onChange" type="text" class="form-control" id="editIntervalDay" v-model="task.day" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editIntervalMonth" class="col-md-3 control-label">Month</label>
+                        <div class="col-md-8">
+                            <input @input="onChange" type="text" class="form-control" id="editIntervalMonth" v-model="task.month" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editIntervalWeekday" class="col-md-3 control-label">Weekday</label>
+                        <div class="col-md-8">
+                            <input @input="onChange" type="text" class="form-control" id="editIntervalWeekday" v-model="task.weekday" />
+                        </div>
+                    </div>
+                </div>
+            </sa-modal>
+
             <sa-button @click.native="editTask"
                        :type="editButtonType"
                        :icon="editButtonIcon"
@@ -50,7 +88,7 @@
         props: ['task', 'users'],
         data() {
             return {
-                editTaskInterval: false,
+                editTaskIntervalVisible: false,
                 //
                 editMode: false,
                 updating: false,

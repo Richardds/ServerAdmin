@@ -22,8 +22,26 @@ class DataController extends Controller
                 'name' => $user->getName()
             ];
         }
-        
+
         return api_response()->success($data)->response();
+    }
+
+    /**
+     * @param DatabaseManager $manager
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function databaseUsers(DatabaseManager $manager)
+    {
+        return api_response()->success($manager->getAvailableUsers())->response();
+    }
+
+    /**
+     * @param DatabaseManager $manager
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function databaseAvailableCharacterSets(DatabaseManager $manager)
+    {
+        return api_response()->success($manager->getAvailableCharacterSets())->response();
     }
 
     /**

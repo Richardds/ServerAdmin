@@ -84,6 +84,14 @@ class DatabaseManager extends Service
         return Collection::make(DB::select('SHOW COLLATION'))->pluck('Collation')->toArray();
     }
 
+    /**
+     * @return string[]
+     */
+    public function getAvailableUsers(): array
+    {
+        return Collection::make(DB::select('SELECT CONCAT(user, \'@\', host) AS user FROM mysql.user'))->pluck('user')->toArray();
+    }
+
     public function getUsers()
     {
 

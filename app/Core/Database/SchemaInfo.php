@@ -169,6 +169,7 @@ class SchemaInfo implements Arrayable
      * Get the instance as an array.
      *
      * @return array
+     * @throws \Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException
      */
     public function toArray(): array
     {

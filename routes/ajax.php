@@ -17,7 +17,10 @@ Route::group(['prefix' => 'service'], function() {
 
 Route::group(['prefix' => 'data'], function() {
     Route::get('system_users', 'DataController@systemUsers');
+
+    Route::get('database_available_character_sets', 'DataController@databaseAvailableCharacterSets');
     Route::get('database_available_collations', 'DataController@databaseAvailableCollations');
+    Route::get('database_users', 'DataController@databaseUsers');
 });
 
 /**

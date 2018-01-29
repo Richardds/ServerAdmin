@@ -143,6 +143,7 @@ SQL;
      * Get the instance as an array.
      *
      * @return array
+     * @throws InvalidParameterException
      */
     public function toArray(): array
     {
@@ -152,15 +153,16 @@ SQL;
 
         $permissions = [];
 
-        foreach ($this->permissions as $user => $userPermissions) {
-            $parts = explode('@', $user);
+        foreach ($this->permissions as $userFull => $userPermissions) {
+            $parts = explode('@', $userFull);
             $user = $parts[0];
             $host = $parts[1];
 
             $permissions[] = [
                 'user' => $user,
                 'host' => $host,
-                'permissions' => $userPermissions
+                'required' => $this->hasRequiredPermissions($userFull),
+                'permissions' => $userPermissions,
             ];
         }
 

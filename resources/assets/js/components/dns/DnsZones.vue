@@ -7,16 +7,16 @@
                 <div class="form-group">
                     <label for="addZoneName" class="col-md-3 control-label">Name</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="addZoneName" v-model="addZone.name" />
+                        <input type="text" class="form-control" id="addZoneName" v-model="zone.name" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="addZoneAdmin" class="col-md-3 control-label">Admin</label>
                     <div class="col-md-8">
                         <div class="input-group">
-                            <input type="text" class="form-control" id="addZoneAdmin" v-model="addZone.admin" />
+                            <input type="text" class="form-control" id="addZoneAdmin" v-model="zone.admin" />
                             <span class="input-group-btn">
-                                <sa-button @click.native="addZone.admin = generateAdmin()" icon="arrow-left" />
+                                <sa-button @click.native="zone.admin = generateAdmin()" icon="arrow-left" />
                             </span>
                         </div>
                     </div>
@@ -25,9 +25,9 @@
                     <label for="addZoneSerial" class="col-md-3 control-label">Serial</label>
                     <div class="col-md-8">
                         <div class="input-group">
-                        <input type="number" class="form-control" id="addZoneSerial" v-model="addZone.serial" />
+                        <input type="number" class="form-control" id="addZoneSerial" v-model="zone.serial" />
                         <span class="input-group-btn">
-                            <sa-button @click.native="addZone.serial = generateSerial()" icon="arrow-left" />
+                            <sa-button @click.native="zone.serial = generateSerial()" icon="arrow-left" />
                         </span>
                         </div>
                     </div>
@@ -35,25 +35,25 @@
                 <div class="form-group">
                     <label for="addZoneRefresh" class="col-md-3 control-label">Refresh</label>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" id="addZoneRefresh" v-model="addZone.refresh" />
+                        <input type="number" class="form-control" id="addZoneRefresh" v-model="zone.refresh" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="addZoneRetry" class="col-md-3 control-label">Retry</label>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" id="addZoneRetry" v-model="addZone.retry" />
+                        <input type="number" class="form-control" id="addZoneRetry" v-model="zone.retry" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="addZoneExpire" class="col-md-3 control-label">Expire</label>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" id="addZoneExpire" v-model="addZone.expire" />
+                        <input type="number" class="form-control" id="addZoneExpire" v-model="zone.expire" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="addZoneTTL" class="col-md-3 control-label">TTL</label>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" id="addZoneTTL" v-model="addZone.ttl" />
+                        <input type="number" class="form-control" id="addZoneTTL" v-model="zone.ttl" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -66,6 +66,7 @@
                 </div>
             </div>
         </sa-modal>
+
         <table class="table table-striped table-controls table-dns-zones">
             <thead>
             <tr>
@@ -104,7 +105,7 @@
             return {
                 zones: [],
                 addZoneModalVisible: false,
-                addZone: {
+                zone: {
                     name: '',
                     admin: '',
                     serial: 0,
@@ -137,7 +138,7 @@
             },
             add() {
                 this.adding = true;
-                axios.post('/api/dns/zones', this.addZone).then(response => {
+                axios.post('/api/dns/zones', this.zone).then(response => {
                     this.reset();
                     this.load();
                     this.adding = false;
@@ -147,17 +148,17 @@
                 });
             },
             reset() {
-                this.addZone.name = '';
-                this.addZone.admin = '';
-                this.addZone.serial = this.generateSerial();
-                this.addZone.refresh = 43200;
-                this.addZone.retry = 3600;
-                this.addZone.expire = 1209600;
-                this.addZone.ttl = 1209600;
+                this.zone.name = '';
+                this.zone.admin = '';
+                this.zone.serial = this.generateSerial();
+                this.zone.refresh = 43200;
+                this.zone.retry = 3600;
+                this.zone.expire = 1209600;
+                this.zone.ttl = 1209600;
                 this.adminChanged = false;
             },
             generateAdmin() {
-                return this.addZone.name ? 'admin.' + this.addZone.name : '';
+                return this.zone.name ? 'admin.' + this.zone.name : '';
             },
             generateSerial(i) {
                 let date = new Date();

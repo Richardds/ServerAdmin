@@ -7,7 +7,20 @@
         <td class="schema-size" :title="schema.size">{{ schemaSizeText }}</td>
 
         <td class="fit">
-            <sa-button @click.native="editPermissions"
+
+            <sa-modal :visible="editUsers"
+                      @close="editUsers = false"
+                      title="Edit users">
+                <div class="form-horizontal">
+                    <ul>
+                        <li v-for="access in schema.access">
+                            {{ access.user }}@{{ access.host }}
+                        </li>
+                    </ul>
+                </div>
+            </sa-modal>
+
+            <sa-button @click.native="editUsers = true"
                        type="default"
                        icon="users"
                        size="sm"
@@ -30,7 +43,9 @@
                 updating: false,
                 toggling: false,
                 deleting: false,
-                changed: false
+                changed: false,
+                //
+                editUsers: false
             };
         },
         methods: {

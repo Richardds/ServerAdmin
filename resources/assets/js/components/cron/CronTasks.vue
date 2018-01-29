@@ -1,37 +1,65 @@
 <template>
     <div>
-        <sa-modal :visible="editTaskIntervalVisible"
-                  @close="closeIntervalEditor"
-                  title="Edit interval">
+        <sa-modal :visible="addTask"
+                  @close="addTask = false"
+                  title="Add task">
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="editIntervalMinute" class="col-md-3 control-label">Minute</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="editIntervalMinute" v-model="editTaskInterval.minute" />
+                        <input type="text" class="form-control" id="editIntervalMinute" v-model="task.minute" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="editIntervalHour" class="col-md-3 control-label">Hour</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="editIntervalHour" v-model="editTaskInterval.hour" />
+                        <input type="text" class="form-control" id="editIntervalHour" v-model="task.hour" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="editIntervalDay" class="col-md-3 control-label">Day</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="editIntervalDay" v-model="editTaskInterval.day" />
+                        <input type="text" class="form-control" id="editIntervalDay" v-model="task.day" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="editIntervalMonth" class="col-md-3 control-label">Month</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="editIntervalMonth" v-model="editTaskInterval.month" />
+                        <input type="text" class="form-control" id="editIntervalMonth" v-model="task.month" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="editIntervalWeekday" class="col-md-3 control-label">Weekday</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="editIntervalWeekday" v-model="editTaskInterval.weekday" />
+                        <input type="text" class="form-control" id="editIntervalWeekday" v-model="task.weekday" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="taskUser" class="col-md-3 control-label">User</label>
+                    <div class="col-md-8">
+                        <select id="taskUser" class="form-control" v-model="task.uid">
+                            <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="taskUser" class="col-md-3 control-label">Command</label>
+                    <div class="col-md-8">
+                        <input class="form-control" type="text" v-model="task.command" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="taskUser" class="col-md-3 control-label">Description</label>
+                    <div class="col-md-8">
+                        <textarea rows="2" class="form-control" v-model="task.description"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-8">
+                        <sa-button @click.native="add"
+                                   type="default"
+                                   icon="plus"
+                                   :loading="adding">Add</sa-button>
                     </div>
                 </div>
             </div>
@@ -51,9 +79,18 @@
                           :key="task.id"
                           :task="task"
                           :users="users"
-                          @editInterval="openIntervalEditor"
                           @destroy="destroy(task.id)" />
             </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="7" class="text-right">
+                    <sa-button @click.native="addTask = true"
+                               type="default"
+                               icon="plus"
+                               size="sm" />
+                </td>
+            </tr>
+            </tfoot>
         </table>
     </div>
 </template>
@@ -65,13 +102,18 @@
                 tasks: [],
                 users: [],
                 //
-                editTaskIntervalIndex: -1,
-                editTaskInterval: {
-                    minute: 0,
-                    hour: 0,
-                    day: 0,
-                    month: 0,
-                    weekday: 0,
+                addTask: false,
+                adding: false,
+                //
+                task: {
+                    minute: '*',
+                    hour: '*',
+                    day: '*',
+                    month: '*',
+                    weekday: '*',
+                    uid: -1,
+                    command: '',
+                    description: '',
                 }
             };
         },
@@ -103,37 +145,15 @@
             destroy(id) {
                 this.tasks = _.remove(this.tasks, task => task.id !== id);
             },
-
-            // Interval editor
-            openIntervalEditor(id) {
-                this.editTaskIntervalIndex = _.findIndex(this.tasks, {'id': id});
-
-                let task = this.tasks[this.editTaskIntervalIndex];
-                this.editTaskInterval.minute = task.minute;
-                this.editTaskInterval.hour = task.hour;
-                this.editTaskInterval.day = task.day;
-                this.editTaskInterval.month = task.month;
-                this.editTaskInterval.weekday = task.weekday;
-            },
-            closeIntervalEditor() {
-                let task = this.tasks[this.editTaskIntervalIndex];
-                task.minute = this.editTaskInterval.minute;
-                task.hour = this.editTaskInterval.hour;
-                task.day = this.editTaskInterval.day;
-                task.month = this.editTaskInterval.month;
-                task.weekday = this.editTaskInterval.weekday;
-
-                this.editTaskIntervalIndex = -1;
-                this.editTaskInterval.minute = 0;
-                this.editTaskInterval.hour = 0;
-                this.editTaskInterval.day = 0;
-                this.editTaskInterval.month = 0;
-                this.editTaskInterval.weekday = 0;
-            }
-        },
-        computed: {
-            editTaskIntervalVisible() {
-                return -1 !== this.editTaskIntervalIndex;
+            add() {
+                this.adding = true;
+                axios.post('/api/cron/tasks', this.task).then(response => {
+                    this.load();
+                    this.adding = false;
+                }).catch(error => {
+                    this.adding = false;
+                    console.error(error);
+                });
             }
         }
     }
