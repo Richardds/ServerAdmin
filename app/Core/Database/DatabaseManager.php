@@ -8,13 +8,6 @@ use Richardds\ServerAdmin\Core\Service;
 
 class DatabaseManager extends Service
 {
-    private $protected_tables = [
-        'information_schema',
-        'performance_schema',
-        'mysql',
-        'serveradmin',
-    ];
-
     /**
      * DatabaseManager constructor.
      */
@@ -68,30 +61,11 @@ class DatabaseManager extends Service
 
     /**
      * @param string $name
-     * @return DatabaseInfo
+     * @return SchemaInfo
      */
-    public function getDatabaseInfo(string $name): DatabaseInfo
+    public function getDatabaseInfo(string $name): SchemaInfo
     {
-        $detailsResult = DB::selectOne('SELECT * FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = :database', [
-            'database' => $name
-        ]);
-
-        $countResult = DB::selectOne('SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = :database', [
-            'database' => $name
-        ]);
-
-        $sizeResult = DB::selectOne('SELECT ROUND(SUM(data_length + index_length), 0) AS size FROM information_schema.tables WHERE table_schema = :database GROUP BY table_schema', [
-            'database' => $name
-        ]);
-
-        return new DatabaseInfo(
-            $detailsResult->SCHEMA_NAME,
-            $detailsResult->DEFAULT_CHARACTER_SET_NAME,
-            $detailsResult->DEFAULT_COLLATION_NAME,
-            $countResult->count,
-            $sizeResult->size ?? 0,
-            in_array($detailsResult->SCHEMA_NAME, $this->protected_tables)
-        );
+        return SchemaInfo::load($name);
     }
 
     /**

@@ -12,7 +12,7 @@ Route::group(['prefix' => 'service'], function() {
 });
 
 /**
- * System
+ * Data (Enums, etc...)
  */
 
 Route::group(['prefix' => 'data'], function() {
@@ -46,6 +46,7 @@ Route::group(['prefix' => 'cron'], function() {
  * Database
  */
 Route::group(['prefix' => 'database'], function() {
+    Route::get('users', 'DatabaseSchemaController@users');
     Route::apiResource('schemas', 'DatabaseSchemaController', [
         'only' => ['index', 'show', 'store', 'destroy']
     ]);
