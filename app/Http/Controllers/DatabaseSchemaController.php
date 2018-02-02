@@ -32,13 +32,41 @@ class DatabaseSchemaController extends Controller
         return view('sections.database.schemas');
     }
 
-    public function users()
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function grantPermissions(Request $request)
     {
+        $this->validate($request, [
+            'name' => 'required|min:1|max:255',
+            'user' => 'required|min:1|max:255',
+        ]);
 
+        $this->manager->grantPermissions($request->get('name'), $request->get('user'));
+
+        return api_response()->success()->response();
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function revokePermissions(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|min:1|max:255',
+            'user' => 'required|min:1|max:255',
+        ]);
+
+        $this->manager->revokePermissions($request->get('name'), $request->get('user'));
+
+        return api_response()->success()->response();
     }
 
     /**
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException
      */
     public function index()
     {
@@ -77,10 +105,11 @@ class DatabaseSchemaController extends Controller
     /**
      * @param string $database
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException
      */
     public function show(string $database)
     {
-        return api_response()->success($this->manager->getDatabaseInfo($database))->response();
+        return api_response()->success($this->manager->getFullDatabaseInfo($database)->toArray())->response();
     }
 
     /**

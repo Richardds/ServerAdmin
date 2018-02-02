@@ -159,41 +159,43 @@
                 availableRecordTypes: ['A', 'AAAA', 'CNAME', 'MX', 'SRV', 'TXT', 'NS'],
                 addRecordModalVisible: false,
                 addRecord: {
-                    zone_id: 0,
+                    zone_id: -1,
                     type: '',
                     name: '',
                     attrs: {},
-                    ttl: 0
+                    ttl: -1
                 },
                 adding: false
             };
         },
         mounted() {
             this.reset();
-            this.load();
+            axios.get('/api/dns/records?zone=' + this.zone).then(response => {
+                this.records = [];
+                for (let record of response.data.data) {
+                    this.records.push(record);
+                }
+            }).catch(error => {
+                console.error(error);
+            });
         },
         methods: {
-            load() {
-                axios.get('/api/dns/records?zone=' + this.zone).then(response => {
-                    this.records = [];
-                    for (let record of response.data.data) {
-                        this.records.push(record);
-                    }
-                }).catch(error => {
-                    console.error(error);
-                });
-            },
             destroy(id) {
                 this.records = _.remove(this.records, record => record.id !== id);
             },
             add() {
                 this.adding = true;
-                axios.post('/api/dns/records', this.addRecord).then(response => {
+                axios.all([
+                    axios.post('/api/dns/records', this.addRecord),
+                    axios.get('/api/dns/records')
+                ]).then(axios.spread(function (created_record, records) {
+                    self.record = [];
+                    for (let record of records.data.data) {
+                        self.records.push(record);
+                    }
                     this.reset();
-                    this.load();
                     this.adding = false;
-                }).catch(error => {
-                    this.adding = false;
+                })).catch(error => {
                     console.error(error);
                 });
             },

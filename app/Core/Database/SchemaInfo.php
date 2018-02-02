@@ -51,12 +51,13 @@ class SchemaInfo implements Arrayable
 
     /**
      * @param string $name
+     * @param bool $fetchAll
      * @return SchemaInfo
      */
-    public static function load(string $name): SchemaInfo
+    public static function load(string $name, bool $fetchAll = false): SchemaInfo
     {
         $schemaInfo = new SchemaInfo($name);
-        $schemaInfo->reload();
+        $schemaInfo->reload($fetchAll);
 
         return $schemaInfo;
     }
@@ -71,8 +72,10 @@ class SchemaInfo implements Arrayable
 
     /**
      * Fetch latest schema info.
+     *
+     * @param bool $fetchAll
      */
-    public function reload(): void
+    public function reload(bool $fetchAll = false): void
     {
         $detailsResult = DB::selectOne('SELECT * FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = :database', [
             'database' => $this->name
@@ -94,10 +97,12 @@ class SchemaInfo implements Arrayable
         $this->size = $sizeResult->size ?? 0;
         $this->protected = in_array($detailsResult->SCHEMA_NAME, self::$protected_tables);
 
-        if (isset($this->permissions)) {
-            $this->permissions->reload();
-        } else {
-            $this->permissions = SchemaPermissions::load($this->name);
+        if ($fetchAll) {
+            if (isset($this->permissions)) {
+                $this->permissions->reload();
+            } else {
+                $this->permissions = SchemaPermissions::load($this->name);
+            }
         }
     }
 
@@ -173,14 +178,19 @@ class SchemaInfo implements Arrayable
      */
     public function toArray(): array
     {
-        return [
+        $data = [
             'name' => $this->name,
             'character_set' => $this->character_set,
             'collation' => $this->collation,
             'tables_count' => $this->tables_count,
             'size' => $this->size,
             'protected' => $this->protected,
-            'access' => $this->permissions->toArray(),
         ];
+
+        if (isset($this->permissions)) {
+            $data['access'] = $this->permissions->toArray();
+        }
+
+        return $data;
     }
 }

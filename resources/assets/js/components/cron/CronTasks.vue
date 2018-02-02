@@ -118,40 +118,41 @@
             };
         },
         mounted() {
-            this.loadUsers();
+            let self = this;
+            axios.all([
+                axios.get('/api/data/system_users'),
+                axios.get('/api/cron/tasks')
+            ]).then(axios.spread(function (system_users, tasks) {
+                self.users = [];
+                for (let user of system_users.data.data) {
+                    self.users.push(user);
+                }
+
+                self.tasks = [];
+                for (let task of tasks.data.data) {
+                    self.tasks.push(task);
+                }
+            })).catch(error => {
+                console.error(error);
+            });
         },
         methods: {
-            loadUsers() {
-                axios.get('/api/data/system_users').then(response => {
-                    this.users = [];
-                    for (let user of response.data.data) {
-                        this.users.push(user);
-                    }
-                    this.load();
-                }).catch(error => {
-                    console.error(error);
-                });
-            },
-            load() {
-                axios.get('/api/cron/tasks').then(response => {
-                    this.tasks = [];
-                    for (let task of response.data.data) {
-                        this.tasks.push(task);
-                    }
-                }).catch(error => {
-                    console.error(error);
-                });
-            },
             destroy(id) {
                 this.tasks = _.remove(this.tasks, task => task.id !== id);
             },
             add() {
+                let self = this;
                 this.adding = true;
-                axios.post('/api/cron/tasks', this.task).then(response => {
-                    this.load();
+                axios.all([
+                    axios.post('/api/cron/tasks', this.task),
+                    axios.get('/api/cron/tasks')
+                ]).then(axios.spread(function (created_task, tasks) {
+                    self.tasks = [];
+                    for (let task of tasks.data.data) {
+                        self.tasks.push(task);
+                    }
                     this.adding = false;
-                }).catch(error => {
-                    this.adding = false;
+                })).catch(error => {
                     console.error(error);
                 });
             }

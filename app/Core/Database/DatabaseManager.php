@@ -24,16 +24,16 @@ class DatabaseManager extends Service
     public function createDatabase(string $name, ?string $character_set = null, ?string $collation = null): void
     {
         if (is_null($character_set) && is_null($character_set)) {
-            DB::statement('CREATE DATABASE :database', [
+            DB::statement('CREATE DATABASE :database;', [
                 'database' => $name
             ]);
         } else if (!is_null($character_set) && is_null($character_set)) {
-            DB::statement('CREATE DATABASE :database CHARACTER SET :charset', [
+            DB::statement('CREATE DATABASE :database CHARACTER SET :charset;', [
                 'database' => $name,
                 'charset' => $character_set,
             ]);
         } else {
-            DB::statement('CREATE DATABASE :database CHARACTER SET :charset COLLATE :collation', [
+            DB::statement('CREATE DATABASE :database CHARACTER SET :charset COLLATE :collation;', [
                 'database' => $name,
                 'charset' => $character_set,
                 'collation' => $collation,
@@ -46,9 +46,35 @@ class DatabaseManager extends Service
      */
     public function dropDatabase(string $name): void
     {
-        DB::statement('DROP DATABASE :database', [
+        DB::statement('DROP DATABASE :database;', [
             'database' => $name
         ]);
+    }
+
+    /**
+     * @param string $name
+     * @param string $user
+     */
+    public function grantPermissions(string $name, string $user)
+    {
+        $escapedUser = '\''.str_replace('@', '\'@\'', $user) . '\'';
+        DB::statement('GRANT ALL ON ? TO ?', [$name, $escapedUser]);
+        $this->reloadPrivileges();
+    }
+
+    public function revokePermissions(string $name, string $user)
+    {
+        $escapedUser = '\''.str_replace('@', '\'@\'', $user) . '\'';
+        DB::statement('REVOKE ALL ON ? TO ?', [$name, $escapedUser]);
+        $this->reloadPrivileges();
+    }
+
+    /**
+     * Reload database privileges.
+     */
+    public function reloadPrivileges(): void
+    {
+        DB::statement('FLUSH PRIVILEGES;');
     }
 
     /**
@@ -56,7 +82,7 @@ class DatabaseManager extends Service
      */
     public function getDatabases(): array
     {
-        return Collection::make(DB::select('SHOW DATABASES'))->pluck('Database')->toArray();
+        return Collection::make(DB::select('SHOW DATABASES;'))->pluck('Database')->toArray();
     }
 
     /**
@@ -69,11 +95,20 @@ class DatabaseManager extends Service
     }
 
     /**
+     * @param string $name
+     * @return SchemaInfo
+     */
+    public function getFullDatabaseInfo(string $name): SchemaInfo
+    {
+        return SchemaInfo::load($name, true);
+    }
+
+    /**
      * @return string[]
      */
     public function getAvailableCharacterSets(): array
     {
-        return Collection::make(DB::select('SHOW CHARACTER SET'))->pluck('Charset')->toArray();
+        return Collection::make(DB::select('SHOW CHARACTER SET;'))->pluck('Charset')->toArray();
     }
 
     /**
@@ -81,7 +116,7 @@ class DatabaseManager extends Service
      */
     public function getAvailableCollations(): array
     {
-        return Collection::make(DB::select('SHOW COLLATION'))->pluck('Collation')->toArray();
+        return Collection::make(DB::select('SHOW COLLATION;'))->pluck('Collation')->toArray();
     }
 
     /**
@@ -89,11 +124,6 @@ class DatabaseManager extends Service
      */
     public function getAvailableUsers(): array
     {
-        return Collection::make(DB::select('SELECT CONCAT(user, \'@\', host) AS user FROM mysql.user'))->pluck('user')->toArray();
-    }
-
-    public function getUsers()
-    {
-
+        return Collection::make(DB::select('SELECT CONCAT(user, \'@\', host) AS user FROM mysql.user;'))->pluck('user')->toArray();
     }
 }

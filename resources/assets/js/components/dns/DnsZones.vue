@@ -120,30 +120,32 @@
         },
         mounted() {
             this.reset();
-            this.load();
+            axios.get('/api/dns/zones').then(response => {
+                this.zones = [];
+                for (let zone of response.data.data) {
+                    this.zones.push(zone);
+                }
+            }).catch(error => {
+                console.error(error);
+            });
         },
         methods: {
-            load() {
-                axios.get('/api/dns/zones').then(response => {
-                    this.zones = [];
-                    for (let zone of response.data.data) {
-                        this.zones.push(zone);
-                    }
-                }).catch(error => {
-                    console.error(error);
-                });
-            },
             destroy(id) {
                 this.zones = _.remove(this.zones, zone => zone.id !== id);
             },
             add() {
                 this.adding = true;
-                axios.post('/api/dns/zones', this.zone).then(response => {
+                axios.all([
+                    axios.post('/api/dns/zones', this.zone),
+                    axios.get('/api/dns/zones')
+                ]).then(axios.spread(function (created_zone, zones) {
+                    self.zones = [];
+                    for (let zone of zones.data.data) {
+                        self.zones.push(zone);
+                    }
                     this.reset();
-                    this.load();
                     this.adding = false;
-                }).catch(error => {
-                    this.adding = false;
+                })).catch(error => {
                     console.error(error);
                 });
             },

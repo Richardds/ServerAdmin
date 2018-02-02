@@ -7,19 +7,11 @@
         <td class="schema-size" :title="schema.size">{{ schemaSizeText }}</td>
 
         <td class="fit">
-
             <sa-modal :visible="editUsers"
                       @close="editUsers = false"
-                      title="Edit users">
-                <div class="form-horizontal">
-                    <ul>
-                        <li v-for="access in schema.access">
-                            {{ access.user }}@{{ access.host }}
-                        </li>
-                    </ul>
-                </div>
+                      title="Schema privileges">
+                <sa-database-schema-users :schema="schema.name" :users="users" />
             </sa-modal>
-
             <sa-button @click.native="editUsers = true"
                        type="default"
                        icon="users"
@@ -37,7 +29,7 @@
 
 <script>
     export default {
-        props: ['schema'],
+        props: ['schema', 'users'],
         data() {
             return {
                 updating: false,
@@ -56,9 +48,6 @@
                 _.forOwn(this.schema, (value, key) => {
                     this.schema[key] = schema[key];
                 });
-            },
-            editPermissions() {
-                // Permissions modal
             },
             deleteSchema() {
                 this.deleting = true;

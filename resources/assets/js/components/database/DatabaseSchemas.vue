@@ -54,6 +54,7 @@
             <sa-database-schema v-for="schema in this.schemas"
                          :key="schema.name"
                          :schema="schema"
+                         :users="users"
                          @destroy="destroy(schema.name)" />
             </tbody>
             <tfoot>
@@ -75,8 +76,9 @@
         data() {
             return {
                 schemas: [],
+                character_sets: [],
+                collations: [],
                 users: [],
-                data: [],
                 //
                 addSchema: false,
                 adding: false,
@@ -89,59 +91,50 @@
             };
         },
         mounted() {
-            this.loadScreenData([
-                'database_available_character_sets',
-                'database_available_collations',
-                'database_users',
-            ], (name) => {
-                console.log(name);
+            let self = this;
+            axios.all([
+                axios.get('/api/data/database_available_character_sets'),
+                axios.get('/api/data/database_available_collations'),
+                axios.get('/api/data/database_users'),
+                axios.get('/api/database/schemas')
+            ]).then(axios.spread(function (character_sets, collations, users, schemas) {
+                self.character_sets = [];
+                for (let character_set of character_sets.data.data) {
+                    self.character_sets.push(character_set);
+                }
+                self.collations = [];
+                for (let collation of collations.data.data) {
+                    self.collations.push(collation);
+                }
+                self.users = [];
+                for (let user of users.data.data) {
+                    self.users.push(user);
+                }
+                self.schemas = [];
+                for (let schema of schemas.data.data) {
+                    self.schemas.push(schema);
+                }
+            })).catch(error => {
+                console.error(error);
             });
-
-            this.loadUsers();
         },
         methods: {
-            loadScreenData(names, after) {
-                for (let name of names) {
-                    axios.get('/api/data/' + name).then(response => {
-                        this.data[name] = response.data.data;
-                        after(name);
-                    }).catch(error => {
-                        console.error(error);
-                    });
-                }
-            },
-
-            loadUsers() {
-                axios.get('/api/data/database_users').then(response => {
-                    this.users = [];
-                    for (let user of response.data.data) {
-                        this.users.push(user);
-                    }
-                    this.load();
-                }).catch(error => {
-                    console.error(error);
-                });
-            },
-            load() {
-                axios.get('/api/database/schemas').then(response => {
-                    this.schemas = [];
-                    for (let schema of response.data.data) {
-                        this.schemas.push(schema);
-                    }
-                }).catch(error => {
-                    console.error(error);
-                });
-            },
             destroy(name) {
                 this.schemas = _.remove(this.schemas, schema => schema.name !== name);
             },
             add() {
                 this.adding = true;
-                axios.post('/api/database/schemas', this.schema).then(response => {
-                    this.load();
+
+                axios.all([
+                    axios.post('/api/database/schemas', this.schema),
+                    axios.get('/api/database/schemas')
+                ]).then(axios.spread(function (created_schema, schemas) {
+                    self.schemas = [];
+                    for (let schema of schemas.data.data) {
+                        self.schemas.push(schema);
+                    }
                     this.adding = false;
-                }).catch(error => {
-                    this.adding = false;
+                })).catch(error => {
                     console.error(error);
                 });
             }
