@@ -20,3 +20,5 @@ Vue.component('sa-cron-task', require('./components/cron/CronTask'));
 Vue.component('sa-database-schemas', require('./components/database/DatabaseSchemas'));
 Vue.component('sa-database-schema', require('./components/database/DatabaseSchema'));
 Vue.component('sa-database-schema-users', require('./components/database/DatabaseSchemaUsers'));
+Vue.component('sa-database-users', require('./components/database/DatabaseUsers'));
+Vue.component('sa-database-user', require('./components/database/DatabaseUser'));

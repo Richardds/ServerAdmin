@@ -55,4 +55,7 @@ Route::group(['prefix' => 'database'], function() {
     Route::apiResource('schemas', 'DatabaseSchemaController', [
         'only' => ['index', 'show', 'store', 'destroy']
     ]);
+    Route::apiResource('users', 'DatabaseUserController', [
+        'only' => ['index', 'store', 'destroy']
+    ]);
 });

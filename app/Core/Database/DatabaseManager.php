@@ -24,16 +24,16 @@ class DatabaseManager extends Service
     public function createDatabase(string $name, ?string $character_set = null, ?string $collation = null): void
     {
         if (is_null($character_set) && is_null($character_set)) {
-            DB::statement('CREATE DATABASE :database;', [
+            DB::statement('CREATE DATABASE \':database\';', [
                 'database' => $name
             ]);
         } else if (!is_null($character_set) && is_null($character_set)) {
-            DB::statement('CREATE DATABASE :database CHARACTER SET :charset;', [
+            DB::statement('CREATE DATABASE \':database\' CHARACTER SET \':charset\';', [
                 'database' => $name,
                 'charset' => $character_set,
             ]);
         } else {
-            DB::statement('CREATE DATABASE :database CHARACTER SET :charset COLLATE :collation;', [
+            DB::statement('CREATE DATABASE \':database\' CHARACTER SET \':charset\' COLLATE \':collation\';', [
                 'database' => $name,
                 'charset' => $character_set,
                 'collation' => $collation,
@@ -46,26 +46,44 @@ class DatabaseManager extends Service
      */
     public function dropDatabase(string $name): void
     {
-        DB::statement('DROP DATABASE :database;', [
+        DB::statement('DROP DATABASE \':database\';', [
             'database' => $name
         ]);
     }
 
     /**
-     * @param string $name
-     * @param string $user
+     * @param DatabaseUser $user
      */
-    public function grantPermissions(string $name, string $user)
+    public function createUser(DatabaseUser $user): void
     {
-        $escapedUser = '\''.str_replace('@', '\'@\'', $user) . '\'';
-        DB::statement('GRANT ALL ON ? TO ?', [$name, $escapedUser]);
+        DB::statement('CREATE USER ? IDENTIFIED BY \'?\';', [$user->toSql(), $user->getPassword()]);
+    }
+
+    /**
+     * @param DatabaseUser $user
+     */
+    public function dropUser(DatabaseUser $user): void
+    {
+        DB::statement('DROP USER ?;', [$user->toSql()]);
+    }
+
+    /**
+     * @param string $name
+     * @param DatabaseUser $user
+     */
+    public function grantPermissions(string $name, DatabaseUser $user): void
+    {
+        DB::statement('GRANT ALL ON \'?\' TO ?;', [$name . '.*', $user->toSql()]);
         $this->reloadPrivileges();
     }
 
-    public function revokePermissions(string $name, string $user)
+    /**
+     * @param string $name
+     * @param DatabaseUser $user
+     */
+    public function revokePermissions(string $name, DatabaseUser $user): void
     {
-        $escapedUser = '\''.str_replace('@', '\'@\'', $user) . '\'';
-        DB::statement('REVOKE ALL ON ? TO ?', [$name, $escapedUser]);
+        DB::statement('REVOKE ALL ON \'?\' FROM ?;', [$name . '.*', $user->toSql()]);
         $this->reloadPrivileges();
     }
 
@@ -124,6 +142,16 @@ class DatabaseManager extends Service
      */
     public function getAvailableUsers(): array
     {
-        return Collection::make(DB::select('SELECT CONCAT(user, \'@\', host) AS user FROM mysql.user;'))->pluck('user')->toArray();
+        $users = [];
+        $result = DB::select('SELECT `user`, `host` FROM `mysql`.`user`;');
+
+        foreach ($result as $user) {
+            $users[] = [
+                'user' => $user->user,
+                'host' => $user->host,
+            ];
+        }
+
+        return $users;
     }
 }

@@ -16,7 +16,7 @@
             <tr>
                 <td>
                     <select class="form-control" id="schemaCollation" v-model="selectedUser">
-                        <option v-for="user in users">{{ user }}</option>
+                        <option v-for="user in users">{{ user.user }}@{{ user.host }}</option>
                     </select>
                 </td>
                 <td class="fit">
@@ -67,7 +67,6 @@
                 });
             },
             revokePermissions(user) {
-                this.grantedUsers = _.remove(this.grantedUsers, grantedUser => grantedUser.name !== user.user);
                 this.revoking = true;
                 axios.patch('/api/database/revoke', {
                     name: this.schema,

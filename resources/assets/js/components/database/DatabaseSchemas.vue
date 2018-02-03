@@ -39,6 +39,12 @@
             </div>
         </sa-modal>
 
+        <sa-modal :visible="editUsers"
+                  @close="editUsers = false"
+                  title="Users">
+            <sa-database-users :users="users" @updateUsers="updateUsers" />
+        </sa-modal>
+
         <table class="table table-striped table-controls table-database-schemas">
             <thead>
             <tr>
@@ -60,6 +66,10 @@
             <tfoot>
             <tr>
                 <td colspan="7" class="text-right">
+                    <sa-button @click.native="editUsers = true"
+                               type="default"
+                               icon="users"
+                               size="sm" />
                     <sa-button @click.native="addSchema = true"
                                type="default"
                                icon="plus"
@@ -82,6 +92,7 @@
                 //
                 addSchema: false,
                 adding: false,
+                editUsers: false,
                 //
                 schema: {
                     name: '',
@@ -119,9 +130,6 @@
             });
         },
         methods: {
-            destroy(name) {
-                this.schemas = _.remove(this.schemas, schema => schema.name !== name);
-            },
             add() {
                 this.adding = true;
 
@@ -137,6 +145,12 @@
                 })).catch(error => {
                     console.error(error);
                 });
+            },
+            destroy(name) {
+                this.schemas = _.remove(this.schemas, schema => schema.name !== name);
+            },
+            updateUsers(users) {
+                this.users = users;
             }
         }
     }

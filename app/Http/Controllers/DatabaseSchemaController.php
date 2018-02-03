@@ -4,6 +4,7 @@ namespace Richardds\ServerAdmin\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Richardds\ServerAdmin\Core\Database\DatabaseManager;
+use Richardds\ServerAdmin\Core\Database\DatabaseUser;
 use Richardds\ServerAdmin\Core\Database\SchemaInfo;
 
 class DatabaseSchemaController extends Controller
@@ -35,6 +36,7 @@ class DatabaseSchemaController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException
      */
     public function grantPermissions(Request $request)
     {
@@ -43,7 +45,7 @@ class DatabaseSchemaController extends Controller
             'user' => 'required|min:1|max:255',
         ]);
 
-        $this->manager->grantPermissions($request->get('name'), $request->get('user'));
+        $this->manager->grantPermissions($request->get('name'), DatabaseUser::fromSingleString($request->get('user')));
 
         return api_response()->success()->response();
     }
@@ -51,6 +53,7 @@ class DatabaseSchemaController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException
      */
     public function revokePermissions(Request $request)
     {
@@ -59,7 +62,7 @@ class DatabaseSchemaController extends Controller
             'user' => 'required|min:1|max:255',
         ]);
 
-        $this->manager->revokePermissions($request->get('name'), $request->get('user'));
+        $this->manager->revokePermissions($request->get('name'), DatabaseUser::fromSingleString($request->get('user')));
 
         return api_response()->success()->response();
     }

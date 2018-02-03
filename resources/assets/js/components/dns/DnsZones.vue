@@ -25,10 +25,10 @@
                     <label for="addZoneSerial" class="col-md-3 control-label">Serial</label>
                     <div class="col-md-8">
                         <div class="input-group">
-                        <input type="number" class="form-control" id="addZoneSerial" v-model="zone.serial" />
-                        <span class="input-group-btn">
-                            <sa-button @click.native="zone.serial = generateSerial()" icon="arrow-left" />
-                        </span>
+                            <input type="number" class="form-control" id="addZoneSerial" v-model="zone.serial" />
+                            <span class="input-group-btn">
+                                <sa-button @click.native="zone.serial = generateSerial()" icon="arrow-left" />
+                            </span>
                         </div>
                     </div>
                 </div>
