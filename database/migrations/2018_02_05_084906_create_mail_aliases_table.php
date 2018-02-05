@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateMailAliasesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('mail_aliases', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('domain_id');
+            $table->string('source');
+            $table->string('destination');
+            $table->timestamps();
+
+            $table->foreign('domain_id')->references('id')->on('mail_servers')->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('mail_aliases');
+    }
+}
