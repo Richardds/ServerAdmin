@@ -131,17 +131,17 @@
         },
         methods: {
             add() {
-                this.adding = true;
-
+                let self = this;
+                self.adding = true;
                 axios.all([
-                    axios.post('/api/database/schemas', this.schema),
+                    axios.post('/api/database/schemas', self.schema),
                     axios.get('/api/database/schemas')
                 ]).then(axios.spread(function (created_schema, schemas) {
                     self.schemas = [];
                     for (let schema of schemas.data.data) {
                         self.schemas.push(schema);
                     }
-                    this.adding = false;
+                    self.adding = false;
                 })).catch(error => {
                     console.error(error);
                 });

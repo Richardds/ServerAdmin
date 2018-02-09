@@ -184,17 +184,18 @@
                 this.records = _.remove(this.records, record => record.id !== id);
             },
             add() {
-                this.adding = true;
+                let self = this;
+                self.adding = true;
                 axios.all([
-                    axios.post('/api/dns/records', this.addRecord),
-                    axios.get('/api/dns/records')
+                    axios.post('/api/dns/records', self.addRecord),
+                    axios.get('/api/dns/records?zone=' + self.zone)
                 ]).then(axios.spread(function (created_record, records) {
-                    self.record = [];
+                    self.records = [];
                     for (let record of records.data.data) {
                         self.records.push(record);
                     }
-                    this.reset();
-                    this.adding = false;
+                    self.reset();
+                    self.adding = false;
                 })).catch(error => {
                     console.error(error);
                 });

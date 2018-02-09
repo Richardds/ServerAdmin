@@ -142,16 +142,16 @@
             },
             add() {
                 let self = this;
-                this.adding = true;
+                self.adding = true;
                 axios.all([
-                    axios.post('/api/cron/tasks', this.task),
+                    axios.post('/api/cron/tasks', self.task),
                     axios.get('/api/cron/tasks')
                 ]).then(axios.spread(function (created_task, tasks) {
                     self.tasks = [];
                     for (let task of tasks.data.data) {
                         self.tasks.push(task);
                     }
-                    this.adding = false;
+                    self.adding = false;
                 })).catch(error => {
                     console.error(error);
                 });

@@ -134,17 +134,18 @@
                 this.zones = _.remove(this.zones, zone => zone.id !== id);
             },
             add() {
-                this.adding = true;
+                let self = this;
+                self.adding = true;
                 axios.all([
-                    axios.post('/api/dns/zones', this.zone),
+                    axios.post('/api/dns/zones', self.zone),
                     axios.get('/api/dns/zones')
                 ]).then(axios.spread(function (created_zone, zones) {
                     self.zones = [];
                     for (let zone of zones.data.data) {
                         self.zones.push(zone);
                     }
-                    this.reset();
-                    this.adding = false;
+                    self.reset();
+                    self.adding = false;
                 })).catch(error => {
                     console.error(error);
                 });
