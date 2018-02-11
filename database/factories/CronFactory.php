@@ -3,11 +3,12 @@
 use Faker\Generator as Faker;
 use Richardds\ServerAdmin\Core\Cron\CronInterval;
 use Richardds\ServerAdmin\Core\Cron\CronIntervalField;
+use Richardds\ServerAdmin\Cron;
 
 /**
  * @var $factory Illuminate\Database\Eloquent\Factory
  */
-$factory->define(Richardds\ServerAdmin\Cron::class, function (Faker $faker) {
+$factory->define(Cron::class, function (Faker $faker) {
     $intervalFields = [
         'Minute' => [0, 59],
         'Hour' => [0, 23],

@@ -9,15 +9,15 @@ class MailAlias extends Model
     protected $fillable = [
         'id',
         'domain_id',
-        'source',
-        'destination',
+        'user_id',
+        'alias',
     ];
 
     protected $visible = [
         'id',
         'domain_id',
-        'source',
-        'destination',
+        'user_id',
+        'alias',
     ];
 
     protected $dates = [
@@ -28,14 +28,25 @@ class MailAlias extends Model
     protected $casts = [
         'id' => 'integer',
         'domain_id' => 'integer',
-        'source' => 'string',
-        'destination' => 'string',
+        'user_id' => 'integer',
+        'alias' => 'string',
         'created_at' => 'date',
         'updated_at' => 'date',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function domain()
     {
         return $this->belongsTo(MailDomain::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(MailUser::class);
     }
 }

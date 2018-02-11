@@ -1,13 +1,14 @@
 <?php
 
 use Faker\Generator as Faker;
+use Richardds\ServerAdmin\User;
 
 /**
  * @var $factory Illuminate\Database\Eloquent\Factory
  */
-$factory->define(Richardds\ServerAdmin\User::class, function (Faker $faker) {
+$factory->define(User::class, function (Faker $faker) {
     return [
         'username' => $faker->name,
-        'password' => $password = bcrypt('secret')
+        'password' => bcrypt('secret'),
     ];
 });

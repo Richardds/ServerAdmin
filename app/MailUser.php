@@ -34,6 +34,9 @@ class MailUser extends Model
         'updated_at' => 'date',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function domain()
     {
         return $this->belongsTo(MailDomain::class);

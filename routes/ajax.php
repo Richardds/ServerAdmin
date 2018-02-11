@@ -59,3 +59,18 @@ Route::group(['prefix' => 'database'], function() {
         'only' => ['index', 'store', 'destroy']
     ]);
 });
+
+/**
+ * Mail
+ */
+Route::group(['prefix' => 'mail'], function() {
+    Route::apiResource('domains', 'MailDomainController', [
+        'only' => ['index', 'show', 'store', 'update', 'destroy']
+    ]);
+    Route::apiResource('users', 'MailUserController', [
+        'only' => ['index', 'show', 'store', 'update', 'destroy']
+    ]);
+    Route::apiResource('aliases', 'MailAliasController', [
+        'only' => ['index', 'show', 'store', 'update', 'destroy']
+    ]);
+});

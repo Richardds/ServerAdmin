@@ -20,4 +20,6 @@ class MailDomain extends Model
         'id' => 'integer',
         'domain' => 'string',
     ];
+
+    public $timestamps = false;
 }

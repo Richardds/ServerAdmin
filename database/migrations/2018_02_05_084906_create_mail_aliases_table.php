@@ -16,11 +16,12 @@ class CreateMailAliasesTable extends Migration
         Schema::create('mail_aliases', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('domain_id');
-            $table->string('source');
-            $table->string('destination');
+            $table->unsignedInteger('user_id');
+            $table->string('alias');
             $table->timestamps();
 
-            $table->foreign('domain_id')->references('id')->on('mail_servers')->onDelete('cascade');
+            $table->foreign('domain_id')->references('id')->on('mail_domains')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('mail_users')->onDelete('cascade');
         });
     }
 

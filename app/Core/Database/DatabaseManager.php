@@ -23,21 +23,12 @@ class DatabaseManager extends Service
      */
     public function createDatabase(string $name, ?string $character_set = null, ?string $collation = null): void
     {
-        if (is_null($character_set) && is_null($character_set)) {
-            DB::statement('CREATE DATABASE \':database\';', [
-                'database' => $name
-            ]);
-        } else if (!is_null($character_set) && is_null($character_set)) {
-            DB::statement('CREATE DATABASE \':database\' CHARACTER SET \':charset\';', [
-                'database' => $name,
-                'charset' => $character_set,
-            ]);
+        if (is_null($character_set) && is_null($collation)) {
+            DB::statement('CREATE DATABASE ?;', [$name]);
+        } else if (!is_null($character_set) && is_null($collation)) {
+            DB::statement('CREATE DATABASE ? CHARACTER SET ?;', [$name, $character_set]);
         } else {
-            DB::statement('CREATE DATABASE \':database\' CHARACTER SET \':charset\' COLLATE \':collation\';', [
-                'database' => $name,
-                'charset' => $character_set,
-                'collation' => $collation,
-            ]);
+            DB::statement('CREATE DATABASE ? CHARACTER SET ? COLLATE ?;', [$name, $character_set, $collation]);
         }
     }
 
@@ -46,9 +37,7 @@ class DatabaseManager extends Service
      */
     public function dropDatabase(string $name): void
     {
-        DB::statement('DROP DATABASE \':database\';', [
-            'database' => $name
-        ]);
+        DB::statement('DROP DATABASE ?;', [$name]);
     }
 
     /**
@@ -73,7 +62,7 @@ class DatabaseManager extends Service
      */
     public function grantPermissions(string $name, DatabaseUser $user): void
     {
-        DB::statement('GRANT ALL ON \'?\' TO ?;', [$name . '.*', $user->toSql()]);
+        DB::statement('GRANT ALL ON ? TO ?;', [$name . '.*', $user->toSql()]);
         $this->reloadPrivileges();
     }
 
@@ -83,7 +72,7 @@ class DatabaseManager extends Service
      */
     public function revokePermissions(string $name, DatabaseUser $user): void
     {
-        DB::statement('REVOKE ALL ON \'?\' FROM ?;', [$name . '.*', $user->toSql()]);
+        DB::statement('REVOKE ALL ON ? FROM ?;', [$name . '.*', $user->toSql()]);
         $this->reloadPrivileges();
     }
 

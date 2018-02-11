@@ -13,5 +13,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(DnsZonesTableSeeder::class);
         $this->call(CronsTableSeeder::class);
+        $this->call(MailDomainsTableSeeder::class);
+        $this->call(MailUsersTableSeeder::class);
+        $this->call(MailAliasesTableSeeder::class);
     }
 }

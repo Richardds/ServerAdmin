@@ -20,7 +20,7 @@ class CreateMailUsersTable extends Migration
             $table->string('password');
             $table->timestamps();
 
-            $table->foreign('domain_id')->references('id')->on('mail_servers')->onDelete('cascade');
+            $table->foreign('domain_id')->references('id')->on('mail_domains')->onDelete('cascade');
         });
     }
 
