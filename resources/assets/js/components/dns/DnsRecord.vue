@@ -135,7 +135,7 @@
             <sa-button @click.native="toggleEnabled"
                        :icon="record.enabled ? 'toggle-on' : 'toggle-off'"
                        size="sm"
-                       :loading="toggling" />
+                       :loading="toggleForm.loading" />
             <sa-button @click.native="deleteRecord"
                        type="danger"
                        icon="trash"
@@ -152,25 +152,21 @@
             return {
                 editMode: false,
                 updating: false,
-                toggling: false,
                 deleting: false,
-                changed: false
+                changed: false,
+                //
+                toggleForm: new ServerAdmin.ToggleForm(),
             };
         },
         methods: {
             onChange() {
                 this.changed = true;
             },
-            updateAttributes(record) {
-                _.forOwn(this.record, (value, key) => {
-                    this.record[key] = record[key];
-                });
-            },
             editRecord() {
                 if (this.editMode && this.changed) {
                     this.updating = true;
                     axios.put('/api/dns/records/' + this.record.id, this.record).then(response => {
-                        this.updateAttributes(response.data.data);
+                        ServerAdmin.Utils.updateAttributes(this.record, response.data.data);
                         this.updating = false;
                         this.changed = false;
                     }).catch(error => {
@@ -190,14 +186,13 @@
                 });
             },
             toggleEnabled() {
-                this.toggling = true;
-                let nextStatus = !this.record.enabled;
-                axios.patch('/api/dns/records/' + this.record.id, {enabled: nextStatus}).then(response => {
-                    this.updateAttributes(response.data.data);
-                    this.toggling = false;
+                this.toggleForm.start();
+                this.toggleForm.switch(this.record.enabled);
+                axios.patch('/api/dns/records/' + this.record.id, this.toggleForm.attributes).then(response => {
+                    ServerAdmin.Utils.updateAttributes(this.record, response.data.data);
+                    this.toggleForm.finish();
                 }).catch(error => {
-                    this.toggling = false;
-                    console.error(error);
+                    this.toggleForm.crash(error);
                 });
             },
         },

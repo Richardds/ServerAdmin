@@ -54,7 +54,7 @@ $factory->define(DnsRecord::class, function (Faker $faker) {
     }
 
     return [
-        'zone_id' => 1, // Must be overwritten in create method
+        'zone_id' => -1, // Must be overwritten by parent factory
         'type' => $type,
         'name' => $faker->domainWord,
         'attrs' => $recordAttributes,

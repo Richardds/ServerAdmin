@@ -17,7 +17,6 @@ Route::group(['prefix' => 'service'], function() {
 
 Route::group(['prefix' => 'data'], function() {
     Route::get('system_users', 'DataController@systemUsers');
-
     Route::get('database_available_character_sets', 'DataController@databaseAvailableCharacterSets');
     Route::get('database_available_collations', 'DataController@databaseAvailableCollations');
     Route::get('database_users', 'DataController@databaseUsers');
@@ -65,7 +64,7 @@ Route::group(['prefix' => 'database'], function() {
  */
 Route::group(['prefix' => 'mail'], function() {
     Route::apiResource('domains', 'MailDomainController', [
-        'only' => ['index', 'show', 'store', 'update', 'destroy']
+        'only' => ['index', 'show', 'store', 'destroy']
     ]);
     Route::apiResource('users', 'MailUserController', [
         'only' => ['index', 'show', 'store', 'update', 'destroy']

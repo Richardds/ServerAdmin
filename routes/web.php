@@ -21,3 +21,9 @@ Route::group(['prefix' => 'dns'], function() {
 
 // Cron
 Route::get('cron', 'CronController@cron_tasks')->name('cron');
+
+// Mail
+Route::group(['prefix' => 'mail'], function() {
+    Route::get('domains', 'MailDomainController@domains')->name('mail_domains');
+    Route::get('domains/{domain}', 'MailUserController@users')->name('mail_users');
+});

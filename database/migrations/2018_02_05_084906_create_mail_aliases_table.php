@@ -20,6 +20,7 @@ class CreateMailAliasesTable extends Migration
             $table->string('alias');
             $table->timestamps();
 
+            $table->unique(['domain_id', 'alias']);
             $table->foreign('domain_id')->references('id')->on('mail_domains')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('mail_users')->onDelete('cascade');
         });

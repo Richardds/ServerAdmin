@@ -69,6 +69,8 @@ class Cron extends Model
         'uid',
         'description',
         'enabled',
+        'created_at',
+        'updated_at',
     ];
 
     /**
@@ -96,6 +98,8 @@ class Cron extends Model
         'uid' => 'integer',
         'description' => 'string',
         'enabled' => 'boolean',
+        'created_at' => 'date',
+        'updated_at' => 'date',
     ];
 
     protected function parseFieldInterval(string $fieldInterval): ?string

@@ -13,7 +13,7 @@ use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsRecordAttributes;
  * @property int $zone_id
  * @property string $type
  * @property string $name
- * @property DnsRecordAttributes $attrs
+ * @property array $attrs
  * @property int $ttl
  * @property bool $enabled
  * @property \Carbon\Carbon $created_at
@@ -65,6 +65,8 @@ class DnsRecord extends Model
         'attrs',
         'ttl',
         'enabled',
+        'created_at',
+        'updated_at',
     ];
 
     protected $dates = [

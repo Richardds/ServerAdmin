@@ -22,3 +22,10 @@ Vue.component('sa-database-schema', require('./components/database/DatabaseSchem
 Vue.component('sa-database-schema-users', require('./components/database/DatabaseSchemaUsers'));
 Vue.component('sa-database-users', require('./components/database/DatabaseUsers'));
 Vue.component('sa-database-user', require('./components/database/DatabaseUser'));
+
+// Mail
+Vue.component('sa-mail-domains', require('./components/mail/MailDomains'));
+Vue.component('sa-mail-domain', require('./components/mail/MailDomain'));
+Vue.component('sa-mail-users', require('./components/mail/MailUsers'));
+Vue.component('sa-mail-user', require('./components/mail/MailUser'));
+Vue.component('sa-mail-user-aliases', require('./components/mail/MailUserAliases'));

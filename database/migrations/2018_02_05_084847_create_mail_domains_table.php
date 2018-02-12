@@ -15,7 +15,7 @@ class CreateMailDomainsTable extends Migration
     {
         Schema::create('mail_domains', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('domain')->unique();
+            $table->string('name')->unique();
         });
     }
 

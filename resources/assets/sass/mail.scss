@@ -1,0 +1,20 @@
+table {
+    &.table-mail-domains {
+        th, td {
+            &.domain-name {
+                //
+            }
+        }
+    }
+
+    &.table-mail-users {
+        th, td {
+            &.user-name {
+                width: 250px;
+            }
+            &.record-username {
+                //
+            }
+        }
+    }
+}

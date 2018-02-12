@@ -1,3 +1,0 @@
-const Utils = new class {
-    //
-};

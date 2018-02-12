@@ -39,7 +39,7 @@
             <sa-button @click.native="toggleEnabled"
                        :icon="zone.enabled ? 'toggle-on' : 'toggle-off'"
                        size="sm"
-                       :loading="toggling" />
+                       :loading="toggleForm.loading" />
             <sa-button @click.native="deleteZone"
                        type="danger"
                        icon="trash"
@@ -56,25 +56,21 @@
             return {
                 editMode: false,
                 updating: false,
-                toggling: false,
                 deleting: false,
-                changed: false
+                changed: false,
+                //
+                toggleForm: new ServerAdmin.ToggleForm(),
             };
         },
         methods: {
             onChange() {
                 this.changed = true;
             },
-            updateAttributes(zone) {
-                _.forOwn(this.zone, (value, key) => {
-                    this.zone[key] = zone[key];
-                });
-            },
             editZone() {
                 if (this.editMode && this.changed) {
                     this.updating = true;
                     axios.put('/api/dns/zones/' + this.zone.id, this.zone).then(response => {
-                        this.updateAttributes(response.data.data);
+                        ServerAdmin.Utils.updateAttributes(this.zone, response.data.data);
                         this.updating = false;
                         this.changed = false;
                     }).catch(error => {
@@ -94,14 +90,13 @@
                 });
             },
             toggleEnabled() {
-                this.toggling = true;
-                let nextStatus = !this.zone.enabled;
-                axios.patch('/api/dns/zones/' + this.zone.id, {enabled: nextStatus}).then(response => {
-                    this.updateAttributes(response.data.data);
-                    this.toggling = false;
+                this.toggleForm.start();
+                this.toggleForm.switch(this.zone.enabled);
+                axios.patch('/api/dns/zones/' + this.zone.id, this.toggleForm.attributes).then(response => {
+                    ServerAdmin.Utils.updateAttributes(this.zone, response.data.data);
+                    this.toggleForm.finish();
                 }).catch(error => {
-                    this.toggling = false;
-                    console.error(error);
+                    this.toggleForm.crash(error);
                 });
             },
         },

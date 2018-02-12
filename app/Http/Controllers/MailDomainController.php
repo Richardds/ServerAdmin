@@ -8,7 +8,7 @@ use Richardds\ServerAdmin\MailDomain;
 class MailDomainController extends ModelController
 {
     protected $rules = [
-        'domain' => 'required|min:1|max:255',
+        'name' => 'required|min:1|max:255',
     ];
 
     /**
@@ -16,7 +16,16 @@ class MailDomainController extends ModelController
      */
     public function __construct()
     {
+        $this->middleware('auth');
         parent::__construct(MailDomain::class);
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function domains()
+    {
+        return view('sections.mail.domains');
     }
 
     /**
@@ -28,7 +37,7 @@ class MailDomainController extends ModelController
         $this->validate($request, $this->rules);
 
         $mailDomain = MailDomain::create([
-            //
+            'name' => $request->get('name'),
         ]);
 
         return api_response()->success(['id' => $mailDomain->id])->response();

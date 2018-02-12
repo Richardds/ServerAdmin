@@ -44,11 +44,6 @@
             onChange() {
                 this.changed = true;
             },
-            updateAttributes(schema) {
-                _.forOwn(this.schema, (value, key) => {
-                    this.schema[key] = schema[key];
-                });
-            },
             deleteSchema() {
                 this.deleting = true;
                 axios.delete('/api/database/schemas/' + this.schema.name).then(response => {

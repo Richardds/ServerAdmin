@@ -16,10 +16,13 @@ class CreateMailUsersTable extends Migration
         Schema::create('mail_users', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('domain_id');
+            $table->string('name')->nullable();
             $table->string('username');
             $table->string('password');
+            $table->boolean('enabled')->default(true);
             $table->timestamps();
 
+            $table->unique(['domain_id', 'username']);
             $table->foreign('domain_id')->references('id')->on('mail_domains')->onDelete('cascade');
         });
     }

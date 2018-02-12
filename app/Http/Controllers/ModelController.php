@@ -33,9 +33,10 @@ abstract class ModelController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         return api_response()->success($this->model::all()->toArray())->response();
     }
@@ -47,10 +48,11 @@ abstract class ModelController extends Controller
     public abstract function store(Request $request);
 
     /**
-     * @param $id
+     * @param Request $request
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Request $request, int $id)
     {
         $model = $this->model::findOrFail($id);
 
@@ -59,10 +61,10 @@ abstract class ModelController extends Controller
 
     /**
      * @param Request $request
-     * @param $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $model = $this->model::findOrFail($id);
 
@@ -74,10 +76,11 @@ abstract class ModelController extends Controller
     }
 
     /**
-     * @param $id
+     * @param Request $request
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Request $request, int $id)
     {
         $model = $this->model::findOrFail($id);
 

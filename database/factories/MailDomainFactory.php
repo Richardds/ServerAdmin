@@ -8,6 +8,6 @@ use Richardds\ServerAdmin\MailDomain;
  */
 $factory->define(MailDomain::class, function (Faker $faker) {
     return [
-        'domain' => $faker->domainName,
+        'name' => $faker->domainName,
     ];
 });

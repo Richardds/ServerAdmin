@@ -73,7 +73,7 @@
             <sa-button @click.native="toggleEnabled"
                        :icon="task.enabled ? 'toggle-on' : 'toggle-off'"
                        size="sm"
-                       :loading="toggling" />
+                       :loading="toggleForm.loading" />
             <sa-button @click.native="deleteTask"
                        type="danger"
                        icon="trash"
@@ -92,25 +92,21 @@
                 //
                 editMode: false,
                 updating: false,
-                toggling: false,
                 deleting: false,
-                changed: false
+                changed: false,
+                //
+                toggleForm: new ServerAdmin.ToggleForm(),
             };
         },
         methods: {
             onChange() {
                 this.changed = true;
             },
-            updateAttributes(task) {
-                _.forOwn(this.task, (value, key) => {
-                    this.task[key] = task[key];
-                });
-            },
             editTask() {
                 if (this.editMode && this.changed) {
                     this.updating = true;
                     axios.put('/api/cron/tasks/' + this.task.id, this.task).then(response => {
-                        this.updateAttributes(response.data.data);
+                        ServerAdmin.Utils.updateAttributes(this.task, response.data.data);
                         this.updating = false;
                         this.changed = false;
                     }).catch(error => {
@@ -130,14 +126,13 @@
                 });
             },
             toggleEnabled() {
-                this.toggling = true;
-                let nextStatus = !this.task.enabled;
-                axios.patch('/api/cron/tasks/' + this.task.id, {enabled: nextStatus}).then(response => {
-                    this.updateAttributes(response.data.data);
-                    this.toggling = false;
+                this.toggleForm.start();
+                this.toggleForm.switch(this.task.enabled);
+                axios.patch('/api/cron/tasks/' + this.task.id, this.toggleForm.attributes).then(response => {
+                    ServerAdmin.Utils.updateAttributes(this.task, response.data.data);
+                    this.toggleForm.finish();
                 }).catch(error => {
-                    this.toggling = false;
-                    console.error(error);
+                    this.toggleForm.crash(error);
                 });
             },
             user(id) {

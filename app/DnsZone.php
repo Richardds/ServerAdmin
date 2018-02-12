@@ -55,6 +55,8 @@ class DnsZone extends Model
         'expire',
         'ttl',
         'enabled',
+        'created_at',
+        'updated_at',
     ];
 
     protected $dates = [

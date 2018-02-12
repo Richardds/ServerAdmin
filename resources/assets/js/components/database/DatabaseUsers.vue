@@ -26,7 +26,7 @@
                             <div class="input-group input-group-sm">
                                 <input type="password" class="form-control" id="password" placeholder="Password" v-model="user.password" />
                                 <span class="input-group-btn">
-                                    <sa-button @click.native="user.password = generatePassword()" icon="arrow-left" />
+                                    <sa-button @click.native="user.password = password()" icon="arrow-left" />
                                 </span>
                             </div>
                         </div>
@@ -85,11 +85,9 @@
             destroy(user) {
                 this.users = _.remove(this.users, aUser => (aUser.user + '@' + aUser.host) !== (user.user + '@' + user.host));
             },
-            generatePassword() {
-                // TODO: Move to utils.
-                // Generates password of 24 alphanumeric characters.
-                return _.times(24, () => _.random(35).toString(36)).join('');
-            }
+            password() {
+                return ServerAdmin.Utils.generatePassword();
+            },
         }
     }
 </script>
