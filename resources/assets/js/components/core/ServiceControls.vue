@@ -22,10 +22,10 @@
             };
         },
         mounted() {
-            this.updateStatus();
+            this.loadStatus();
         },
         methods: {
-            updateStatus() {
+            loadStatus() {
                 this.toggling = true;
                 axios.post('/api/service/status', {service: this.service}).then(response => {
                     this.handleStatus(response.data.data);

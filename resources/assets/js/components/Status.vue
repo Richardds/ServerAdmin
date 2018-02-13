@@ -3,7 +3,7 @@
         <button @click="$emit('close')" type="button" class="close" data-dismiss="alert" aria-label="Close">
             <i class="fa fa-times" aria-hidden="true"></i>
         </button>
-        <slot></slot>
+        <slot />
     </div>
 </template>
 

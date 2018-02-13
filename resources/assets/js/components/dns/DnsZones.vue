@@ -2,7 +2,7 @@
     <div>
         <sa-modal :visible="createZoneForm.enabled"
                   @close="createZoneForm.close()"
-                  title="Add Zone">
+                  title="Create zone">
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="addZoneName" class="col-md-3 control-label">Name</label>
@@ -61,7 +61,7 @@
                         <sa-button @click.native="createZone()"
                                    type="default"
                                    icon="plus"
-                                   :loading="createZoneForm.loading">Add</sa-button>
+                                   :loading="createZoneForm.loading">Create</sa-button>
                     </div>
                 </div>
             </div>
@@ -83,7 +83,7 @@
             <sa-dns-zone v-for="zone in orderedZones"
                          :key="zone.id"
                          :zone="zone"
-                         @destroy="destroyZone(zone.id)" />
+                         @destroyZone="loadZones()" />
             </tbody>
             <tfoot>
             <tr>
@@ -128,9 +128,6 @@
                 }).catch(error => {
                     console.error(error);
                 });
-            },
-            destroyZone(id) {
-                this.zones = _.remove(this.zones, zone => zone.id !== id);
             },
             createZone() {
                 this.createZoneForm.start();

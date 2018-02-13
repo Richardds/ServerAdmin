@@ -5,7 +5,7 @@
         <form class="form-signin" method="POST" action="{{ route('login') }}">
             {!! csrf_field() !!}
 
-            <h2 class="text-center">Authentication</h2>
+            <h2 class="text-center">Server Admin <small>v0.0.1-dev</small></h2>
 
             <label for="username" class="sr-only">Username</label>
             <input id="username" type="text" class="form-control input-top" name="username" value="{{ old('username') }}" placeholder="Username" required autofocus>

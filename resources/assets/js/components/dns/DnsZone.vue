@@ -86,7 +86,7 @@
                 this.destroyZoneForm.start();
                 axios.delete('/api/dns/zones/' + this.zone.id).then(() => {
                     this.destroyZoneForm.finish();
-                    this.$emit('destroy');
+                    this.$emit('destroyZone');
                 }).catch(error => {
                     this.destroyZoneForm.crash(error);
                 });

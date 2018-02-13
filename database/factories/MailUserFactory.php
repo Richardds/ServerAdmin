@@ -14,6 +14,6 @@ $factory->define(MailUser::class, function (Faker $faker) {
         'domain_id' => -1, // Must be overwritten by parent factory
         'name' => $firstName . ' ' . $lastName,
         'username' => strtolower($faker->asciify($firstName)) . '.' . strtolower($faker->asciify($lastName)),
-        'password' => bcrypt('secret'),
+        'password' => 'secret',
     ];
 });

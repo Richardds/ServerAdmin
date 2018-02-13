@@ -9,6 +9,6 @@ use Richardds\ServerAdmin\User;
 $factory->define(User::class, function (Faker $faker) {
     return [
         'username' => $faker->name,
-        'password' => bcrypt('secret'),
+        'password' => 'secret',
     ];
 });

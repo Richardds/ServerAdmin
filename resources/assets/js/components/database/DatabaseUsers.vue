@@ -1,49 +1,70 @@
 <template>
-    <table class="table table-striped table-controls">
-        <tbody>
-        <sa-database-user v-for="user in orderedUsers"
-                          :key="user.user + '@' + user.host"
-                          :user="user"
-                          @destroy="destroyUser(user)" />
-        </tbody>
-        <tfoot>
-        <tr>
-            <td>
-                <div class="form-horizontal">
-                    <div class="form-group form-group-sm">
-                        <label for="user" class="col-md-2 control-label">User</label>
-                        <div class="col-md-10">
-                            <div class="input-group input-group-sm">
-                                <input type="text" class="form-control" id="user" placeholder="User" v-model="createUserForm.attributes.user">
-                                <span class="input-group-addon"><i class="fa fa-at" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control" placeholder="Host" v-model="createUserForm.attributes.host">
-                            </div>
-                        </div>
+    <div>
+        <sa-modal :visible="createUserForm.enabled"
+                  @close="createUserForm.close()"
+                  title="Create user">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label for="user" class="col-md-3 control-label">User</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="user" v-model="createUserForm.attributes.user">
                     </div>
-                    <div class="form-group form-group-sm">
-                        <label for="password" class="col-md-2 control-label">Password</label>
-                        <div class="col-md-10">
-                            <div class="input-group input-group-sm">
-                                <input type="password" class="form-control" id="password" placeholder="Password" v-model="createUserForm.attributes.password" />
-                                <span class="input-group-btn">
-                                    <sa-button data-clipboard-target="#password" icon="copy" />
-                                    <sa-button @click.native="createUserForm.attributes.password = password()" icon="arrow-left" />
-                                </span>
-                            </div>
+                </div>
+                <div class="form-group">
+                    <label for="host" class="col-md-3 control-label">Host</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="host" v-model="createUserForm.attributes.host">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-md-3 control-label">Password</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password" v-model="createUserForm.attributes.password" />
+                            <span class="input-group-btn">
+                                <sa-button data-clipboard-target="#password" icon="copy" />
+                                <sa-button @click.native="createUserForm.attributes.password = password()" icon="arrow-left" />
+                            </span>
                         </div>
                     </div>
                 </div>
-            </td>
-            <td class="fit">
-                <sa-button @click.native="createUser()"
-                           type="default"
-                           icon="plus"
-                           size="sm"
-                           :loading="createUserForm.loading" />
-            </td>
-        </tr>
-        </tfoot>
-    </table>
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-8">
+                        <sa-button @click.native="createUser()"
+                                   type="default"
+                                   icon="plus"
+                                   :loading="createUserForm.loading">Create</sa-button>
+                    </div>
+                </div>
+            </div>
+        </sa-modal>
+
+        <table class="table table-striped table-controls table-database-users">
+            <thead>
+            <tr>
+                <th>User</th>
+                <th>Host</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <sa-database-user v-for="user in orderedUsers"
+                              :key="user.user + '@' + user.host"
+                              :user="user"
+                              @destroyUser="loadUsers()" />
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="7" class="text-right">
+                    <sa-button @click.native="createUserForm.open()"
+                               type="default"
+                               icon="plus"
+                               size="sm" />
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
 </template>
 
 <script>
@@ -82,9 +103,6 @@
                 }).catch(error => {
                     this.createUserForm.crash(error);
                 });
-            },
-            destroyUser(user) {
-                this.users = _.remove(this.users, aUser => (aUser.user + '@' + aUser.host) !== (user.user + '@' + user.host));
             },
             password() {
                 return ServerAdmin.Utils.generatePassword();

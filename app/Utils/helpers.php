@@ -28,3 +28,17 @@ function api_response(): ApiResponse
 {
     return new ApiResponse();
 }
+
+/**
+ * @param string $password
+ * @param null|string $salt
+ * @return string
+ */
+function sha512crypt(string $password, ?string $salt = null)
+{
+    if (is_null($salt)) {
+        $salt = substr(bin2hex(openssl_random_pseudo_bytes(16)), 0, 16);
+    }
+
+    return crypt($password, sprintf('$6$%s$', $salt));
+}

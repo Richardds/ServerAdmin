@@ -2,7 +2,7 @@
     <div>
         <sa-modal :visible="createRecordForm.enabled"
                   @close="createRecordForm.close()"
-                  title="Add Record">
+                  title="Create record">
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="addRecordType" class="col-md-3 control-label">Type</label>
@@ -120,7 +120,7 @@
                     <div class="col-md-offset-3 col-md-8">
                         <sa-button @click.native="createRecord"
                                    icon="plus"
-                                   :loading="createRecordForm.loading">Add</sa-button>
+                                   :loading="createRecordForm.loading">Create</sa-button>
                     </div>
                 </div>
             </div>
@@ -139,7 +139,7 @@
             <sa-dns-record v-for="record in this.orderedRecords"
                            :key="record.id"
                            :record="record"
-                           @destroy="destroyRecord(record.id)" />
+                           @destroyRecord="loadRecords()" />
             </tbody>
             <tfoot>
             <tr>
@@ -184,9 +184,6 @@
                 }).catch(error => {
                     console.error(error);
                 });
-            },
-            destroyRecord(id) {
-                this.records = _.remove(this.records, record => record.id !== id);
             },
             createRecord() {
                 this.createRecordForm.start();

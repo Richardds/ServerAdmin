@@ -11,7 +11,10 @@ Route::post('logout', 'AuthenticationController@logout')->name('logout');
 Route::get('dashboard', 'DashboardController@showDashboard')->name('dashboard');
 
 // Database
-Route::get('database', 'DatabaseSchemaController@databases')->name('database');
+Route::group(['prefix' => 'database'], function() {
+    Route::get('schemas', 'DatabaseSchemaController@databases')->name('database_schemas');
+    Route::get('users', 'DatabaseUserController@users')->name('database_users');
+});
 
 // DNS
 Route::group(['prefix' => 'dns'], function() {

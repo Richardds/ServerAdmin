@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Cron</div>
+                    <div class="panel-heading">Cron tasks</div>
 
                     <sa-cron-tasks></sa-cron-tasks>
                 </div>

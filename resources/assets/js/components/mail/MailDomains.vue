@@ -2,7 +2,7 @@
     <div>
         <sa-modal :visible="createDomainForm.enabled"
                   @close="createDomainForm.close()"
-                  title="Add domain">
+                  title="Create domain">
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="domainName" class="col-md-3 control-label">Name</label>
@@ -15,7 +15,7 @@
                         <sa-button @click.native="createDomain()"
                                    type="default"
                                    icon="plus"
-                                   :loading="createDomainForm.loading">Add</sa-button>
+                                   :loading="createDomainForm.loading">Create</sa-button>
                     </div>
                 </div>
             </div>
@@ -31,7 +31,7 @@
             <sa-mail-domain v-for="domain in orderedDomains"
                             :key="domain.id"
                             :domain="domain"
-                            @destroy="destroyDomain(domain.id)" />
+                            @deleteDomain="loadDomains()" />
             </tbody>
             <tfoot>
             <tr>
@@ -70,9 +70,6 @@
                 }).catch(error => {
                     console.error(error);
                 });
-            },
-            destroyDomain(id) {
-                this.domains = _.remove(this.domains, domain => domain.id !== id);
             },
             createDomain() {
                 this.createDomainForm.start();

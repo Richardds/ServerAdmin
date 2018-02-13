@@ -122,7 +122,7 @@
                 this.destroyTaskForm.start();
                 axios.delete('/api/cron/tasks/' + this.task.id).then(response => {
                     this.destroyTaskForm.finish();
-                    this.$emit('destroy');
+                    this.$emit('destroyTask');
                 }).catch(error => {
                     this.destroyTaskForm.crash(error);
                 });

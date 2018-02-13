@@ -20,6 +20,7 @@ Vue.component('sa-cron-task', require('./components/cron/CronTask'));
 Vue.component('sa-database-schemas', require('./components/database/DatabaseSchemas'));
 Vue.component('sa-database-schema', require('./components/database/DatabaseSchema'));
 Vue.component('sa-database-schema-users', require('./components/database/DatabaseSchemaUsers'));
+Vue.component('sa-database-schema-user', require('./components/database/DatabaseSchemaUser'));
 Vue.component('sa-database-users', require('./components/database/DatabaseUsers'));
 Vue.component('sa-database-user', require('./components/database/DatabaseUser'));
 
@@ -29,3 +30,4 @@ Vue.component('sa-mail-domain', require('./components/mail/MailDomain'));
 Vue.component('sa-mail-users', require('./components/mail/MailUsers'));
 Vue.component('sa-mail-user', require('./components/mail/MailUser'));
 Vue.component('sa-mail-user-aliases', require('./components/mail/MailUserAliases'));
+Vue.component('sa-mail-user-alias', require('./components/mail/MailUserAlias'));

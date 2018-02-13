@@ -9,14 +9,13 @@
 
                     <div class="panel-body">
                         <sa-service-controls service="database"></sa-service-controls>
-                        <a href="{{ route('database_users') }}">Users?</a>
                     </div>
                 </div>
 
                 <div class="panel panel-default">
-                    <div class="panel-heading">Schemas</div>
+                    <div class="panel-heading">Users</div>
 
-                    <sa-database-schemas></sa-database-schemas>
+                    <sa-database-users></sa-database-users>
                 </div>
             </div>
         </div>

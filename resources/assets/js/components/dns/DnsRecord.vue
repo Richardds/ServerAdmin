@@ -182,7 +182,7 @@
                 this.destroyRecordForm.start();
                 axios.delete('/api/dns/records/' + this.record.id).then(() => {
                     this.destroyRecordForm.finish();
-                    this.$emit('destroy');
+                    this.$emit('destroyRecord');
                 }).catch(error => {
                     this.destroyRecordForm.crash(error);
                 });

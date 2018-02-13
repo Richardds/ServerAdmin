@@ -2,7 +2,7 @@
     <div>
         <sa-modal :visible="createSchemaForm.enabled"
                   @close="createSchemaForm.close()"
-                  title="Add database">
+                  title="Create schema">
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="schemaName" class="col-md-3 control-label">Name</label>
@@ -14,7 +14,7 @@
                     <label for="schemaCharacterSet" class="col-md-3 control-label">Character set</label>
                     <div class="col-md-8">
                         <select class="form-control" id="schemaCharacterSet" v-model="createSchemaForm.attributes.character_set">
-                            <option v-for="user in users">{{ user }}</option>
+                            <option v-for="character_set in character_sets">{{ character_set }}</option>
                         </select>
                     </div>
                 </div>
@@ -22,7 +22,7 @@
                     <label for="schemaCollation" class="col-md-3 control-label">Collation</label>
                     <div class="col-md-8">
                         <select class="form-control" id="schemaCollation" v-model="createSchemaForm.attributes.collation">
-                            <option v-for="user in users">{{ user }}</option>
+                            <option v-for="collation in collations">{{ collation }}</option>
                         </select>
                     </div>
                 </div>
@@ -31,16 +31,10 @@
                         <sa-button @click.native="createSchema()"
                                    type="default"
                                    icon="plus"
-                                   :loading="createSchemaForm.loading">Add</sa-button>
+                                   :loading="createSchemaForm.loading">Create</sa-button>
                     </div>
                 </div>
             </div>
-        </sa-modal>
-
-        <sa-modal :visible="editUsersModal.enabled"
-                  @close="editUsersModal.close()"
-                  title="Users">
-            <sa-database-users :users="users" @updateUsers="updateUsers" />
         </sa-modal>
 
         <table class="table table-striped table-controls table-database-schemas">
@@ -59,15 +53,11 @@
                          :key="schema.name"
                          :schema="schema"
                          :users="users"
-                         @destroy="destroySchema(schema.name)" />
+                         @destroySchema="loadSchemas()" />
             </tbody>
             <tfoot>
             <tr>
                 <td colspan="7" class="text-right">
-                    <sa-button @click.native="editUsersModal.open()"
-                               type="default"
-                               icon="users"
-                               size="sm" />
                     <sa-button @click.native="createSchemaForm.open()"
                                type="default"
                                icon="plus"
@@ -87,7 +77,6 @@
                 character_sets: [],
                 collations: [],
                 users: [],
-                editUsersModal: new ServerAdmin.ModalForm(),
                 createSchemaForm: new ServerAdmin.ModalForm({
                     name: '',
                     character_set: 'utf8mb4',
@@ -142,12 +131,6 @@
                     this.createSchemaForm.crash(error);
                 });
             },
-            destroySchema(name) {
-                this.schemas = _.remove(this.schemas, schema => schema.name !== name);
-            },
-            updateUsers(users) {
-                this.users = users;
-            }
         },
         computed: {
             orderedSchemas() {

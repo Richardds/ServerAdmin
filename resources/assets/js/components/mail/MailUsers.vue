@@ -2,7 +2,7 @@
     <div>
         <sa-modal :visible="createUserForm.enabled"
                   @close="createUserForm.close()"
-                  title="Add domain">
+                  title="Create user">
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="name" class="col-md-3 control-label">Name</label>
@@ -33,7 +33,7 @@
                         <sa-button @click.native="createUser()"
                                    type="default"
                                    icon="plus"
-                                   :loading="createUserForm.loading">Add</sa-button>
+                                   :loading="createUserForm.loading">Create</sa-button>
                     </div>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                             :key="user.id"
                             :domain="domain"
                             :user="user"
-                            @destroy="destroyUser(user.id)" />
+                            @destroyUser="loadUsers()" />
             </tbody>
             <tfoot>
             <tr>
@@ -103,9 +103,6 @@
                 }).catch(error => {
                     console.error(error);
                 });
-            },
-            destroyUser(id) {
-                this.users = _.remove(this.users, user => user.id !== id);
             },
             createUser() {
                 this.createUserForm.start();

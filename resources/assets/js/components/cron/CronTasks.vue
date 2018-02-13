@@ -2,7 +2,7 @@
     <div>
         <sa-modal :visible="createTaskForm.enabled"
                   @close="createTaskForm.close()"
-                  title="Add task">
+                  title="Create task">
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="editIntervalMinute" class="col-md-3 control-label">Minute</label>
@@ -59,7 +59,7 @@
                         <sa-button @click.native="createTask()"
                                    type="default"
                                    icon="plus"
-                                   :loading="createTaskForm.loading">Add</sa-button>
+                                   :loading="createTaskForm.loading">Create</sa-button>
                     </div>
                 </div>
             </div>
@@ -79,7 +79,7 @@
                           :key="task.id"
                           :task="task"
                           :users="users"
-                          @destroy="destroyTask(task.id)" />
+                          @destroyTask="loadTasks()" />
             </tbody>
             <tfoot>
             <tr>
@@ -137,9 +137,6 @@
                 }).catch(error => {
                     console.error(error);
                 });
-            },
-            destroyTask(id) {
-                this.tasks = _.remove(this.tasks, task => task.id !== id);
             },
             createTask() {
                 this.createTaskForm.start();

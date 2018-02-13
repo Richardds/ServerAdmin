@@ -48,9 +48,9 @@ Route::group(['prefix' => 'cron'], function() {
  * Database
  */
 Route::group(['prefix' => 'database'], function() {
-    Route::get('users', 'DatabaseSchemaController@users');
-    Route::patch('grant', 'DatabaseSchemaController@grantPrivileges');
-    Route::patch('revoke', 'DatabaseSchemaController@revokePrivileges');
+    Route::patch('grant', 'DatabaseUserController@grantPrivileges');
+    Route::patch('revoke', 'DatabaseUserController@revokePrivileges');
+    Route::patch('userPassword', 'DatabaseUserController@changePassword');
     Route::apiResource('schemas', 'DatabaseSchemaController', [
         'only' => ['index', 'show', 'store', 'destroy']
     ]);

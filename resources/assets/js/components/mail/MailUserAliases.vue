@@ -2,23 +2,22 @@
     <div class="form-horizontal">
         <table class="table table-striped table-controls">
             <tbody>
-            <tr v-for="alias in orderedAliases">
-                <td>{{ alias.alias }}@{{ domain.name }}</td>
-                <td class="fit">
-                    <sa-button @click.native="destroyAlias(alias.id)"
-                               type="danger"
-                               icon="trash"
-                               :loading="destroyAliasForm.loading" />
-                </td>
-            </tr>
+            <sa-mail-user-alias v-for="alias in orderedAliases"
+                                :key="alias.id"
+                                :alias="alias"
+                                :domain="domain"
+                                @destroyAlias="loadAliases()" />
             </tbody>
             <tfoot>
             <tr>
                 <td>
-                    <input type="text" class="form-control" id="username" v-model="createAliasForm.attributes.alias" />
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="username" v-model="createAliasForm.attributes.alias" />
+                        <span class="input-group-addon">@{{ domain.name }}</span>
+                    </div>
                 </td>
                 <td class="fit">
-                    <sa-button @click.native="createAlias"
+                    <sa-button @click.native="createAlias()"
                                type="default"
                                icon="plus"
                                :loading="createAliasForm.loading" />
@@ -39,9 +38,6 @@
                     domain_id: this.domain.id,
                     user_id: this.user.id,
                     alias: '',
-                }),
-                destroyAliasForm: new ServerAdmin.Form({
-                    'id': -1
                 }),
             };
         },
@@ -66,15 +62,6 @@
                     this.loadAliases();
                 }).catch(error => {
                     this.createAliasForm.crash(error);
-                });
-            },
-            destroyAlias(id) {
-                this.destroyAliasForm.start();
-                axios.delete('/api/mail/aliases/' + id).then(() => {
-                    this.destroyAliasForm.finish();
-                    this.loadAliases();
-                }).catch(error => {
-                    this.destroyAliasForm.crash(error);
                 });
             },
         },

@@ -42,7 +42,7 @@
                 this.destroySchemaForm.start();
                 axios.delete('/api/database/schemas/' + this.schema.name).then(() => {
                     this.destroySchemaForm.finish();
-                    this.$emit('destroy');
+                    this.$emit('destroySchema');
                 }).catch(error => {
                     this.destroySchemaForm.crash(error);
                 });

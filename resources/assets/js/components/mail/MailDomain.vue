@@ -28,7 +28,7 @@
                 this.destroyDomainForm.start();
                 axios.delete('/api/mail/domains/' + this.domain.id).then(() => {
                     this.destroyDomainForm.finish();
-                    this.$emit('destroy');
+                    this.$emit('deleteDomain');
                 }).catch(error => {
                     this.destroyDomainForm.crash(error);
                 });

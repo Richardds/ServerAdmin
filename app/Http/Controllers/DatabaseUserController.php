@@ -25,6 +25,65 @@ class DatabaseUserController extends Controller
     }
 
     /**
+     * @return \Illuminate\View\View
+     */
+    public function users()
+    {
+        return view('sections.database.users');
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException
+     */
+    public function grantPrivileges(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|min:1|max:255',
+            'user' => 'required|min:1|max:255',
+        ]);
+
+        $this->manager->grantPrivileges($request->get('name'), DatabaseUser::fromSingleString($request->get('user')));
+
+        return api_response()->success()->response();
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException
+     */
+    public function revokePrivileges(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|min:1|max:255',
+            'user' => 'required|min:1|max:255',
+        ]);
+
+        $this->manager->revokePrivileges($request->get('name'), DatabaseUser::fromSingleString($request->get('user')));
+
+        return api_response()->success()->response();
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException
+     */
+    public function changePassword(Request $request)
+    {
+        $this->validate($request, [
+            'user' => 'required|min:1|max:255',
+            'password' => 'required|min:8|max:255',
+        ]);
+
+        $this->manager->changeUserPassword(DatabaseUser::fromSingleString($request->get('user')), $request->get('password'));
+
+        return api_response()->success()->response();
+    }
+
+    /**
      * @return \Illuminate\Http\JsonResponse
      */
     public function index()

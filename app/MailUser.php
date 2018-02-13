@@ -85,6 +85,6 @@ class MailUser extends Model
      */
     public function setPasswordAttribute(string $password): void
     {
-        $this->attributes['password'] = bcrypt($password);
+        $this->attributes['password'] = sha512crypt($password);
     }
 }

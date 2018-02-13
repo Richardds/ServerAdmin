@@ -2,20 +2,17 @@
     <div class="form-horizontal">
         <table class="table table-striped table-controls">
             <tbody>
-            <tr v-for="user in orderedGrantedUsers" v-if="user.required">
-                <td>{{ user.user }}@{{ user.host }}</td>
-                <td class="fit">
-                    <sa-button @click.native="revokePrivileges(user)"
-                               type="danger"
-                               icon="trash"
-                               :loading="userForm.loading" />
-                </td>
-            </tr>
+            <sa-database-schema-user v-for="user in orderedGrantedUsers"
+                                     v-if="user.required"
+                                     :key="user.id"
+                                     :schema="schema"
+                                     :user="user"
+                                     @revokePrivileges="loadPrivileges()"/>
             </tbody>
             <tfoot>
             <tr>
                 <td>
-                    <select class="form-control" id="schemaCollation" v-model="userForm.attributes.user">
+                    <select class="form-control" id="schemaCollation" v-model="grantPrivilegesForm.attributes.user">
                         <option v-for="user in users">{{ user.user }}@{{ user.host }}</option>
                     </select>
                 </td>
@@ -23,7 +20,7 @@
                     <sa-button @click.native="grantPrivileges()"
                                type="default"
                                icon="plus"
-                               :loading="userForm.loading" />
+                               :loading="grantPrivilegesForm.loading" />
                 </td>
             </tr>
             </tfoot>
@@ -37,7 +34,7 @@
         data() {
             return {
                 grantedUsers: [],
-                userForm: new ServerAdmin.Form({
+                grantPrivilegesForm: new ServerAdmin.Form({
                     name: this.schema,
                     user: -1,
                 }),
@@ -58,24 +55,14 @@
                 });
             },
             grantPrivileges() {
-                this.userForm.start();
-                axios.patch('/api/database/grant', this.userForm.attributes).then(() => {
-                    this.userForm.finish();
+                this.grantPrivilegesForm.start();
+                axios.patch('/api/database/grant', this.grantPrivilegesForm.attributes).then(() => {
+                    this.grantPrivilegesForm.finish();
                     this.loadPrivileges();
                 }).catch(error => {
-                    this.userForm.crash(error);
+                    this.grantPrivilegesForm.crash(error);
                 });
             },
-            revokePrivileges(user) {
-                this.userForm.start();
-                this.userForm.attributes.user = user.user + '@' + user.host;
-                axios.patch('/api/database/revoke', this.userForm.attributes).then(() => {
-                    this.userForm.finish();
-                    this.loadPrivileges();
-                }).catch(error => {
-                    this.userForm.crash(error);
-                });
-            }
         },
         computed: {
             orderedGrantedUsers() {

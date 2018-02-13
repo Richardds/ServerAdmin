@@ -22,7 +22,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-offset-3 col-md-8">
-                            <sa-button @click.native="updateUserPassword"
+                            <sa-button @click.native="changePassword()"
                                        type="default"
                                        icon="check"
                                        :loading="changePasswordForm.loading">Change</sa-button>
@@ -43,11 +43,11 @@
             <sa-button @click.native="editAliasesModal.open()"
                        icon="users"
                        size="sm" />
-            <sa-button @click.native="toggleEnabled"
+            <sa-button @click.native="toggleUser()"
                        :icon="user.enabled ? 'toggle-on' : 'toggle-off'"
                        size="sm"
                        :loading="toggleUserForm.loading" />
-            <sa-button @click.native="deleteUser"
+            <sa-button @click.native="destroyUser()"
                        type="danger"
                        icon="trash"
                        size="sm"
@@ -72,16 +72,16 @@
             };
         },
         methods: {
-            deleteUser() {
+            destroyUser() {
                 this.destroyUserForm.start();
                 axios.delete('/api/mail/users/' + this.user.id).then(() => {
                     this.destroyUserForm.finish();
-                    this.$emit('destroy');
+                    this.$emit('destroyUser');
                 }).catch(error => {
                     this.destroyUserForm.crash(error);
                 });
             },
-            toggleEnabled() {
+            toggleUser() {
                 this.toggleUserForm.start();
                 this.toggleUserForm.switch(this.user.enabled);
                 axios.patch('/api/mail/users/' + this.user.id, this.toggleUserForm.attributes).then(response => {
@@ -91,7 +91,7 @@
                     this.toggleUserForm.crash(error);
                 });
             },
-            updateUserPassword() {
+            changePassword() {
                 this.changePasswordForm.start();
                 axios.patch('/api/mail/users/' + this.user.id, this.changePasswordForm.attributes).then(response => {
                     ServerAdmin.Utils.updateAttributes(this.user, response.data.data);

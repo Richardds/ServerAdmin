@@ -77,6 +77,15 @@ class DatabaseManager extends Service
     }
 
     /**
+     * @param DatabaseUser $user
+     * @param string $password
+     */
+    public function changeUserPassword(DatabaseUser $user, string $password): void
+    {
+        DB::statement('SET PASSWORD FOR ? = PASSWORD(\'?\');', [$user->toSql(), $password]);
+    }
+
+    /**
      * Reload database privileges.
      */
     public function reloadPrivileges(): void
