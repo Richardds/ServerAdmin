@@ -127,20 +127,20 @@
         </template>
 
         <td class="fit">
-            <sa-button @click.native="editRecord"
+            <sa-button @click.native="editRecord()"
                        :type="editButtonType"
                        :icon="editButtonIcon"
                        size="sm"
                        :loading="updating" />
-            <sa-button @click.native="toggleEnabled"
+            <sa-button @click.native="toggleRecord()"
                        :icon="record.enabled ? 'toggle-on' : 'toggle-off'"
                        size="sm"
-                       :loading="toggleForm.loading" />
-            <sa-button @click.native="deleteRecord"
+                       :loading="toggleRecordForm.loading" />
+            <sa-button @click.native="destroyRecord()"
                        type="danger"
                        icon="trash"
                        size="sm"
-                       :loading="deleting" />
+                       :loading="destroyRecordForm.loading" />
         </td>
     </tr>
 </template>
@@ -152,10 +152,12 @@
             return {
                 editMode: false,
                 updating: false,
-                deleting: false,
                 changed: false,
                 //
-                toggleForm: new ServerAdmin.ToggleForm(),
+                toggleRecordForm: new ServerAdmin.ToggleForm(),
+                destroyRecordForm: new ServerAdmin.Form({
+                    'id': -1
+                }),
             };
         },
         methods: {
@@ -176,23 +178,23 @@
                 }
                 this.editMode = !this.editMode;
             },
-            deleteRecord() {
-                this.deleting = true;
-                axios.delete('/api/dns/records/' + this.record.id).then(response => {
+            destroyRecord() {
+                this.destroyRecordForm.start();
+                axios.delete('/api/dns/records/' + this.record.id).then(() => {
+                    this.destroyRecordForm.finish();
                     this.$emit('destroy');
                 }).catch(error => {
-                    this.deleting = false;
-                    console.error(error);
+                    this.destroyRecordForm.crash(error);
                 });
             },
-            toggleEnabled() {
-                this.toggleForm.start();
-                this.toggleForm.switch(this.record.enabled);
-                axios.patch('/api/dns/records/' + this.record.id, this.toggleForm.attributes).then(response => {
+            toggleRecord() {
+                this.toggleRecordForm.start();
+                this.toggleRecordForm.switch(this.record.enabled);
+                axios.patch('/api/dns/records/' + this.record.id, this.toggleRecordForm.attributes).then(response => {
                     ServerAdmin.Utils.updateAttributes(this.record, response.data.data);
-                    this.toggleForm.finish();
+                    this.toggleRecordForm.finish();
                 }).catch(error => {
-                    this.toggleForm.crash(error);
+                    this.toggleRecordForm.crash(error);
                 });
             },
         },

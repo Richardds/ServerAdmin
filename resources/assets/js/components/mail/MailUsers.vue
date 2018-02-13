@@ -1,38 +1,38 @@
 <template>
     <div>
-        <sa-modal :visible="userForm.enabled"
-                  @close="userForm.close()"
+        <sa-modal :visible="createUserForm.enabled"
+                  @close="createUserForm.close()"
                   title="Add domain">
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="name" class="col-md-3 control-label">Name</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="name" v-model="userForm.attributes.name" />
+                        <input type="text" class="form-control" id="name" v-model="createUserForm.attributes.name" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="username" class="col-md-3 control-label">Username</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="username" v-model="userForm.attributes.username" />
+                        <input type="text" class="form-control" id="username" v-model="createUserForm.attributes.username" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="password" class="col-md-3 control-label">Password</label>
                     <div class="col-md-8">
                         <div class="input-group">
-                            <input type="password" class="form-control" id="password" v-model="userForm.attributes.password" />
+                            <input type="password" class="form-control" id="password" v-model="createUserForm.attributes.password" />
                             <span class="input-group-btn">
-                                <sa-button @click.native="userForm.attributes.password = password()" icon="arrow-left" />
+                                <sa-button @click.native="createUserForm.attributes.password = password()" icon="arrow-left" />
                             </span>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-3 col-md-8">
-                        <sa-button @click.native="add"
+                        <sa-button @click.native="createUser()"
                                    type="default"
                                    icon="plus"
-                                   :loading="userForm.loading">Add</sa-button>
+                                   :loading="createUserForm.loading">Add</sa-button>
                     </div>
                 </div>
             </div>
@@ -46,16 +46,16 @@
             </tr>
             </thead>
             <tbody>
-            <sa-mail-user v-for="user in this.users"
+            <sa-mail-user v-for="user in orderedUsers"
                             :key="user.id"
                             :domain="domain"
                             :user="user"
-                            @destroy="destroy(user.id)" />
+                            @destroy="destroyUser(user.id)" />
             </tbody>
             <tfoot>
             <tr>
                 <td colspan="7" class="text-right">
-                    <sa-button @click.native="userForm.open()"
+                    <sa-button @click.native="createUserForm.open()"
                                type="default"
                                icon="plus"
                                size="sm" />
@@ -73,18 +73,18 @@
             return {
                 users: [],
                 domain: {},
-                userForm: new ServerAdmin.ModalForm({
-                    'domain_id': this.domain_id,
-                    'username': '',
-                    'password': '',
+                createUserForm: new ServerAdmin.ModalForm({
+                    domain_id: this.domain_id,
+                    username: '',
+                    password: '',
                 }),
             };
         },
         mounted() {
-            this.load();
+            this.loadUsers();
         },
         methods: {
-            load() {
+            loadUsers() {
                 // Load domain info
                 axios.get('/api/mail/domains/' + this.domain_id).then(response => {
                     this.domain = response.data.data;
@@ -103,21 +103,26 @@
                     console.error(error);
                 });
             },
-            destroy(id) {
+            destroyUser(id) {
                 this.users = _.remove(this.users, user => user.id !== id);
             },
-            add() {
-                this.userForm.start();
-                axios.post('/api/mail/users', this.userForm.attributes).then(() => {
-                    this.userForm.finish();
-                    this.load();
+            createUser() {
+                this.createUserForm.start();
+                axios.post('/api/mail/users', this.createUserForm.attributes).then(() => {
+                    this.createUserForm.finish();
+                    this.loadUsers();
                 }).catch(error => {
-                    this.userForm.crash(error);
+                    this.createUserForm.crash(error);
                 });
             },
             password() {
                 return ServerAdmin.Utils.generatePassword();
             },
+        },
+        computed: {
+            orderedUsers() {
+                return _.sortBy(this.users, 'name');
+            }
         }
     }
 </script>

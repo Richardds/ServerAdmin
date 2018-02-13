@@ -52,7 +52,7 @@ class ApiResponse
     {
         $this->success = false;
 
-        if (! is_null($e)) {
+        if (!is_null($e)) {
             $this->exception($e);
         }
 
@@ -114,23 +114,25 @@ class ApiResponse
      */
     public function response(int $status = 200, array $headers = [])
     {
-        $responseData = [
-            'success' => $this->success ?? true,
-        ];
+        $responseData['success'] = $this->success ?? false;
 
-        if (! empty($this->message)) {
+        if (!empty($this->message)) {
             $responseData['message'] = $this->message;
         }
 
-        if (! empty($this->errors)) {
+        if (request()->method() == 'GET') {
+            $responseData['data'] = $this->data ?? [];
+        } else {
+            if (!empty($this->data)) {
+                $responseData['data'] = $this->data;
+            }
+        }
+
+        if (!empty($this->errors)) {
             $responseData['errors'] = $this->errors;
         }
 
-        if (! empty($this->data)) {
-            $responseData['data'] = $this->data;
-        }
-
-        if (! is_null($this->exception)) {
+        if (!is_null($this->exception)) {
             $responseData['exception'] = [
                 'message' => $this->exception->getMessage(),
                 'class' => get_class($this->exception),

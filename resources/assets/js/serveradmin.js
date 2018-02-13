@@ -34,6 +34,17 @@ export const Utils = new class {
         return _.times(length, () => _.random(35).toString(36)).join('');
     }
 
+    /**
+     * Generate serial number based on current date and iterator.
+     *
+     * @param i
+     * @returns {*}
+     */
+    generateSerial(i = 1) {
+        let date = new Date();
+        return ((date.getFullYear() * 100 + date.getMonth() + 1) * 100 + date.getDate()) * 100 + _.min([(i), 99])
+    }
+
 };
 
 export class Form {
@@ -69,6 +80,16 @@ export class ModalForm extends Form {
         this.enabled = false;
     }
 
+    finish() {
+        super.finish();
+        this.close();
+    }
+
+    crash(error) {
+        super.crash(error);
+        this.close();
+    }
+
     open() {
         this.enabled = true;
     }
@@ -87,5 +108,13 @@ export class ToggleForm extends Form {
 
     switch(currentState) {
         this.attributes.enabled = !currentState;
+    }
+}
+
+export class EditForm extends Form {
+    constructor(defaultAttributes) {
+        super(defaultAttributes);
+        this.editing = false;
+        this.changed = false;
     }
 }

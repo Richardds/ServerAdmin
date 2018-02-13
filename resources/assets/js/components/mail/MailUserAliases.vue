@@ -2,7 +2,7 @@
     <div class="form-horizontal">
         <table class="table table-striped table-controls">
             <tbody>
-            <tr v-for="alias in aliases">
+            <tr v-for="alias in orderedAliases">
                 <td>{{ alias.alias }}@{{ domain.name }}</td>
                 <td class="fit">
                     <sa-button @click.native="destroyAlias(alias.id)"
@@ -36,9 +36,9 @@
             return {
                 aliases: [],
                 createAliasForm: new ServerAdmin.Form({
-                    'domain_id': this.domain.id,
-                    'user_id': this.user.id,
-                    'alias': '',
+                    domain_id: this.domain.id,
+                    user_id: this.user.id,
+                    alias: '',
                 }),
                 destroyAliasForm: new ServerAdmin.Form({
                     'id': -1
@@ -77,6 +77,11 @@
                     this.destroyAliasForm.crash(error);
                 });
             },
+        },
+        computed: {
+            orderedAliases() {
+                return _.sortBy(this.aliases, 'alias');
+            }
         },
     }
 </script>

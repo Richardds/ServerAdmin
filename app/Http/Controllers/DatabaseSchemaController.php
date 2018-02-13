@@ -38,14 +38,14 @@ class DatabaseSchemaController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException
      */
-    public function grantPermissions(Request $request)
+    public function grantPrivileges(Request $request)
     {
         $this->validate($request, [
             'name' => 'required|min:1|max:255',
             'user' => 'required|min:1|max:255',
         ]);
 
-        $this->manager->grantPermissions($request->get('name'), DatabaseUser::fromSingleString($request->get('user')));
+        $this->manager->grantPrivileges($request->get('name'), DatabaseUser::fromSingleString($request->get('user')));
 
         return api_response()->success()->response();
     }
@@ -55,14 +55,14 @@ class DatabaseSchemaController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException
      */
-    public function revokePermissions(Request $request)
+    public function revokePrivileges(Request $request)
     {
         $this->validate($request, [
             'name' => 'required|min:1|max:255',
             'user' => 'required|min:1|max:255',
         ]);
 
-        $this->manager->revokePermissions($request->get('name'), DatabaseUser::fromSingleString($request->get('user')));
+        $this->manager->revokePrivileges($request->get('name'), DatabaseUser::fromSingleString($request->get('user')));
 
         return api_response()->success()->response();
     }

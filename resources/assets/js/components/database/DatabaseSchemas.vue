@@ -1,46 +1,44 @@
 <template>
     <div>
-        <sa-modal :visible="addSchema"
-                  @close="addSchema = false"
+        <sa-modal :visible="createSchemaForm.enabled"
+                  @close="createSchemaForm.close()"
                   title="Add database">
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="schemaName" class="col-md-3 control-label">Name</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="schemaName" v-model="schema.name" />
+                        <input type="text" class="form-control" id="schemaName" v-model="createSchemaForm.attributes.name" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="schemaCharacterSet" class="col-md-3 control-label">Character set</label>
                     <div class="col-md-8">
-                        <select class="form-control" id="schemaCharacterSet" v-model="schema.character_set">
-                            <!-- <option v-for="user in users">{{ user }}</option> -->
-                            <option>utf8mb4</option>
+                        <select class="form-control" id="schemaCharacterSet" v-model="createSchemaForm.attributes.character_set">
+                            <option v-for="user in users">{{ user }}</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="schemaCollation" class="col-md-3 control-label">Collation</label>
                     <div class="col-md-8">
-                        <select class="form-control" id="schemaCollation" v-model="schema.collation">
-                            <!-- <option v-for="user in users">{{ user }}</option> -->
-                            <option>utf8mb4_general_ci</option>
+                        <select class="form-control" id="schemaCollation" v-model="createSchemaForm.attributes.collation">
+                            <option v-for="user in users">{{ user }}</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-3 col-md-8">
-                        <sa-button @click.native="add"
+                        <sa-button @click.native="createSchema()"
                                    type="default"
                                    icon="plus"
-                                   :loading="adding">Add</sa-button>
+                                   :loading="createSchemaForm.loading">Add</sa-button>
                     </div>
                 </div>
             </div>
         </sa-modal>
 
-        <sa-modal :visible="editUsers"
-                  @close="editUsers = false"
+        <sa-modal :visible="editUsersModal.enabled"
+                  @close="editUsersModal.close()"
                   title="Users">
             <sa-database-users :users="users" @updateUsers="updateUsers" />
         </sa-modal>
@@ -57,20 +55,20 @@
             </tr>
             </thead>
             <tbody>
-            <sa-database-schema v-for="schema in this.schemas"
+            <sa-database-schema v-for="schema in orderedSchemas"
                          :key="schema.name"
                          :schema="schema"
                          :users="users"
-                         @destroy="destroy(schema.name)" />
+                         @destroy="destroySchema(schema.name)" />
             </tbody>
             <tfoot>
             <tr>
                 <td colspan="7" class="text-right">
-                    <sa-button @click.native="editUsers = true"
+                    <sa-button @click.native="editUsersModal.open()"
                                type="default"
                                icon="users"
                                size="sm" />
-                    <sa-button @click.native="addSchema = true"
+                    <sa-button @click.native="createSchemaForm.open()"
                                type="default"
                                icon="plus"
                                size="sm" />
@@ -89,26 +87,22 @@
                 character_sets: [],
                 collations: [],
                 users: [],
-                //
-                addSchema: false,
-                adding: false,
-                editUsers: false,
-                //
-                schema: {
+                editUsersModal: new ServerAdmin.ModalForm(),
+                createSchemaForm: new ServerAdmin.ModalForm({
                     name: '',
                     character_set: 'utf8mb4',
                     collation: 'utf8mb4_general_ci',
-                },
+                }),
             };
         },
         mounted() {
             let self = this;
+            // Load data
             axios.all([
                 axios.get('/api/data/database_available_character_sets'),
                 axios.get('/api/data/database_available_collations'),
                 axios.get('/api/data/database_users'),
-                axios.get('/api/database/schemas')
-            ]).then(axios.spread(function (character_sets, collations, users, schemas) {
+            ]).then(axios.spread(function (character_sets, collations, users) {
                 self.character_sets = [];
                 for (let character_set of character_sets.data.data) {
                     self.character_sets.push(character_set);
@@ -121,37 +115,44 @@
                 for (let user of users.data.data) {
                     self.users.push(user);
                 }
-                self.schemas = [];
-                for (let schema of schemas.data.data) {
-                    self.schemas.push(schema);
-                }
+
+                // Load schemas
+                self.loadSchemas();
             })).catch(error => {
                 console.error(error);
             });
         },
         methods: {
-            add() {
-                let self = this;
-                self.adding = true;
-                axios.all([
-                    axios.post('/api/database/schemas', self.schema),
-                    axios.get('/api/database/schemas')
-                ]).then(axios.spread(function (created_schema, schemas) {
-                    self.schemas = [];
-                    for (let schema of schemas.data.data) {
-                        self.schemas.push(schema);
+            loadSchemas() {
+                axios.get('/api/database/schemas').then(response => {
+                    this.schemas = [];
+                    for (let schema of response.data.data) {
+                        this.schemas.push(schema);
                     }
-                    self.adding = false;
-                })).catch(error => {
+                }).catch(error => {
                     console.error(error);
                 });
             },
-            destroy(name) {
+            createSchema() {
+                this.createSchemaForm.start();
+                axios.post('/api/database/schemas', this.createSchemaForm.attributes).then(() => {
+                    this.createSchemaForm.finish();
+                    this.loadSchemas();
+                }).catch(error => {
+                    this.createSchemaForm.crash(error);
+                });
+            },
+            destroySchema(name) {
                 this.schemas = _.remove(this.schemas, schema => schema.name !== name);
             },
             updateUsers(users) {
                 this.users = users;
             }
-        }
+        },
+        computed: {
+            orderedSchemas() {
+                return _.sortBy(this.schemas, 'name');
+            }
+        },
     }
 </script>

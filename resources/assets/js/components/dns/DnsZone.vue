@@ -31,20 +31,20 @@
         </template>
 
         <td class="fit">
-            <sa-button @click.native="editZone"
+            <sa-button @click.native="editZone()"
                        :type="editButtonType"
                        :icon="editButtonIcon"
                        size="sm"
                        :loading="updating" />
-            <sa-button @click.native="toggleEnabled"
+            <sa-button @click.native="toggleZone()"
                        :icon="zone.enabled ? 'toggle-on' : 'toggle-off'"
                        size="sm"
-                       :loading="toggleForm.loading" />
-            <sa-button @click.native="deleteZone"
+                       :loading="toggleZoneForm.loading" />
+            <sa-button @click.native="destroyZone()"
                        type="danger"
                        icon="trash"
                        size="sm"
-                       :loading="deleting" />
+                       :loading="destroyZoneForm.loading" />
         </td>
     </tr>
 </template>
@@ -56,10 +56,12 @@
             return {
                 editMode: false,
                 updating: false,
-                deleting: false,
                 changed: false,
                 //
-                toggleForm: new ServerAdmin.ToggleForm(),
+                toggleZoneForm: new ServerAdmin.ToggleForm(),
+                destroyZoneForm: new ServerAdmin.Form({
+                    'id': -1
+                }),
             };
         },
         methods: {
@@ -80,23 +82,23 @@
                 }
                 this.editMode = !this.editMode;
             },
-            deleteZone() {
-                this.deleting = true;
-                axios.delete('/api/dns/zones/' + this.zone.id).then(response => {
+            destroyZone() {
+                this.destroyZoneForm.start();
+                axios.delete('/api/dns/zones/' + this.zone.id).then(() => {
+                    this.destroyZoneForm.finish();
                     this.$emit('destroy');
                 }).catch(error => {
-                    this.deleting = false;
-                    console.error(error);
+                    this.destroyZoneForm.crash(error);
                 });
             },
-            toggleEnabled() {
-                this.toggleForm.start();
-                this.toggleForm.switch(this.zone.enabled);
-                axios.patch('/api/dns/zones/' + this.zone.id, this.toggleForm.attributes).then(response => {
+            toggleZone() {
+                this.toggleZoneForm.start();
+                this.toggleZoneForm.switch(this.zone.enabled);
+                axios.patch('/api/dns/zones/' + this.zone.id, this.toggleZoneForm.attributes).then(response => {
                     ServerAdmin.Utils.updateAttributes(this.zone, response.data.data);
-                    this.toggleForm.finish();
+                    this.toggleZoneForm.finish();
                 }).catch(error => {
-                    this.toggleForm.crash(error);
+                    this.toggleZoneForm.crash(error);
                 });
             },
         },

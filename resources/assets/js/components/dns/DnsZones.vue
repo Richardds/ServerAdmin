@@ -1,22 +1,22 @@
 <template>
     <div>
-        <sa-modal :visible="addZoneModalVisible"
-                  @close="addZoneModalVisible = false"
+        <sa-modal :visible="createZoneForm.enabled"
+                  @close="createZoneForm.close()"
                   title="Add Zone">
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="addZoneName" class="col-md-3 control-label">Name</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="addZoneName" v-model="zone.name" />
+                        <input type="text" class="form-control" id="addZoneName" v-model="createZoneForm.attributes.name" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="addZoneAdmin" class="col-md-3 control-label">Admin</label>
                     <div class="col-md-8">
                         <div class="input-group">
-                            <input type="text" class="form-control" id="addZoneAdmin" v-model="zone.admin" />
+                            <input type="text" class="form-control" id="addZoneAdmin" v-model="createZoneForm.attributes.admin" />
                             <span class="input-group-btn">
-                                <sa-button @click.native="zone.admin = generateAdmin()" icon="arrow-left" />
+                                <sa-button @click.native="createZoneForm.attributes.admin = generateAdmin()" icon="arrow-left" />
                             </span>
                         </div>
                     </div>
@@ -25,9 +25,9 @@
                     <label for="addZoneSerial" class="col-md-3 control-label">Serial</label>
                     <div class="col-md-8">
                         <div class="input-group">
-                            <input type="number" class="form-control" id="addZoneSerial" v-model="zone.serial" />
+                            <input type="number" class="form-control" id="addZoneSerial" v-model="createZoneForm.attributes.serial" />
                             <span class="input-group-btn">
-                                <sa-button @click.native="zone.serial = generateSerial()" icon="arrow-left" />
+                                <sa-button @click.native="createZoneForm.attributes.serial = generateSerial()" icon="arrow-left" />
                             </span>
                         </div>
                     </div>
@@ -35,33 +35,33 @@
                 <div class="form-group">
                     <label for="addZoneRefresh" class="col-md-3 control-label">Refresh</label>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" id="addZoneRefresh" v-model="zone.refresh" />
+                        <input type="number" class="form-control" id="addZoneRefresh" v-model="createZoneForm.attributes.refresh" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="addZoneRetry" class="col-md-3 control-label">Retry</label>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" id="addZoneRetry" v-model="zone.retry" />
+                        <input type="number" class="form-control" id="addZoneRetry" v-model="createZoneForm.attributes.retry" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="addZoneExpire" class="col-md-3 control-label">Expire</label>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" id="addZoneExpire" v-model="zone.expire" />
+                        <input type="number" class="form-control" id="addZoneExpire" v-model="createZoneForm.attributes.expire" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="addZoneTTL" class="col-md-3 control-label">TTL</label>
                     <div class="col-md-8">
-                        <input type="number" class="form-control" id="addZoneTTL" v-model="zone.ttl" />
+                        <input type="number" class="form-control" id="addZoneTTL" v-model="createZoneForm.attributes.ttl" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-3 col-md-8">
-                        <sa-button @click.native="add"
+                        <sa-button @click.native="createZone()"
                                    type="default"
                                    icon="plus"
-                                   :loading="adding">Add</sa-button>
+                                   :loading="createZoneForm.loading">Add</sa-button>
                     </div>
                 </div>
             </div>
@@ -80,15 +80,15 @@
             </tr>
             </thead>
             <tbody>
-            <sa-dns-zone v-for="zone in this.zones"
+            <sa-dns-zone v-for="zone in orderedZones"
                          :key="zone.id"
                          :zone="zone"
-                         @destroy="destroy(zone.id)" />
+                         @destroy="destroyZone(zone.id)" />
             </tbody>
             <tfoot>
             <tr>
                 <td colspan="7" class="text-right">
-                    <sa-button @click.native="addZoneModalVisible = true"
+                    <sa-button @click.native="createZoneForm.open()"
                                type="default"
                                icon="plus"
                                size="sm" />
@@ -104,70 +104,55 @@
         data() {
             return {
                 zones: [],
-                addZoneModalVisible: false,
-                zone: {
+                createZoneForm: new ServerAdmin.ModalForm({
                     name: '',
                     admin: '',
-                    serial: 0,
-                    refresh: 0,
-                    retry: 0,
-                    expire: 0,
-                    ttl: 0
-                },
-                adminChanged: false,
-                adding: false
+                    serial: this.generateSerial(),
+                    refresh: 43200,
+                    retry: 3600,
+                    expire: 1209600,
+                    ttl: 1209600
+                }),
             };
         },
         mounted() {
-            this.reset();
-            axios.get('/api/dns/zones').then(response => {
-                this.zones = [];
-                for (let zone of response.data.data) {
-                    this.zones.push(zone);
-                }
-            }).catch(error => {
-                console.error(error);
-            });
+            this.loadZones();
         },
         methods: {
-            destroy(id) {
-                this.zones = _.remove(this.zones, zone => zone.id !== id);
-            },
-            add() {
-                let self = this;
-                self.adding = true;
-                axios.all([
-                    axios.post('/api/dns/zones', self.zone),
-                    axios.get('/api/dns/zones')
-                ]).then(axios.spread(function (created_zone, zones) {
-                    self.zones = [];
-                    for (let zone of zones.data.data) {
-                        self.zones.push(zone);
+            loadZones() {
+                axios.get('/api/dns/zones').then(response => {
+                    this.zones = [];
+                    for (let zone of response.data.data) {
+                        this.zones.push(zone);
                     }
-                    self.reset();
-                    self.adding = false;
-                })).catch(error => {
+                }).catch(error => {
                     console.error(error);
                 });
             },
-            reset() {
-                this.zone.name = '';
-                this.zone.admin = '';
-                this.zone.serial = this.generateSerial();
-                this.zone.refresh = 43200;
-                this.zone.retry = 3600;
-                this.zone.expire = 1209600;
-                this.zone.ttl = 1209600;
-                this.adminChanged = false;
+            destroyZone(id) {
+                this.zones = _.remove(this.zones, zone => zone.id !== id);
+            },
+            createZone() {
+                this.createZoneForm.start();
+                axios.post('/api/dns/zones', this.createZoneForm.attributes).then(() => {
+                    this.createZoneForm.finish();
+                    this.loadZones();
+                }).catch(error => {
+                    this.createZoneForm.crash(error);
+                });
             },
             generateAdmin() {
-                return this.zone.name ? 'admin.' + this.zone.name : '';
+                let name = this.createZoneForm.attributes.name;
+                return name ? 'admin.' + name : '';
             },
-            generateSerial(i) {
-                let date = new Date();
-                return ((date.getFullYear() * 100 + date.getMonth() + 1) * 100 + date.getDate()) * 100 + _.min([(i || 1), 99])
-
+            generateSerial() {
+                return ServerAdmin.Utils.generateSerial();
             }
-        }
+        },
+        computed: {
+            orderedZones() {
+                return _.sortBy(this.zones, 'name');
+            }
+        },
     }
 </script>

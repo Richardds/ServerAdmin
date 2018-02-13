@@ -1,6 +1,7 @@
 window._ = require('lodash');
 window.Vue = require('vue');
 window.axios = require('axios');
+window.Clipboard = require('clipboard');
 window.ServerAdmin = require('./serveradmin');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -11,3 +12,6 @@ if (token) {
 } else {
     console.error('CSRF token not found');
 }
+
+// Initialize Clipboard.js
+new Clipboard('.btn');

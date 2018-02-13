@@ -2,11 +2,11 @@
     <tr>
         <td>{{ user.user }}@{{ user.host }}</td>
         <td class="fit">
-            <sa-button @click.native="deleteUser(user)"
+            <sa-button @click.native="destroyUser(user)"
                        type="danger"
                        icon="trash"
                        size="sm"
-                       :loading="deleting" />
+                       :loading="destroyUserForm.loading" />
         </td>
     </tr>
 </template>
@@ -16,31 +16,21 @@
         props: ['user'],
         data() {
             return {
-                deleting: false,
+                destroyUserForm: new ServerAdmin.Form({
+                    'id': -1
+                }),
             };
         },
         methods: {
-            add() {
-                this.adding = true;
-                axios.post('/api/database/users', this.user).then(response => {
-                    this.adding = false;
-                }).catch(error => {
-                    this.deleting = false;
-                    console.error(error);
-                });
-            },
-            deleteUser(user) {
-                this.deleting = true;
-                axios.delete('/api/database/users/' + user.user + '@' + user.host).then(response => {
+            destroyUser(user) {
+                this.destroyUserForm.start();
+                axios.delete('/api/database/users/' + user.user + '@' + user.host).then(() => {
+                    this.destroyUserForm.finish();
                     this.$emit('destroy');
                 }).catch(error => {
-                    this.deleting = false;
-                    console.error(error);
+                    this.destroyUserForm.crash(error);
                 });
             }
         },
-        computed: {
-
-        }
     }
 </script>

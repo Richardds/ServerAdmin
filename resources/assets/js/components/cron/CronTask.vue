@@ -5,15 +5,15 @@
                 {{ task.minute }} {{ task.hour }} {{ task.day }} {{ task.month }} {{ task.weekday }}
             </td>
             <td class="cron-user">
-                <select @change="onChange" class="form-control input-sm" v-model="task.uid">
+                <select @change="onChange()" class="form-control input-sm" v-model="task.uid">
                     <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
                 </select>
             </td>
             <td class="cron-command">
-                <input @input="onChange" class="form-control input-sm" type="text" v-model="task.command" />
+                <input @input="onChange()" class="form-control input-sm" type="text" v-model="task.command" />
             </td>
             <td class="cron-description">
-                <textarea @input="onChange" rows="2" class="form-control input-sm" v-model="task.description"></textarea>
+                <textarea @input="onChange()" rows="2" class="form-control input-sm" v-model="task.description"></textarea>
             </td>
         </template>
 
@@ -35,50 +35,50 @@
                     <div class="form-group">
                         <label for="editIntervalMinute" class="col-md-3 control-label">Minute</label>
                         <div class="col-md-8">
-                            <input @input="onChange" type="text" class="form-control" id="editIntervalMinute" v-model="task.minute" />
+                            <input @input="onChange()" type="text" class="form-control" id="editIntervalMinute" v-model="task.minute" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="editIntervalHour" class="col-md-3 control-label">Hour</label>
                         <div class="col-md-8">
-                            <input @input="onChange" type="text" class="form-control" id="editIntervalHour" v-model="task.hour" />
+                            <input @input="onChange()" type="text" class="form-control" id="editIntervalHour" v-model="task.hour" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="editIntervalDay" class="col-md-3 control-label">Day</label>
                         <div class="col-md-8">
-                            <input @input="onChange" type="text" class="form-control" id="editIntervalDay" v-model="task.day" />
+                            <input @input="onChange()" type="text" class="form-control" id="editIntervalDay" v-model="task.day" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="editIntervalMonth" class="col-md-3 control-label">Month</label>
                         <div class="col-md-8">
-                            <input @input="onChange" type="text" class="form-control" id="editIntervalMonth" v-model="task.month" />
+                            <input @input="onChange()" type="text" class="form-control" id="editIntervalMonth" v-model="task.month" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="editIntervalWeekday" class="col-md-3 control-label">Weekday</label>
                         <div class="col-md-8">
-                            <input @input="onChange" type="text" class="form-control" id="editIntervalWeekday" v-model="task.weekday" />
+                            <input @input="onChange()" type="text" class="form-control" id="editIntervalWeekday" v-model="task.weekday" />
                         </div>
                     </div>
                 </div>
             </sa-modal>
 
-            <sa-button @click.native="editTask"
+            <sa-button @click.native="editTask()"
                        :type="editButtonType"
                        :icon="editButtonIcon"
                        size="sm"
                        :loading="updating" />
-            <sa-button @click.native="toggleEnabled"
+            <sa-button @click.native="toggleTask()"
                        :icon="task.enabled ? 'toggle-on' : 'toggle-off'"
                        size="sm"
-                       :loading="toggleForm.loading" />
-            <sa-button @click.native="deleteTask"
+                       :loading="toggleTaskForm.loading" />
+            <sa-button @click.native="destroyTask()"
                        type="danger"
                        icon="trash"
                        size="sm"
-                       :loading="deleting" />
+                       :loading="destroyTaskForm.loading" />
         </td>
     </tr>
 </template>
@@ -92,10 +92,12 @@
                 //
                 editMode: false,
                 updating: false,
-                deleting: false,
                 changed: false,
                 //
-                toggleForm: new ServerAdmin.ToggleForm(),
+                toggleTaskForm: new ServerAdmin.ToggleForm(),
+                destroyTaskForm: new ServerAdmin.Form({
+                    'id': -1
+                }),
             };
         },
         methods: {
@@ -116,23 +118,23 @@
                 }
                 this.editMode = !this.editMode;
             },
-            deleteTask() {
-                this.deleting = true;
+            destroyTask() {
+                this.destroyTaskForm.start();
                 axios.delete('/api/cron/tasks/' + this.task.id).then(response => {
+                    this.destroyTaskForm.finish();
                     this.$emit('destroy');
                 }).catch(error => {
-                    this.deleting = false;
-                    console.error(error);
+                    this.destroyTaskForm.crash(error);
                 });
             },
-            toggleEnabled() {
-                this.toggleForm.start();
-                this.toggleForm.switch(this.task.enabled);
-                axios.patch('/api/cron/tasks/' + this.task.id, this.toggleForm.attributes).then(response => {
+            toggleTask() {
+                this.toggleTaskForm.start();
+                this.toggleTaskForm.switch(this.task.enabled);
+                axios.patch('/api/cron/tasks/' + this.task.id, this.toggleTaskForm.attributes).then(response => {
                     ServerAdmin.Utils.updateAttributes(this.task, response.data.data);
-                    this.toggleForm.finish();
+                    this.toggleTaskForm.finish();
                 }).catch(error => {
-                    this.toggleForm.crash(error);
+                    this.toggleTaskForm.crash(error);
                 });
             },
             user(id) {

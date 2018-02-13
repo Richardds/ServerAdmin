@@ -1,10 +1,10 @@
 <template>
     <table class="table table-striped table-controls">
         <tbody>
-        <sa-database-user v-for="user in users"
+        <sa-database-user v-for="user in orderedUsers"
                           :key="user.user + '@' + user.host"
                           :user="user"
-                          @destroy="destroy(user)" />
+                          @destroy="destroyUser(user)" />
         </tbody>
         <tfoot>
         <tr>
@@ -14,9 +14,9 @@
                         <label for="user" class="col-md-2 control-label">User</label>
                         <div class="col-md-10">
                             <div class="input-group input-group-sm">
-                                <input type="text" class="form-control" id="user" placeholder="User" v-model="user.user">
+                                <input type="text" class="form-control" id="user" placeholder="User" v-model="createUserForm.attributes.user">
                                 <span class="input-group-addon"><i class="fa fa-at" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control" placeholder="Host" v-model="user.host">
+                                <input type="text" class="form-control" placeholder="Host" v-model="createUserForm.attributes.host">
                             </div>
                         </div>
                     </div>
@@ -24,9 +24,10 @@
                         <label for="password" class="col-md-2 control-label">Password</label>
                         <div class="col-md-10">
                             <div class="input-group input-group-sm">
-                                <input type="password" class="form-control" id="password" placeholder="Password" v-model="user.password" />
+                                <input type="password" class="form-control" id="password" placeholder="Password" v-model="createUserForm.attributes.password" />
                                 <span class="input-group-btn">
-                                    <sa-button @click.native="user.password = password()" icon="arrow-left" />
+                                    <sa-button data-clipboard-target="#password" icon="copy" />
+                                    <sa-button @click.native="createUserForm.attributes.password = password()" icon="arrow-left" />
                                 </span>
                             </div>
                         </div>
@@ -34,11 +35,11 @@
                 </div>
             </td>
             <td class="fit">
-                <sa-button @click.native="add"
+                <sa-button @click.native="createUser()"
                            type="default"
                            icon="plus"
                            size="sm"
-                           :loading="adding" />
+                           :loading="createUserForm.loading" />
             </td>
         </tr>
         </tfoot>
@@ -50,44 +51,49 @@
         data() {
             return {
                 users: [],
-                user: {
+                createUserForm: new ServerAdmin.ModalForm({
                     user: '',
                     host: 'localhost',
                     password: '',
-                },
-                //
-                adding: false,
-                destroying: false,
+                }),
             };
         },
         mounted() {
-            axios.get('/api/database/users').then(response => {
-                this.users = [];
-                for (let user of response.data.data) {
-                    this.users.push(user);
-                }
-                this.$emit('updateUsers', this.users);
-            }).catch(error => {
-                this.deleting = false;
-                console.error(error);
-            });
+            this.loadUsers();
         },
         methods: {
-            add() {
-                this.adding = true;
-                axios.post('/api/database/users', this.user).then(response => {
-                    this.adding = false;
+            loadUsers() {
+                axios.get('/api/database/users').then(response => {
+                    this.users = [];
+                    for (let user of response.data.data) {
+                        this.users.push(user);
+                    }
+                    this.$emit('updateUsers', this.users);
                 }).catch(error => {
-                    this.adding = false;
+                    this.deleting = false;
                     console.error(error);
                 });
             },
-            destroy(user) {
+            createUser() {
+                this.createUserForm.start();
+                axios.post('/api/database/users', this.createUserForm.attributes).then(() => {
+                    this.createUserForm.finish();
+                    this.loadUsers();
+                }).catch(error => {
+                    this.createUserForm.crash(error);
+                });
+            },
+            destroyUser(user) {
                 this.users = _.remove(this.users, aUser => (aUser.user + '@' + aUser.host) !== (user.user + '@' + user.host));
             },
             password() {
                 return ServerAdmin.Utils.generatePassword();
             },
-        }
+        },
+        computed: {
+            orderedUsers() {
+                return _.sortBy(this.users, ['user', 'host']);
+            }
+        },
     }
 </script>

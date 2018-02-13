@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">DNS Service</div>
+                    <div class="panel-heading">DNS</div>
 
                     <div class="panel-body">
                         <sa-service-controls service="dns"></sa-service-controls>
@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="panel panel-default">
-                    <div class="panel-heading">DNS Records of zone <strong>{{ $zone->name }}</strong></div>
+                    <div class="panel-heading">Records of zone <strong>{{ $zone->name }}</strong></div>
 
                     <sa-dns-records zone="{{ $zone->id }}"></sa-dns-records>
                 </div>

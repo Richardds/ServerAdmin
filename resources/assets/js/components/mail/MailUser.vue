@@ -4,14 +4,20 @@
         <td class="user-username">{{ user.username }}<span class="lighter">@{{ domain.name }}</span></td>
         <td class="fit">
 
-            <sa-modal :visible="passwordForm.enabled"
-                      @close="passwordForm.close()"
+            <sa-modal :visible="changePasswordForm.enabled"
+                      @close="changePasswordForm.close()"
                       title="Change password">
                 <div class="form-horizontal">
                     <div class="form-group">
                         <label for="password" class="col-md-3 control-label">Password</label>
                         <div class="col-md-8">
-                            <input type="password" class="form-control" id="password" v-model="passwordForm.attributes.password" />
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" v-model="changePasswordForm.attributes.password" />
+                                <span class="input-group-btn">
+                                    <sa-button data-clipboard-target="#password" icon="copy" />
+                                    <sa-button @click.native="changePasswordForm.attributes.password = password()" icon="arrow-left" />
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -19,33 +25,33 @@
                             <sa-button @click.native="updateUserPassword"
                                        type="default"
                                        icon="check"
-                                       :loading="passwordForm.loading">Change</sa-button>
+                                       :loading="changePasswordForm.loading">Change</sa-button>
                         </div>
                     </div>
                 </div>
             </sa-modal>
 
-            <sa-modal :visible="aliasModal.enabled"
-                      @close="aliasModal.close()"
+            <sa-modal :visible="editAliasesModal.enabled"
+                      @close="editAliasesModal.close()"
                       title="User aliases">
                 <sa-mail-user-aliases :domain="domain" :user="user" />
             </sa-modal>
 
-            <sa-button @click.native="passwordForm.open()"
+            <sa-button @click.native="changePasswordForm.open()"
                        icon="key"
                        size="sm" />
-            <sa-button @click.native="aliasModal.open()"
+            <sa-button @click.native="editAliasesModal.open()"
                        icon="users"
                        size="sm" />
             <sa-button @click.native="toggleEnabled"
                        :icon="user.enabled ? 'toggle-on' : 'toggle-off'"
                        size="sm"
-                       :loading="toggleForm.loading" />
+                       :loading="toggleUserForm.loading" />
             <sa-button @click.native="deleteUser"
                        type="danger"
                        icon="trash"
                        size="sm"
-                       :loading="deleting" />
+                       :loading="destroyUserForm.loading" />
         </td>
     </tr>
 </template>
@@ -55,43 +61,47 @@
         props: ['domain', 'user'],
         data() {
             return {
-                deleting: false,
-                //
-                toggleForm: new ServerAdmin.ToggleForm(),
-                passwordForm: new ServerAdmin.ModalForm({
-                    'password': ''
+                toggleUserForm: new ServerAdmin.ToggleForm(),
+                changePasswordForm: new ServerAdmin.ModalForm({
+                    password: ''
                 }),
-                aliasModal: new ServerAdmin.ModalForm(),
+                editAliasesModal: new ServerAdmin.ModalForm(),
+                destroyUserForm: new ServerAdmin.Form({
+                    'id': -1
+                }),
             };
         },
         methods: {
             deleteUser() {
-                this.deleting = true;
-                axios.delete('/api/mail/user/' + this.user.id).then(response => {
+                this.destroyUserForm.start();
+                axios.delete('/api/mail/users/' + this.user.id).then(() => {
+                    this.destroyUserForm.finish();
                     this.$emit('destroy');
                 }).catch(error => {
-                    this.deleting = false;
-                    console.error(error);
+                    this.destroyUserForm.crash(error);
                 });
             },
             toggleEnabled() {
-                this.toggleForm.start();
-                this.toggleForm.switch(this.user.enabled);
-                axios.patch('/api/mail/users/' + this.user.id, this.toggleForm.attributes).then(response => {
+                this.toggleUserForm.start();
+                this.toggleUserForm.switch(this.user.enabled);
+                axios.patch('/api/mail/users/' + this.user.id, this.toggleUserForm.attributes).then(response => {
                     ServerAdmin.Utils.updateAttributes(this.user, response.data.data);
-                    this.toggleForm.finish();
+                    this.toggleUserForm.finish();
                 }).catch(error => {
-                    this.toggleForm.crash(error);
+                    this.toggleUserForm.crash(error);
                 });
             },
             updateUserPassword() {
-                this.passwordForm.start();
-                axios.patch('/api/mail/users/' + this.user.id, this.passwordForm.attributes).then(response => {
+                this.changePasswordForm.start();
+                axios.patch('/api/mail/users/' + this.user.id, this.changePasswordForm.attributes).then(response => {
                     ServerAdmin.Utils.updateAttributes(this.user, response.data.data);
-                    this.passwordForm.finish();
+                    this.changePasswordForm.finish();
                 }).catch(error => {
-                    this.passwordForm.crash(error);
+                    this.changePasswordForm.crash(error);
                 });
+            },
+            password() {
+                return ServerAdmin.Utils.generatePassword();
             },
         }
     }

@@ -60,7 +60,7 @@ class DatabaseManager extends Service
      * @param string $name
      * @param DatabaseUser $user
      */
-    public function grantPermissions(string $name, DatabaseUser $user): void
+    public function grantPrivileges(string $name, DatabaseUser $user): void
     {
         DB::statement('GRANT ALL ON ? TO ?;', [$name . '.*', $user->toSql()]);
         $this->reloadPrivileges();
@@ -70,7 +70,7 @@ class DatabaseManager extends Service
      * @param string $name
      * @param DatabaseUser $user
      */
-    public function revokePermissions(string $name, DatabaseUser $user): void
+    public function revokePrivileges(string $name, DatabaseUser $user): void
     {
         DB::statement('REVOKE ALL ON ? FROM ?;', [$name . '.*', $user->toSql()]);
         $this->reloadPrivileges();

@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="panel panel-default">
-                    <div class="panel-heading">Databases</div>
+                    <div class="panel-heading">Schemas</div>
 
                     <sa-database-schemas></sa-database-schemas>
                 </div>

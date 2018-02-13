@@ -8,7 +8,7 @@
                        type="danger"
                        icon="trash"
                        size="sm"
-                       :loading="deleting" />
+                       :loading="destroyDomainForm.loading" />
         </td>
     </tr>
 </template>
@@ -18,17 +18,19 @@
         props: ['domain'],
         data() {
             return {
-                deleting: false,
+                destroyDomainForm: new ServerAdmin.Form({
+                    'id': -1
+                }),
             };
         },
         methods: {
             deleteDomain() {
-                this.deleting = true;
-                axios.delete('/api/mail/domains/' + this.domain.id).then(response => {
+                this.destroyDomainForm.start();
+                axios.delete('/api/mail/domains/' + this.domain.id).then(() => {
+                    this.destroyDomainForm.finish();
                     this.$emit('destroy');
                 }).catch(error => {
-                    this.deleting = false;
-                    console.error(error);
+                    this.destroyDomainForm.crash(error);
                 });
             }
         }

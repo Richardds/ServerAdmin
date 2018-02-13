@@ -7,22 +7,21 @@
         <td class="schema-size" :title="schema.size">{{ schemaSizeText }}</td>
 
         <td class="fit">
-            <sa-modal :visible="editUsers"
-                      @close="editUsers = false"
+            <sa-modal :visible="editUsersModal.enabled"
+                      @close="editUsersModal.close()"
                       title="Schema privileges">
                 <sa-database-schema-users :schema="schema.name" :users="users" />
             </sa-modal>
-            <sa-button @click.native="editUsers = true"
+            <sa-button @click.native="editUsersModal.open()"
                        type="default"
                        icon="users"
-                       size="sm"
-                       :loading="updating" />
-            <sa-button @click.native="deleteSchema"
+                       size="sm" />
+            <sa-button @click.native="destroySchema()"
                        :disabled="schema.protected"
                        type="danger"
                        icon="trash"
                        size="sm"
-                       :loading="deleting" />
+                       :loading="destroySchemaForm.loading" />
         </td>
     </tr>
 </template>
@@ -32,25 +31,20 @@
         props: ['schema', 'users'],
         data() {
             return {
-                updating: false,
-                toggling: false,
-                deleting: false,
-                changed: false,
-                //
-                editUsers: false
+                editUsersModal: new ServerAdmin.ModalForm(),
+                destroySchemaForm: new ServerAdmin.Form({
+                    'id': -1
+                }),
             };
         },
         methods: {
-            onChange() {
-                this.changed = true;
-            },
-            deleteSchema() {
-                this.deleting = true;
-                axios.delete('/api/database/schemas/' + this.schema.name).then(response => {
+            destroySchema() {
+                this.destroySchemaForm.start();
+                axios.delete('/api/database/schemas/' + this.schema.name).then(() => {
+                    this.destroySchemaForm.finish();
                     this.$emit('destroy');
                 }).catch(error => {
-                    this.deleting = false;
-                    console.error(error);
+                    this.destroySchemaForm.crash(error);
                 });
             },
         },

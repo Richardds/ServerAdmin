@@ -1,43 +1,43 @@
 <template>
     <div>
-        <sa-modal :visible="addTask"
-                  @close="addTask = false"
+        <sa-modal :visible="createTaskForm.enabled"
+                  @close="createTaskForm.close()"
                   title="Add task">
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="editIntervalMinute" class="col-md-3 control-label">Minute</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="editIntervalMinute" v-model="task.minute" />
+                        <input type="text" class="form-control" id="editIntervalMinute" v-model="createTaskForm.attributes.minute" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="editIntervalHour" class="col-md-3 control-label">Hour</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="editIntervalHour" v-model="task.hour" />
+                        <input type="text" class="form-control" id="editIntervalHour" v-model="createTaskForm.attributes.hour" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="editIntervalDay" class="col-md-3 control-label">Day</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="editIntervalDay" v-model="task.day" />
+                        <input type="text" class="form-control" id="editIntervalDay" v-model="createTaskForm.attributes.day" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="editIntervalMonth" class="col-md-3 control-label">Month</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="editIntervalMonth" v-model="task.month" />
+                        <input type="text" class="form-control" id="editIntervalMonth" v-model="createTaskForm.attributes.month" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="editIntervalWeekday" class="col-md-3 control-label">Weekday</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="editIntervalWeekday" v-model="task.weekday" />
+                        <input type="text" class="form-control" id="editIntervalWeekday" v-model="createTaskForm.attributes.weekday" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="taskUser" class="col-md-3 control-label">User</label>
                     <div class="col-md-8">
-                        <select id="taskUser" class="form-control" v-model="task.uid">
+                        <select id="taskUser" class="form-control" v-model="createTaskForm.attributes.uid">
                             <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
                         </select>
                     </div>
@@ -45,21 +45,21 @@
                 <div class="form-group">
                     <label for="taskUser" class="col-md-3 control-label">Command</label>
                     <div class="col-md-8">
-                        <input class="form-control" type="text" v-model="task.command" />
+                        <input class="form-control" type="text" v-model="createTaskForm.attributes.command" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="taskUser" class="col-md-3 control-label">Description</label>
                     <div class="col-md-8">
-                        <textarea rows="2" class="form-control" v-model="task.description"></textarea>
+                        <textarea rows="2" class="form-control" v-model="createTaskForm.attributes.description"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-3 col-md-8">
-                        <sa-button @click.native="add"
+                        <sa-button @click.native="createTask()"
                                    type="default"
                                    icon="plus"
-                                   :loading="adding">Add</sa-button>
+                                   :loading="createTaskForm.loading">Add</sa-button>
                     </div>
                 </div>
             </div>
@@ -75,16 +75,16 @@
             </tr>
             </thead>
             <tbody>
-            <sa-cron-task v-for="task in this.tasks"
+            <sa-cron-task v-for="task in orderedTasks"
                           :key="task.id"
                           :task="task"
                           :users="users"
-                          @destroy="destroy(task.id)" />
+                          @destroy="destroyTask(task.id)" />
             </tbody>
             <tfoot>
             <tr>
                 <td colspan="7" class="text-right">
-                    <sa-button @click.native="addTask = true"
+                    <sa-button @click.native="createTaskForm.open()"
                                type="default"
                                icon="plus"
                                size="sm" />
@@ -101,11 +101,7 @@
             return {
                 tasks: [],
                 users: [],
-                //
-                addTask: false,
-                adding: false,
-                //
-                task: {
+                createTaskForm: new ServerAdmin.ModalForm({
                     minute: '*',
                     hour: '*',
                     day: '*',
@@ -114,48 +110,51 @@
                     uid: -1,
                     command: '',
                     description: '',
-                }
+                }),
             };
         },
         mounted() {
-            let self = this;
-            axios.all([
-                axios.get('/api/data/system_users'),
-                axios.get('/api/cron/tasks')
-            ]).then(axios.spread(function (system_users, tasks) {
-                self.users = [];
-                for (let user of system_users.data.data) {
-                    self.users.push(user);
+            // Load system users
+            axios.get('/api/data/system_users').then(response => {
+                this.users = [];
+                for (let user of response.data.data) {
+                    this.users.push(user);
                 }
 
-                self.tasks = [];
-                for (let task of tasks.data.data) {
-                    self.tasks.push(task);
-                }
-            })).catch(error => {
+                // Load tasks
+                this.loadTasks();
+            }).catch(error => {
                 console.error(error);
             });
         },
         methods: {
-            destroy(id) {
-                this.tasks = _.remove(this.tasks, task => task.id !== id);
-            },
-            add() {
-                let self = this;
-                self.adding = true;
-                axios.all([
-                    axios.post('/api/cron/tasks', self.task),
-                    axios.get('/api/cron/tasks')
-                ]).then(axios.spread(function (created_task, tasks) {
-                    self.tasks = [];
-                    for (let task of tasks.data.data) {
-                        self.tasks.push(task);
+            loadTasks() {
+                axios.get('/api/cron/tasks').then(response => {
+                    this.tasks = [];
+                    for (let task of response.data.data) {
+                        this.tasks.push(task);
                     }
-                    self.adding = false;
-                })).catch(error => {
+                }).catch(error => {
                     console.error(error);
                 });
+            },
+            destroyTask(id) {
+                this.tasks = _.remove(this.tasks, task => task.id !== id);
+            },
+            createTask() {
+                this.createTaskForm.start();
+                axios.post('/api/cron/tasks', this.createTaskForm.attributes).then(response => {
+                    this.createTaskForm.finish();
+                    this.loadTasks();
+                }).catch(error => {
+                    this.createTaskForm.crash(error);
+                });
+            },
+        },
+        computed: {
+            orderedTasks() {
+                return _.sortBy(this.tasks, 'uid');
             }
-        }
+        },
     }
 </script>

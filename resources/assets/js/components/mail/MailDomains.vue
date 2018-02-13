@@ -1,21 +1,21 @@
 <template>
     <div>
-        <sa-modal :visible="domainForm.enabled"
-                  @close="domainForm.close()"
+        <sa-modal :visible="createDomainForm.enabled"
+                  @close="createDomainForm.close()"
                   title="Add domain">
             <div class="form-horizontal">
                 <div class="form-group">
                     <label for="domainName" class="col-md-3 control-label">Name</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="domainName" v-model="domainForm.attributes.name" />
+                        <input type="text" class="form-control" id="domainName" v-model="createDomainForm.attributes.name" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-3 col-md-8">
-                        <sa-button @click.native="add"
+                        <sa-button @click.native="createDomain()"
                                    type="default"
                                    icon="plus"
-                                   :loading="domainForm.loading">Add</sa-button>
+                                   :loading="createDomainForm.loading">Add</sa-button>
                     </div>
                 </div>
             </div>
@@ -28,15 +28,15 @@
             </tr>
             </thead>
             <tbody>
-            <sa-mail-domain v-for="domain in this.domains"
+            <sa-mail-domain v-for="domain in orderedDomains"
                             :key="domain.id"
                             :domain="domain"
-                            @destroy="destroy(domain.id)" />
+                            @destroy="destroyDomain(domain.id)" />
             </tbody>
             <tfoot>
             <tr>
                 <td colspan="7" class="text-right">
-                    <sa-button @click.native="domainForm.open()"
+                    <sa-button @click.native="createDomainForm.open()"
                                type="default"
                                icon="plus"
                                size="sm" />
@@ -52,16 +52,16 @@
         data() {
             return {
                 domains: [],
-                domainForm: new ServerAdmin.ModalForm({
+                createDomainForm: new ServerAdmin.ModalForm({
                     'name': ''
                 }),
             };
         },
         mounted() {
-            this.load();
+            this.loadDomains();
         },
         methods: {
-            load() {
+            loadDomains() {
                 axios.get('/api/mail/domains').then(response => {
                     this.domains = [];
                     for (let domain of response.data.data) {
@@ -71,18 +71,23 @@
                     console.error(error);
                 });
             },
-            destroy(id) {
+            destroyDomain(id) {
                 this.domains = _.remove(this.domains, domain => domain.id !== id);
             },
-            add() {
-                this.domainForm.start();
-                axios.post('/api/mail/domains', this.domainForm.attributes).then(() => {
-                    this.domainForm.finish();
-                    this.load();
+            createDomain() {
+                this.createDomainForm.start();
+                axios.post('/api/mail/domains', this.createDomainForm.attributes).then(() => {
+                    this.createDomainForm.finish();
+                    this.loadDomains();
                 }).catch(error => {
-                    this.domainForm.crash(error);
+                    this.createDomainForm.crash(error);
                 });
             },
+        },
+        computed: {
+            orderedDomains() {
+                return _.sortBy(this.domains, 'name');
+            }
         }
     }
 </script>
