@@ -22,6 +22,7 @@
                         <div class="input-group">
                             <input type="password" class="form-control" id="password" v-model="createUserForm.attributes.password" />
                             <span class="input-group-btn">
+                                <sa-button data-clipboard-target="#password" icon="copy" />
                                 <sa-button @click.native="createUserForm.attributes.password = password()" icon="arrow-left" />
                             </span>
                         </div>
