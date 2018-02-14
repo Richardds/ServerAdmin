@@ -3,20 +3,19 @@ table {
     th, td {
       &.cron-interval {
         @extend .numeric;
-        width: 150px;
+        width: 200px;
         font-size: $font-size-small;
          &.edit-mode {
            cursor: zoom-in;
          }
       }
+
+      &.cron-user {
+        width: 150px;
+      }
+
       &.cron-command {
         //
-      }
-      &.cron-user {
-        width: 100px;
-      }
-      &.cron-description {
-        width: 250px;
       }
     }
   }

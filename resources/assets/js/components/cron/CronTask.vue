@@ -12,9 +12,6 @@
             <td class="cron-command">
                 <input @input="onChange()" class="form-control input-sm" type="text" v-model="task.command" />
             </td>
-            <td class="cron-description">
-                <textarea @input="onChange()" rows="2" class="form-control input-sm" v-model="task.description"></textarea>
-            </td>
         </template>
 
         <template v-else>
@@ -23,7 +20,6 @@
             </td>
             <td class="cron-user">{{ user(task.uid).name }}</td>
             <td class="cron-command">{{ task.command }}</td>
-            <td class="cron-description">{{ task.description }}</td>
         </template>
 
         <td class="fit">

@@ -16,14 +16,12 @@ use Richardds\ServerAdmin\Core\Cron\CronInterval;
  * @property string $weekday
  * @property string $command
  * @property int $uid
- * @property string $description
  * @property bool $enabled
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\Cron whereCommand($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\Cron whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\Cron whereDay($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\Cron whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\Cron whereEnabled($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\Cron whereHour($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\Cron whereId($value)
@@ -49,7 +47,6 @@ class Cron extends Model
         'weekday',
         'command',
         'uid',
-        'description',
         'enabled',
     ];
 
@@ -67,7 +64,6 @@ class Cron extends Model
         'weekday',
         'command',
         'uid',
-        'description',
         'enabled',
         'created_at',
         'updated_at',
@@ -96,7 +92,6 @@ class Cron extends Model
         'weekday' => 'string',
         'command' => 'string',
         'uid' => 'integer',
-        'description' => 'string',
         'enabled' => 'boolean',
         'created_at' => 'date',
         'updated_at' => 'date',

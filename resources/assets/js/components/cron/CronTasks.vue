@@ -49,12 +49,6 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="taskUser" class="col-md-3 control-label">Description</label>
-                    <div class="col-md-8">
-                        <textarea rows="2" class="form-control" v-model="createTaskForm.attributes.description"></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
                     <div class="col-md-offset-3 col-md-8">
                         <sa-button @click.native="createTask()"
                                    type="default"
@@ -70,7 +64,6 @@
                 <th>Interval</th>
                 <th>User</th>
                 <th>Command</th>
-                <th>Description</th>
                 <th></th>
             </tr>
             </thead>
@@ -109,7 +102,6 @@
                     weekday: '*',
                     uid: -1,
                     command: '',
-                    description: '',
                 }),
             };
         },
