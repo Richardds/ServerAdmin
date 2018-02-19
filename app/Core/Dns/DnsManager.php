@@ -2,9 +2,12 @@
 
 namespace Richardds\ServerAdmin\Core\Dns;
 
+use Illuminate\Support\Facades\DB;
 use Richardds\ServerAdmin\Core\ConfigIo;
 use Richardds\ServerAdmin\Core\Service;
 use Richardds\ServerAdmin\DnsZone;
+use Richardds\ServerAdmin\Facades\Execute;
+use Symfony\Component\Finder\Finder;
 
 class DnsManager extends Service
 {
@@ -15,6 +18,20 @@ class DnsManager extends Service
     public function __construct()
     {
         parent::__construct('bind9');
+    }
+
+    public function cleanZoneFiles()
+    {
+        $finder = new Finder();
+        $files = $finder->files()->in(self::ZONES_CONFIG_FOLDER);
+
+        $filenames = DnsZone::whereEnabled(true)->get([DB::raw('CONCAT(name, \'.db\') AS filename')])->pluck('filename');
+
+        foreach ($files->getIterator() as $file) {
+            if (!$filenames->contains($file->getFilename())) {
+                Execute::withoutOutput("rm {$file->getRealPath()}", true);
+            }
+        }
     }
 
     public function generateZonesConfig()
@@ -36,6 +53,8 @@ class DnsManager extends Service
             $zonesConfig->writeln("};");
             $zonesConfig->nextline();
         }
+
+        $this->cleanZoneFiles();
     }
 
     public function generateZoneRecordsConfig(DnsZone $zone, string $zonesConfigPath)
