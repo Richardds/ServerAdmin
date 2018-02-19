@@ -31,7 +31,7 @@
             <sa-mail-domain v-for="domain in orderedDomains"
                             :key="domain.id"
                             :domain="domain"
-                            @deleteDomain="loadDomains()" />
+                            @destroyDomain="loadDomains()" />
             </tbody>
             <tfoot>
             <tr>

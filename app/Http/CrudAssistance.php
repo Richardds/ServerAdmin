@@ -18,14 +18,14 @@ trait CrudAssistance
         $strippedRules = [];
 
         foreach ($rules as $attributeName => $rule) {
-            $requirements = explode('|', $rule);
+            $requirements = !is_array($rule) ? explode('|', $rule) : $rule;
 
             if (in_array('required', $requirements)) {
                 $index = array_search('required', $requirements);
                 unset($requirements[$index]);
             }
 
-            $strippedRules[$attributeName] = implode('|', $requirements);
+            $strippedRules[$attributeName] = $requirements;
         }
 
         return $strippedRules;

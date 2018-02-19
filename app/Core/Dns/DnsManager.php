@@ -8,9 +8,9 @@ use Richardds\ServerAdmin\DnsZone;
 
 class DnsManager extends Service
 {
-    protected $zonesConfigMasterFile = '/etc/bind/named.conf.local';
+    const ZONES_CONFIG_MASTER_FILE = '/etc/bind/named.conf.local';
 
-    protected $zonesConfigFolder = '/etc/bind/zones';
+    const ZONES_CONFIG_FOLDER = '/etc/bind/zones';
 
     public function __construct()
     {
@@ -20,14 +20,14 @@ class DnsManager extends Service
     public function generateZonesConfig()
     {
         $zones = DnsZone::whereEnabled(true)->get();
-        $zonesConfig = new ConfigIo($this->zonesConfigMasterFile);
+        $zonesConfig = new ConfigIo(self::ZONES_CONFIG_MASTER_FILE);
 
         $zonesConfig->truncate();
-        $zonesConfig->writeln("include \"/etc/bind/zones.rfc1918\";"); // TODO
+        $zonesConfig->writeln("include \"/etc/bind/zones.rfc1918\";");
         $zonesConfig->nextline();
 
         foreach ($zones as $zone) {
-            $zonesConfigPath = "{$this->zonesConfigFolder}/{$zone->name}.db";
+            $zonesConfigPath = self::ZONES_CONFIG_FOLDER . "/{$zone->name}.db";
             $this->generateZoneRecordsConfig($zone, $zonesConfigPath);
 
             $zonesConfig->writeln("zone \"{$zone->name}\" in {");

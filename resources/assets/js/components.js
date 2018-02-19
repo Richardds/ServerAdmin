@@ -4,7 +4,7 @@ Vue.component('sa-modal', require('./components/Modal.vue'));
 Vue.component('sa-button', require('./components/Button.vue'));
 
 // Core
-Vue.component('sa-service-controls', require('./components/core/ServiceControls.vue'));
+Vue.component('sa-service-controls', require('./components/core/ServiceControls'));
 
 // DNS
 Vue.component('sa-dns-zones', require('./components/dns/DnsZones.vue'));
@@ -31,3 +31,7 @@ Vue.component('sa-mail-users', require('./components/mail/MailUsers'));
 Vue.component('sa-mail-user', require('./components/mail/MailUser'));
 Vue.component('sa-mail-user-aliases', require('./components/mail/MailUserAliases'));
 Vue.component('sa-mail-user-alias', require('./components/mail/MailUserAlias'));
+
+// Firewall
+Vue.component('sa-firewall-rules', require('./components/firewall/FirewallRules'));
+Vue.component('sa-firewall-rule', require('./components/firewall/FirewallRule'));

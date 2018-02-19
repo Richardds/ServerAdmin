@@ -80,6 +80,19 @@ class ServiceCommand
     }
 
     /**
+     * Force-Reload service.
+     *
+     * @param string $name
+     * @return \Richardds\ServerAdmin\Core\Service
+     */
+    public static function forceReload(string $name): Service
+    {
+        Execute::withoutOutput("service {$name} force-reload", true);
+
+        return new Service($name);
+    }
+
+    /**
      * Check if service is running.
      *
      * @param string $name

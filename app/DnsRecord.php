@@ -34,19 +34,19 @@ class DnsRecord extends Model
 {
     use DnsRecordAssistance;
 
-    const DNS_A_RECORD = 'A';
+    const RECORD_A = 'A';
 
-    const DNS_AAAA_RECORD = 'AAAA';
+    const RECORD_AAAA = 'AAAA';
 
-    const DNS_CNAME_RECORD = 'CNAME';
+    const RECORD_CNAME = 'CNAME';
 
-    const DNS_MX_RECORD = 'MX';
+    const RECORD_MX = 'MX';
 
-    const DNS_SRV_RECORD = 'SRV';
+    const RECORD_SRV = 'SRV';
 
-    const DNS_TXT_RECORD = 'TXT';
+    const RECORD_TXT = 'TXT';
 
-    const DNS_NS_RECORD = 'NS';
+    const RECORD_NS = 'NS';
 
     protected $fillable = [
         'zone_id',
@@ -88,13 +88,13 @@ class DnsRecord extends Model
     public static function availableTypes()
     {
         return [
-            self::DNS_A_RECORD,
-            self::DNS_AAAA_RECORD,
-            self::DNS_CNAME_RECORD,
-            self::DNS_MX_RECORD,
-            self::DNS_SRV_RECORD,
-            self::DNS_TXT_RECORD,
-            self::DNS_NS_RECORD,
+            self::RECORD_A,
+            self::RECORD_AAAA,
+            self::RECORD_CNAME,
+            self::RECORD_MX,
+            self::RECORD_SRV,
+            self::RECORD_TXT,
+            self::RECORD_NS,
         ];
     }
 

@@ -3,16 +3,19 @@
 namespace Richardds\ServerAdmin\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Richardds\ServerAdmin\Core\Commands\ServiceCommand;
+use Richardds\ServerAdmin\Core\Database\DatabaseManager;
+use Richardds\ServerAdmin\Core\Dns\DnsManager;
+use Richardds\ServerAdmin\Core\Firewall\FirewallManager;
+use Richardds\ServerAdmin\Core\Mail\MailManager;
 use Richardds\ServerAdmin\Core\Service;
 
 class ServiceController extends Controller
 {
     private $services = [
-        'dns' => 'bind9',
-        'database' => 'mysql',
-        'mail_in' => 'dovecot',
-        'mail_out' => 'postfix',
+        'dns' => DnsManager::class,
+        'database' => DatabaseManager::class,
+        'mail' => MailManager::class,
+        'firewall' => FirewallManager::class,
     ];
 
     /**
@@ -32,7 +35,8 @@ class ServiceController extends Controller
      */
     public function start(Request $request)
     {
-        $service = ServiceCommand::start($this->getValidServiceName($request));
+        $service = $this->getValidService($request);
+        $service->start();
 
         return api_response()->success($this->createServiceReport($service))->response();
     }
@@ -46,7 +50,8 @@ class ServiceController extends Controller
      */
     public function stop(Request $request)
     {
-        $service = ServiceCommand::stop($this->getValidServiceName($request));
+        $service = $this->getValidService($request);
+        $service->stop();
 
         return api_response()->success($this->createServiceReport($service))->response();
     }
@@ -60,7 +65,8 @@ class ServiceController extends Controller
      */
     public function restart(Request $request)
     {
-        $service = ServiceCommand::restart($this->getValidServiceName($request));
+        $service = $this->getValidService($request);
+        $service->restart();
 
         return api_response()->success($this->createServiceReport($service))->response();
     }
@@ -74,7 +80,8 @@ class ServiceController extends Controller
      */
     public function reload(Request $request)
     {
-        $service = ServiceCommand::reload($this->getValidServiceName($request));
+        $service = $this->getValidService($request);
+        $service->reload();
 
         return api_response()->success($this->createServiceReport($service))->response();
     }
@@ -88,17 +95,17 @@ class ServiceController extends Controller
      */
     public function status(Request $request)
     {
-        $service = new Service($this->getValidServiceName($request));
+        $service = $this->getValidService($request);
 
         return api_response()->success($this->createServiceReport($service))->response();
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     * @return mixed
+     * @param Request $request
+     * @return Service
      * @throws \Exception
      */
-    public function getValidServiceName(Request $request)
+    public function getValidService(Request $request): Service
     {
         $this->validate($request, [
             'service' => 'required|string|max:255',
@@ -106,18 +113,17 @@ class ServiceController extends Controller
 
         $service = $request->get('service');
 
-        if (! $this->services[$service]) {
-            throw new \Exception('Invalid service name');
+        if (!isset($this->services[$service])) {
+            throw new \Exception('Invalid service name.');
         }
 
-        return $this->services[$service];
+        return new $this->services[$service];
     }
 
     public function createServiceReport(Service $service)
     {
         return [
             'running' => $service->isRunning(),
-            // ...
         ];
     }
 }

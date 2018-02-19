@@ -13,25 +13,35 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\MailDomain whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\MailDomain whereName($value)
  * @mixin \Eloquent
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\MailDomain whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\MailDomain whereUpdatedAt($value)
  */
 class MailDomain extends Model
 {
     protected $fillable = [
-        'id',
         'name',
     ];
 
     protected $visible = [
         'id',
         'name',
+        'created_at',
+        'updated_at',
+    ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
     ];
 
     protected $casts = [
         'id' => 'integer',
         'name' => 'string',
+        'created_at' => 'date',
+        'updated_at' => 'date',
     ];
-
-    public $timestamps = false;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

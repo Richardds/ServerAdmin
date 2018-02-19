@@ -5,7 +5,7 @@ use Richardds\ServerAdmin\Core\Commands\ServiceCommand;
 
 class Service
 {
-    private $name;
+    protected $name;
 
     /**
      * Service constructor.
@@ -19,42 +19,34 @@ class Service
 
     /**
      * Start service.
-     *
-     * @return Service
      */
-    public function start(): Service
+    public function start(): void
     {
-        return ServiceCommand::start($this->name);
+        ServiceCommand::start($this->name);
     }
 
     /**
      * Stop service.
-     *
-     * @return Service
      */
-    public function stop(): Service
+    public function stop(): void
     {
-        return ServiceCommand::stop($this->name);
+        ServiceCommand::stop($this->name);
     }
 
     /**
      * Restart service.
-     *
-     * @return Service
      */
-    public function restart(): Service
+    public function restart(): void
     {
-        return ServiceCommand::restart($this->name);
+        ServiceCommand::restart($this->name);
     }
 
     /**
      * Reload service.
-     *
-     * @return Service
      */
-    public function reload(): Service
+    public function reload(): void
     {
-        return ServiceCommand::reload($this->name);
+        ServiceCommand::reload($this->name);
     }
 
     /**

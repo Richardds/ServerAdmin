@@ -26,7 +26,6 @@ use Illuminate\Database\Eloquent\Model;
 class MailAlias extends Model
 {
     protected $fillable = [
-        'id',
         'domain_id',
         'user_id',
         'alias',

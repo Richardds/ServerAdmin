@@ -3,6 +3,7 @@
 namespace Richardds\ServerAdmin\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Richardds\ServerAdmin\Core\Dns\DnsManager;
 use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsRecordAssistance;
@@ -64,7 +65,7 @@ class DnsRecordController extends Controller
     {
         $this->validate($request, [
             'zone_id' => 'required|exists:dns_zones,id',
-            'type' => 'required',
+            'type' => 'required|' . Rule::in(DnsRecord::availableTypes()),
             'name' => 'required|min:1|max:253',
             'attrs' => 'required',
             'ttl' => 'required|numeric',
@@ -72,13 +73,6 @@ class DnsRecordController extends Controller
         ]);
 
         $type = $request->get('type');
-
-        // Record type validation
-        if (!in_array($type, DnsRecord::availableTypes())) {
-            throw ValidationException::withMessages([
-                'type' => 'Invalid type.'
-            ]);
-        }
 
         try {
             $record = new DnsRecord([

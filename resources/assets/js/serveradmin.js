@@ -45,6 +45,17 @@ export const Utils = new class {
         return ((date.getFullYear() * 100 + date.getMonth() + 1) * 100 + date.getDate()) * 100 + _.min([(i), 99])
     }
 
+    stripObjectNulls(object) {
+        let newObject = {};
+
+        Object.keys(object).forEach((key) => {
+            if (object[key] != null) {
+                newObject[key] = object[key];
+            }
+        });
+
+        return newObject;
+    }
 };
 
 export class Form {
@@ -71,6 +82,7 @@ export class Form {
     crash(error) {
         this.loading = false;
         console.log(error);
+        // TODO: Print error in logger
     }
 }
 
@@ -87,7 +99,7 @@ export class ModalForm extends Form {
 
     crash(error) {
         super.crash(error);
-        this.close();
+        // TODO: Show form fields errors
     }
 
     open() {
@@ -111,6 +123,9 @@ export class ToggleForm extends Form {
     }
 }
 
+/**
+ * TODO: ...
+ */
 export class EditForm extends Form {
     constructor(defaultAttributes) {
         super(defaultAttributes);

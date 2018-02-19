@@ -4,7 +4,7 @@
             <a :href="'/mail/domains/' + domain.id" :title="'Edit domain ' + domain.name + ' users'">{{ domain.name }}</a>
         </td>
         <td class="fit">
-            <sa-button @click.native="deleteDomain"
+            <sa-button @click.native="destroyDomain()"
                        type="danger"
                        icon="trash"
                        size="sm"
@@ -24,11 +24,11 @@
             };
         },
         methods: {
-            deleteDomain() {
+            destroyDomain() {
                 this.destroyDomainForm.start();
                 axios.delete('/api/mail/domains/' + this.domain.id).then(() => {
                     this.destroyDomainForm.finish();
-                    this.$emit('deleteDomain');
+                    this.$emit('destroyDomain');
                 }).catch(error => {
                     this.destroyDomainForm.crash(error);
                 });

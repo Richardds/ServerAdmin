@@ -23,10 +23,17 @@ Route::group(['prefix' => 'dns'], function() {
 });
 
 // Cron
-Route::get('cron', 'CronController@cron_tasks')->name('cron');
+Route::group(['prefix' => 'cron'], function() {
+    Route::get('tasks', 'CronController@cron_tasks')->name('cron_tasks');
+});
 
 // Mail
 Route::group(['prefix' => 'mail'], function() {
     Route::get('domains', 'MailDomainController@domains')->name('mail_domains');
     Route::get('domains/{domain}', 'MailUserController@users')->name('mail_users');
+});
+
+// Firewall
+Route::group(['prefix' => 'firewall'], function() {
+    Route::get('rules', 'FirewallRuleController@rules')->name('firewall_rules');
 });

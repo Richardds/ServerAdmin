@@ -23,19 +23,19 @@ $factory->define(DnsRecord::class, function (Faker $faker) {
     $recordAttributes = null;
 
     switch ($type) {
-        case DnsRecord::DNS_A_RECORD:
+        case DnsRecord::RECORD_A:
             $recordAttributes = new DnsARecordAttributes($faker->ipv4);
             break;
-        case DnsRecord::DNS_AAAA_RECORD:
+        case DnsRecord::RECORD_AAAA:
             $recordAttributes = new DnsAAAARecordAttributes($faker->ipv6);
             break;
-        case DnsRecord::DNS_CNAME_RECORD:
+        case DnsRecord::RECORD_CNAME:
             $recordAttributes = new DnsCNAMERecordAttributes($faker->domainName);
             break;
-        case DnsRecord::DNS_MX_RECORD:
+        case DnsRecord::RECORD_MX:
             $recordAttributes = new DnsMXRecordAttributes($faker->domainName, $faker->numberBetween(1, 5) * 10);
             break;
-        case DnsRecord::DNS_SRV_RECORD:
+        case DnsRecord::RECORD_SRV:
             $recordAttributes = new DnsSRVRecordAttributes(
                 $faker->randomElement(['_sip', '_ldap', '_ts3', '_cisco-uds', '_collab-edge',]),
                 $faker->randomElement(['_tcp', '_udp',]),
@@ -45,10 +45,10 @@ $factory->define(DnsRecord::class, function (Faker $faker) {
                 $faker->numberBetween(1, 65535)
             );
             break;
-        case DnsRecord::DNS_TXT_RECORD:
+        case DnsRecord::RECORD_TXT:
             $recordAttributes = new DnsTXTRecordAttributes($faker->sentence);
             break;
-        case DnsRecord::DNS_NS_RECORD:
+        case DnsRecord::RECORD_NS:
             $recordAttributes = new DnsNSRecordAttributes($faker->domainName);
             break;
     }

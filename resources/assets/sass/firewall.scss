@@ -1,0 +1,49 @@
+table {
+    &.table-firewall-rules {
+        tr {
+            &.type-allow .rule-type {
+                color: #9bca3e;
+            }
+
+            &.type-deny .rule-type {
+                color: #bd2527;
+            }
+
+            &.type-reject .rule-type {
+                color: #ff7900;
+            }
+
+            &.type-limit .rule-type {
+                color: #7c7c7c;
+            }
+        }
+
+        th, td {
+            &.rule-type {
+                width: 75px;
+                font-weight: bold;
+                text-align: center;
+            }
+
+            &.rule-protocol {
+                width: 75px;
+                font-weight: bold;
+                text-align: center;
+            }
+
+            &.rule-destination {
+                @extend .numeric;
+                width: 300px;
+            }
+
+            &.rule-source {
+                @extend .numeric;
+                width: 300px;
+            }
+
+            &.rule-port {
+                @extend .numeric;
+            }
+        }
+    }
+}

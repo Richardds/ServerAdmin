@@ -73,3 +73,12 @@ Route::group(['prefix' => 'mail'], function() {
         'only' => ['index', 'show', 'store', 'update', 'destroy']
     ]);
 });
+
+/**
+ * Firewall
+ */
+Route::group(['prefix' => 'firewall'], function() {
+    Route::apiResource('rules', 'FirewallRuleController', [
+        'only' => ['index', 'show', 'store', 'update', 'destroy']
+    ]);
+});

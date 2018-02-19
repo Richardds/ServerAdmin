@@ -23,6 +23,13 @@ abstract class ModelController extends Controller
     ];
 
     /**
+     * @var array
+     */
+    protected $editable = [
+        //
+    ];
+
+    /**
      * ModelController constructor.
      *
      * @param string $model
@@ -69,7 +76,7 @@ abstract class ModelController extends Controller
         $model = $this->model::findOrFail($id);
 
         $this->validate($request, $this->stripRequired($this->rules));
-        $this->updateModel($model, $request, array_keys($this->rules));
+        $this->updateModel($model, $request, empty($this->editable) ? array_keys($this->rules) : $this->editable);
         $model->save();
 
         return api_response()->success($model->toArray())->response();
@@ -79,6 +86,7 @@ abstract class ModelController extends Controller
      * @param Request $request
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function destroy(Request $request, int $id)
     {

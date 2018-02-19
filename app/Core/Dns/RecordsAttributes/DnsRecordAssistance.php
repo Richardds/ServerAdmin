@@ -33,19 +33,19 @@ trait DnsRecordAssistance
     public static function createDnsRecordAttributes(string $type, array $attrs): DnsRecordAttributes
     {
         switch ($type) {
-            case DnsRecord::DNS_A_RECORD:
+            case DnsRecord::RECORD_A:
                 return DnsARecordAttributes::fromArray($attrs);
-            case DnsRecord::DNS_AAAA_RECORD:
+            case DnsRecord::RECORD_AAAA:
                 return DnsAAAARecordAttributes::fromArray($attrs);
-            case DnsRecord::DNS_CNAME_RECORD:
+            case DnsRecord::RECORD_CNAME:
                 return DnsCNAMERecordAttributes::fromArray($attrs);
-            case DnsRecord::DNS_MX_RECORD:
+            case DnsRecord::RECORD_MX:
                 return DnsMXRecordAttributes::fromArray($attrs);
-            case DnsRecord::DNS_SRV_RECORD:
+            case DnsRecord::RECORD_SRV:
                 return DnsSRVRecordAttributes::fromArray($attrs);
-            case DnsRecord::DNS_TXT_RECORD:
+            case DnsRecord::RECORD_TXT:
                 return DnsTXTRecordAttributes::fromArray($attrs);
-            case DnsRecord::DNS_NS_RECORD:
+            case DnsRecord::RECORD_NS:
                 return DnsNSRecordAttributes::fromArray($attrs);
             default:
                 throw new Exception('Invalid DNS type');

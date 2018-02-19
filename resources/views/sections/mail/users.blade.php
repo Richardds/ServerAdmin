@@ -8,9 +8,7 @@
                     <div class="panel-heading">Mail</div>
 
                     <div class="panel-body">
-                        <sa-service-controls service="mail_in"></sa-service-controls>
-                        <br />
-                        <sa-service-controls service="mail_out"></sa-service-controls>
+                        <sa-service-controls service="mail"></sa-service-controls>
                     </div>
                 </div>
 

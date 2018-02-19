@@ -86,7 +86,7 @@ table.table {
 }
 
 /**
- * Screen specific imports
+ * Sections's imports
  */
 
 // Login
@@ -103,3 +103,6 @@ table.table {
 
 // Mail
 @import "mail";
+
+// Firewall
+@import "firewall";

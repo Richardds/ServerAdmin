@@ -22,11 +22,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\MailUser whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\MailUser whereUsername($value)
  * @mixin \Eloquent
+ * @property string $name
+ * @property bool $enabled
+ * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\MailUser whereEnabled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\MailUser whereName($value)
  */
 class MailUser extends Model
 {
     protected $fillable = [
-        'id',
         'domain_id',
         'name',
         'username',
