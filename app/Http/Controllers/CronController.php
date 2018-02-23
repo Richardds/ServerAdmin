@@ -20,14 +20,13 @@ class CronController extends Controller
      * @var array
      */
     protected $rules = [
-        'minute' => 'required|min:1|max:255',
-        'hour' => 'required|min:1|max:255',
-        'day' => 'required|min:1|max:255',
-        'month' => 'required|min:1|max:255',
-        'weekday' => 'required|min:1|max:255',
+        'minute' => 'min:1|max:255',
+        'hour' => 'min:1|max:255',
+        'day' => 'min:1|max:255',
+        'month' => 'min:1|max:255',
+        'weekday' => 'min:1|max:255',
         'command' => 'required|min:1|max:255',
         'uid' => 'required|numeric',
-        'description' => 'max:255',
         'enabled' => 'boolean',
     ];
 
@@ -66,14 +65,13 @@ class CronController extends Controller
         $this->validate($request, $this->rules);
 
         $task = Cron::create([
-            'minute' => $request->get('minute'),
-            'hour' => $request->get('hour'),
-            'day' => $request->get('day'),
-            'month' => $request->get('month'),
-            'weekday' => $request->get('weekday'),
+            'minute' => $request->get('minute', '*'),
+            'hour' => $request->get('hour', '*'),
+            'day' => $request->get('day', '*'),
+            'month' => $request->get('month', '*'),
+            'weekday' => $request->get('weekday', '*'),
             'command' => $request->get('command'),
             'uid' => $request->get('uid'),
-            'description' => $request->get('description'),
             'enabled' => $request->get('enabled', true),
         ]);
 

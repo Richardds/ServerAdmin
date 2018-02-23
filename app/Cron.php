@@ -192,15 +192,6 @@ class Cron extends Model
     }
 
     /**
-     * @param $value
-     * @return string
-     */
-    protected function getDescriptionAttribute($value): string
-    {
-        return $value ?? '';
-    }
-
-    /**
      * @param CronInterval $interval
      */
     public function setInterval(CronInterval $interval): void
