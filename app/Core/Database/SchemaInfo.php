@@ -56,6 +56,7 @@ class SchemaInfo implements Arrayable
      * @param string $name
      * @param bool $fetchAll
      * @return SchemaInfo
+     * @throws InvalidParameterException
      */
     public static function load(string $name, bool $fetchAll = false): SchemaInfo
     {
@@ -108,7 +109,7 @@ class SchemaInfo implements Arrayable
             'database' => $this->name
         ]);
 
-        if (is_null($detailsResult) || is_null($countResult) || is_null($sizeResult)) {
+        if (is_null($detailsResult)) {
             throw new InvalidParameterException('Schema does not exist', ['schema' => $this->name]);
         }
 
