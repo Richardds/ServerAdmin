@@ -20,6 +20,8 @@ Route::group(['prefix' => 'database'], function() {
 Route::group(['prefix' => 'dns'], function() {
     Route::get('zones', 'DnsZoneController@zones')->name('dns_zones');
     Route::get('zones/{zone}', 'DnsZoneController@zone')->name('dns_records');
+    Route::get('zones/{zone}/export', 'DnsZoneController@export')->name('dns_zone_export');
+    Route::get('zones/{zone}/import', 'DnsZoneController@import')->name('dns_zone_import');
 });
 
 // Cron

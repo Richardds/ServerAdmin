@@ -125,6 +125,15 @@
                 </div>
             </div>
         </sa-modal>
+
+        <sa-modal :visible="importZoneFileModal.enabled"
+                  @close="importZoneFileModal.close()"
+                  title="Import zone">
+            <div class="form-horizontal">
+
+            </div>
+        </sa-modal>
+
         <table class="table table-striped table-controls table-dns-records">
             <thead>
             <tr>
@@ -144,6 +153,14 @@
             <tfoot>
             <tr>
                 <td colspan="5" class="text-right">
+                    <sa-button @click.native="exportZone()"
+                               type="default"
+                               icon="download"
+                               size="sm" />
+                    <sa-button @click.native="importZoneFileModal.open()"
+                               type="default"
+                               icon="upload"
+                               size="sm" />
                     <sa-button @click.native="createRecordForm.open()"
                                icon="plus"
                                size="sm" />
@@ -161,6 +178,7 @@
             return {
                 records: [],
                 availableRecordTypes: ['A', 'AAAA', 'CNAME', 'MX', 'SRV', 'TXT', 'NS'],
+                importZoneFileModal: new ServerAdmin.ModalForm(),
                 createRecordForm: new ServerAdmin.ModalForm({
                     zone_id: this.zone,
                     type: 'A',
@@ -227,6 +245,9 @@
                         break;
                 }
             },
+            exportZone() {
+                window.location.href = '/dns/zones/' + this.zone + '/export';
+            }
         },
         computed: {
             orderedRecords() {

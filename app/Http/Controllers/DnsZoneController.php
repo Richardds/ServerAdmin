@@ -46,6 +46,38 @@ class DnsZoneController extends Controller
 
     /**
      * @param DnsZone $zone
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function export(DnsZone $zone)
+    {
+        $exportContent = '';
+        $records = $zone->dnsRecords()
+            ->orderBy('type')
+            ->orderBy('name')
+            ->get();
+
+        foreach ($records as $record) {
+            $exportContent .= $record->attrs->toBindSyntax($record) . "\n";
+        }
+
+        return response($exportContent, 200, [
+            'Content-Type' => 'text/plain',
+            'Content-Disposition' => "attachment; filename=\"{$zone->name}.txt\""
+        ]);
+    }
+
+    /**
+     * @param DnsZone $zone
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function import(DnsZone $zone, Request $request)
+    {
+        //
+    }
+
+    /**
+     * @param DnsZone $zone
      * @return \Illuminate\Http\JsonResponse
      */
     public function records(DnsZone $zone)
