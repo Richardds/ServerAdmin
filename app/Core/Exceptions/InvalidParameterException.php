@@ -6,13 +6,22 @@ use Exception;
 
 class InvalidParameterException extends Exception
 {
-    public function __construct($message = "", array $parameters)
+    /**
+     * InvalidParameterException constructor.
+     *
+     * @param string $message
+     * @param array $parameters
+     */
+    public function __construct(string $message = "", array $parameters)
     {
         parent::__construct($message);
+
         $parametes_str = [];
+
         foreach ($parameters as $name => $parameter) {
             $parametes_str[] = is_string($name) ? '\'' . $name . '\' => \'' . $parameter . '\'' : '\'' . $parameter . '\'';
         }
-        $this->message .= ' (parameters: ' . implode(', ', $parametes_str) . ')';
+
+        $this->message .= ' (' . implode(', ', $parametes_str) . ')';
     }
 }

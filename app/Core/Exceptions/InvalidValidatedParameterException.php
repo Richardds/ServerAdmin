@@ -8,6 +8,13 @@ class InvalidValidatedParameterException extends InvalidParameterException
 {
     protected $errors;
 
+    /**
+     * InvalidValidatedParameterException constructor.
+     *
+     * @param string $message
+     * @param array $parameters
+     * @param Validator $validator
+     */
     public function __construct(string $message = "", array $parameters, Validator $validator)
     {
         parent::__construct($message, $parameters);

@@ -105,6 +105,6 @@ class DatabaseUser
      */
     public function toSql(): string
     {
-        return "'{$this->user}'@'{$this->host}'";
+        return "'" . escapeSqlParameter($this->user) . "'@'" . escapeSqlParameter($this->host) . "'";
     }
 }

@@ -42,3 +42,17 @@ function sha512crypt(string $password, ?string $salt = null)
 
     return crypt($password, sprintf('$6$%s$', $salt));
 }
+
+/**
+ * @param string $parameter
+ * @return string
+ */
+function escapeSqlParameter(string $parameter): string
+{
+    return $parameter; // TODO: Implement
+}
+
+function limitStringLength(string $string, int $length, string $ending = '...'): string
+{
+    return strlen($string) > $length ? substr($string, 0, $length - strlen($ending)) . $ending : $string;
+}

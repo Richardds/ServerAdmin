@@ -4,6 +4,7 @@ namespace Richardds\ServerAdmin\Core\Database;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException;
 use Richardds\ServerAdmin\Core\Service;
 
 class DatabaseManager extends Service
@@ -24,20 +25,25 @@ class DatabaseManager extends Service
     public function createDatabase(string $name, ?string $character_set = null, ?string $collation = null): void
     {
         if (is_null($character_set) && is_null($collation)) {
-            DB::statement('CREATE DATABASE ?;', [$name]);
+            DB::statement('CREATE DATABASE ' . escapeSqlParameter($name) . ';');
         } else if (!is_null($character_set) && is_null($collation)) {
-            DB::statement('CREATE DATABASE ? CHARACTER SET ?;', [$name, $character_set]);
+            DB::statement('CREATE DATABASE ' . escapeSqlParameter($name) . ' CHARACTER SET ' . escapeSqlParameter($character_set) . ';');
         } else {
-            DB::statement('CREATE DATABASE ? CHARACTER SET ? COLLATE ?;', [$name, $character_set, $collation]);
+            DB::statement('CREATE DATABASE ' . escapeSqlParameter($name) . ' CHARACTER SET ' . escapeSqlParameter($character_set) . ' COLLATE ' . escapeSqlParameter($collation) . ';');
         }
     }
 
     /**
      * @param string $name
+     * @throws InvalidParameterException
      */
     public function dropDatabase(string $name): void
     {
-        DB::statement('DROP DATABASE ?;', [$name]);
+        if (SchemaInfo::isProtectedSchema($name)) {
+            throw new InvalidParameterException('Cannot delete protected schema', ['schema' => $name]);
+        }
+
+        DB::statement('DROP DATABASE ' . escapeSqlParameter($name) . ';');
     }
 
     /**
@@ -45,7 +51,7 @@ class DatabaseManager extends Service
      */
     public function createUser(DatabaseUser $user): void
     {
-        DB::statement('CREATE USER ? IDENTIFIED BY \'?\';', [$user->toSql(), $user->getPassword()]);
+        DB::statement('CREATE USER ' . $user->toSql() . ' IDENTIFIED BY \'' . escapeSqlParameter($user->getPassword()) . '\';');
     }
 
     /**
@@ -53,7 +59,7 @@ class DatabaseManager extends Service
      */
     public function dropUser(DatabaseUser $user): void
     {
-        DB::statement('DROP USER ?;', [$user->toSql()]);
+        DB::statement('DROP USER ' . $user->toSql() . ';');
     }
 
     /**
@@ -62,7 +68,7 @@ class DatabaseManager extends Service
      */
     public function grantPrivileges(string $name, DatabaseUser $user): void
     {
-        DB::statement('GRANT ALL ON ? TO ?;', [$name . '.*', $user->toSql()]);
+        DB::statement('GRANT ALL ON ' . escapeSqlParameter($name) . '.* TO ' . $user->toSql() . ';');
         $this->reloadPrivileges();
     }
 
@@ -72,7 +78,7 @@ class DatabaseManager extends Service
      */
     public function revokePrivileges(string $name, DatabaseUser $user): void
     {
-        DB::statement('REVOKE ALL ON ? FROM ?;', [$name . '.*', $user->toSql()]);
+        DB::statement('REVOKE ALL ON ' . escapeSqlParameter($name) . '.* FROM ' . $user->toSql() . ';');
         $this->reloadPrivileges();
     }
 
@@ -82,7 +88,7 @@ class DatabaseManager extends Service
      */
     public function changeUserPassword(DatabaseUser $user, string $password): void
     {
-        DB::statement('SET PASSWORD FOR ? = PASSWORD(\'?\');', [$user->toSql(), $password]);
+        DB::statement('SET PASSWORD FOR ' . $user->toSql() . ' = PASSWORD(\'' . escapeSqlParameter($password) . '\');');
     }
 
     /**

@@ -4,6 +4,7 @@ namespace Richardds\ServerAdmin\Core\Database;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\DB;
+use Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException;
 
 class SchemaInfo implements Arrayable
 {
@@ -13,6 +14,8 @@ class SchemaInfo implements Arrayable
         'mysql',
         'serveradmin',
     ];
+
+    private static $loaded = false;
 
     /**
      * @var string
@@ -62,6 +65,21 @@ class SchemaInfo implements Arrayable
         return $schemaInfo;
     }
 
+    public static function isProtectedSchema(string $name): bool
+    {
+        if (!self::$loaded) {
+            $loaded_protected_tables = env('DB_PROTECTED');
+
+            if (!is_null($loaded_protected_tables)) {
+                self::$protected_tables = explode(',', $loaded_protected_tables);
+            }
+
+            self::$loaded = true;
+        }
+
+        return in_array($name, self::$protected_tables);
+    }
+
     /**
      * SchemaInfo constructor.
      * @param string $name
@@ -74,28 +92,31 @@ class SchemaInfo implements Arrayable
      * Fetch latest schema info.
      *
      * @param bool $fetchAll
+     * @throws InvalidParameterException
      */
     public function reload(bool $fetchAll = false): void
     {
-        $detailsResult = DB::selectOne('SELECT * FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = :database', [
+        $detailsResult = DB::selectOne('SELECT * FROM `information_schema`.`SCHEMATA` WHERE `SCHEMA_NAME` = :database;', [
             'database' => $this->name
         ]);
 
-        $countResult = DB::selectOne('SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = :database', [
+        $countResult = DB::selectOne('SELECT COUNT(*) AS `count` FROM `information_schema`.`tables` WHERE `table_schema` = :database;', [
             'database' => $this->name
         ]);
 
-        $sizeResult = DB::selectOne('SELECT ROUND(SUM(data_length + index_length), 0) AS size FROM information_schema.tables WHERE table_schema = :database GROUP BY table_schema', [
+        $sizeResult = DB::selectOne('SELECT ROUND(SUM(`data_length` + `index_length`), 0) AS `size` FROM `information_schema`.`tables` WHERE `table_schema` = :database GROUP BY `table_schema`;', [
             'database' => $this->name
         ]);
 
-        // TODO: Throw exception when database is missing.
+        if (is_null($detailsResult) || is_null($countResult) || is_null($sizeResult)) {
+            throw new InvalidParameterException('Schema does not exist', ['schema' => $this->name]);
+        }
 
         $this->character_set = $detailsResult->DEFAULT_CHARACTER_SET_NAME;
         $this->collation = $detailsResult->DEFAULT_COLLATION_NAME;
         $this->tables_count = $countResult->count;
         $this->size = $sizeResult->size ?? 0;
-        $this->protected = in_array($detailsResult->SCHEMA_NAME, self::$protected_tables);
+        $this->protected = SchemaInfo::isProtectedSchema($detailsResult->SCHEMA_NAME);
 
         if ($fetchAll) {
             if (isset($this->permissions)) {

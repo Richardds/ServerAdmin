@@ -83,6 +83,7 @@ class DatabaseSchemaController extends Controller
     /**
      * @param string $database
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException
      */
     public function destroy(string $database)
     {
