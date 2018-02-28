@@ -23,7 +23,7 @@ class DnsManager extends Service implements ConfigurableService
 
     public function configure()
     {
-        $zones = DnsZone::whereEnabled(true)->get();
+        $zones = DnsZone::enabled()->get();
         $zonesConfig = new ConfigIo(self::ZONES_CONFIG_MASTER_FILE);
 
         $zonesConfig->truncate();
@@ -51,10 +51,10 @@ class DnsManager extends Service implements ConfigurableService
 
         $zoneConfig->writeln("@	IN	SOA	{$zone->name} {$zone->admin} ({$zone->serial} {$zone->refresh} {$zone->retry} {$zone->expire} {$zone->ttl})");
         $zoneConfig->nextline();
-        $zoneConfig->writeln("@	IN	NS	ns.local.");
+        $zoneConfig->writeln("@	IN	NS	ns.local."); // TODO: Hostname
         $zoneConfig->nextline();
 
-        $zoneRecords = $zone->dnsRecords->where('enabled', '=', true);
+        $zoneRecords = $zone->dnsRecords()->enabled()->orderBy('type')->orderBy('name')->get();
 
         foreach ($zoneRecords as $record) {
             $bindRecordConfig = $record->attrs->toBindSyntax($record);
@@ -67,7 +67,7 @@ class DnsManager extends Service implements ConfigurableService
         $finder = new Finder();
         $files = $finder->files()->in(self::ZONES_CONFIG_FOLDER);
 
-        $filenames = DnsZone::whereEnabled(true)->get([DB::raw('CONCAT(name, \'.db\') AS filename')])->pluck('filename');
+        $filenames = DnsZone::enabled()->get([DB::raw('CONCAT(name, \'.db\') AS filename')])->pluck('filename');
 
         foreach ($files->getIterator() as $file) {
             if (!$filenames->contains($file->getFilename())) {

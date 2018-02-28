@@ -11,9 +11,9 @@ use Illuminate\Notifications\Notifiable;
  * @property int $id
  * @property string $username
  * @property string $password
- * @property string|null $remember_token
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
+ * @property string $remember_token
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\User whereId($value)
@@ -27,25 +27,50 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'username',
         'password',
     ];
 
+    /**
+     * The attributes that should be visible in serialization.
+     *
+     * @var array
+     */
     protected $visible = [
         'username',
     ];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array
+     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
     protected $dates = [
         'created_at',
         'updated_at',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'id' => 'integer',
         'username' => 'string',

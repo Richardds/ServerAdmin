@@ -3,6 +3,7 @@
 namespace Richardds\ServerAdmin;
 
 use Illuminate\Database\Eloquent\Model;
+use Richardds\ServerAdmin\Scopes\Local\Toggles;
 
 /**
  * Richardds\ServerAdmin\DnsZone
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Richardds\ServerAdmin\DnsRecord[] $dnsRecords
+ * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsZone enabled()
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsZone whereAdmin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsZone whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsZone whereEnabled($value)
@@ -34,6 +36,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class DnsZone extends Model
 {
+    use Toggles;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'name',
         'admin',
@@ -45,6 +54,11 @@ class DnsZone extends Model
         'enabled',
     ];
 
+    /**
+     * The attributes that should be visible in serialization.
+     *
+     * @var array
+     */
     protected $visible = [
         'id',
         'name',
@@ -59,11 +73,21 @@ class DnsZone extends Model
         'updated_at',
     ];
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
     protected $dates = [
         'created_at',
         'updated_at',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'name' => 'string',
         'admin' => 'string',

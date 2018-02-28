@@ -5,6 +5,7 @@ namespace Richardds\ServerAdmin\Http\Controllers;
 use Illuminate\Http\Request;
 use Richardds\ServerAdmin\Core\Dns\DnsManager;
 use Richardds\ServerAdmin\DnsZone;
+use Richardds\ServerAdmin\Facades\Execute;
 use Richardds\ServerAdmin\Http\CrudAssistance;
 
 class DnsZoneController extends Controller
@@ -50,17 +51,8 @@ class DnsZoneController extends Controller
      */
     public function export(DnsZone $zone)
     {
-        $exportContent = '';
-        $records = $zone->dnsRecords()
-            ->orderBy('type')
-            ->orderBy('name')
-            ->get();
-
-        foreach ($records as $record) {
-            $exportContent .= $record->attrs->toBindSyntax($record) . "\n";
-        }
-
-        return response($exportContent, 200, [
+        return response(Execute::output('cat ' . DnsManager::ZONES_CONFIG_FOLDER . '/' . $zone->name . '.db'),
+            200, [
             'Content-Type' => 'text/plain',
             'Content-Disposition' => "attachment; filename=\"{$zone->name}.txt\""
         ]);

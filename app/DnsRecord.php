@@ -5,6 +5,7 @@ namespace Richardds\ServerAdmin;
 use Illuminate\Database\Eloquent\Model;
 use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsRecordAssistance;
 use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsRecordAttributes;
+use Richardds\ServerAdmin\Scopes\Local\Toggles;
 
 /**
  * Richardds\ServerAdmin\DnsRecord
@@ -19,6 +20,7 @@ use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsRecordAttributes;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read \Richardds\ServerAdmin\DnsZone $dnsZone
+ * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsRecord enabled()
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsRecord whereAttrs($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsRecord whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\DnsRecord whereEnabled($value)
@@ -32,6 +34,8 @@ use Richardds\ServerAdmin\Core\Dns\RecordsAttributes\DnsRecordAttributes;
  */
 class DnsRecord extends Model
 {
+    use Toggles;
+
     use DnsRecordAssistance;
 
     const RECORD_A = 'A';
@@ -48,6 +52,11 @@ class DnsRecord extends Model
 
     const RECORD_NS = 'NS';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'zone_id',
         'type',
@@ -57,6 +66,11 @@ class DnsRecord extends Model
         'enabled',
     ];
 
+    /**
+     * The attributes that should be visible in serialization.
+     *
+     * @var array
+     */
     protected $visible = [
         'id',
         'zone_id',
@@ -69,11 +83,21 @@ class DnsRecord extends Model
         'updated_at',
     ];
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
     protected $dates = [
         'created_at',
         'updated_at',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'zone_id' => 'integer',
         'type' => 'string',

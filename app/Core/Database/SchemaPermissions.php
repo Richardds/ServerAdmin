@@ -68,7 +68,7 @@ class SchemaPermissions implements Arrayable
      */
     public function reload(): void
     {
-        $query = <<<SQL
+        $query = <<< EOT
         SELECT
           mdb.host,
           mdb.user,
@@ -95,7 +95,7 @@ class SchemaPermissions implements Arrayable
           )), ' ', ',') AS `privileges`
         FROM mysql.db mdb
         WHERE mdb.db = :database
-SQL;
+EOT;
         $users = DB::select($query, [
             'database' => $this->name
         ]);

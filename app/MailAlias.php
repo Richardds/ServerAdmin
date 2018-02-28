@@ -25,12 +25,22 @@ use Illuminate\Database\Eloquent\Model;
  */
 class MailAlias extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'domain_id',
         'user_id',
         'alias',
     ];
 
+    /**
+     * The attributes that should be visible in serialization.
+     *
+     * @var array
+     */
     protected $visible = [
         'id',
         'domain_id',
@@ -40,11 +50,21 @@ class MailAlias extends Model
         'updated_at',
     ];
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
     protected $dates = [
         'created_at',
         'updated_at',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'id' => 'integer',
         'domain_id' => 'integer',

@@ -44,7 +44,7 @@ class FirewallManager extends Service implements ConfigurableService
 
     public function configure()
     {
-        $rules = FirewallRule::whereEnabled(true)->get();
+        $rules = FirewallRule::enabled()->get();
 
         $this->clearRules();
 

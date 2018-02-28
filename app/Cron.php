@@ -4,6 +4,7 @@ namespace Richardds\ServerAdmin;
 
 use Illuminate\Database\Eloquent\Model;
 use Richardds\ServerAdmin\Core\Tasks\CronInterval;
+use Richardds\ServerAdmin\Scopes\Local\Toggles;
 
 /**
  * Richardds\ServerAdmin\Cron
@@ -16,12 +17,15 @@ use Richardds\ServerAdmin\Core\Tasks\CronInterval;
  * @property string $weekday
  * @property string $command
  * @property int $uid
+ * @property string|null $description
  * @property bool $enabled
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\Cron enabled()
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\Cron whereCommand($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\Cron whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\Cron whereDay($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\Cron whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\Cron whereEnabled($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\Cron whereHour($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Richardds\ServerAdmin\Cron whereId($value)
@@ -34,6 +38,8 @@ use Richardds\ServerAdmin\Core\Tasks\CronInterval;
  */
 class Cron extends Model
 {
+    use Toggles;
+
     /**
      * The attributes that are mass assignable.
      *
