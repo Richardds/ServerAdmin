@@ -44,15 +44,23 @@ function sha512crypt(string $password, ?string $salt = null)
 }
 
 /**
- * @param string $parameter
+ * @param string $string
+ * @param int $length
+ * @param string $ending
  * @return string
  */
-function escapeSqlParameter(string $parameter): string
-{
-    return $parameter; // TODO: Implement
-}
-
 function limitStringLength(string $string, int $length, string $ending = '...'): string
 {
     return strlen($string) > $length ? substr($string, 0, $length - strlen($ending)) . $ending : $string;
+}
+
+/**
+ * @param string $value
+ * @param array $rules
+ * @param null|string $name
+ * @throws \Illuminate\Validation\ValidationException
+ */
+function validate(string $value, array $rules, ?string $name = 'value'): void
+{
+    Validator::make([$name => $value], [$name => $rules])->validate();
 }

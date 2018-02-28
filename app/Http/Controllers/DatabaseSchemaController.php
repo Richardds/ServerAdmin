@@ -59,9 +59,9 @@ class DatabaseSchemaController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => ['required', 'string', 'max:255'],
-            'character_set' => ['nullable', 'string', 'max:255'],
-            'collation' => ['nullable', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_]+$/'],
+            'character_set' => ['nullable', 'string', 'max:255', 'regex:/^[a-z0-9_]+$/'],
+            'collation' => ['nullable', 'string', 'max:255', 'regex:/^[a-z0-9_]+$/'],
         ]);
 
         $name = $request->get('name');
@@ -84,10 +84,13 @@ class DatabaseSchemaController extends Controller
     /**
      * @param string $database
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      * @throws \Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException
      */
     public function destroy(string $database)
     {
+        validate($database, [['string', 'max:255', 'regex:/^[a-z0-9_]+$/']], 'database');
+
         $this->manager->dropDatabase($database);
 
         return api_response()->success()->response();

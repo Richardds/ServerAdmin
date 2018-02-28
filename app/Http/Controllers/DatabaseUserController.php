@@ -40,8 +40,8 @@ class DatabaseUserController extends Controller
     public function grantPrivileges(Request $request)
     {
         $this->validate($request, [
-            'name' => ['required', 'string', 'max:255'],
-            'user' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_]+$/'],
+            'user' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_\.@:]+$/'],
         ]);
 
         $this->manager->grantPrivileges($request->get('name'), DatabaseUser::fromSingleString($request->get('user')));
@@ -57,8 +57,8 @@ class DatabaseUserController extends Controller
     public function revokePrivileges(Request $request)
     {
         $this->validate($request, [
-            'name' => ['required', 'string', 'max:255'],
-            'user' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_]+$/'],
+            'user' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_\.@:]+$/'],
         ]);
 
         $this->manager->revokePrivileges($request->get('name'), DatabaseUser::fromSingleString($request->get('user')));
@@ -74,7 +74,7 @@ class DatabaseUserController extends Controller
     public function changePassword(Request $request)
     {
         $this->validate($request, [
-            'user' => ['required', 'string', 'max:255'],
+            'user' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_\.@:]+$/'],
             'password' => ['required', 'string', 'max:255'],
         ]);
 
@@ -98,8 +98,8 @@ class DatabaseUserController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'user' => ['required', 'string', 'max:255'],
-            'host' => ['required', 'string', 'max:255'],
+            'user' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_]+$/'],
+            'host' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_]+$/'],
             'password' => ['required', 'string', 'max:255'],
         ]);
 
@@ -115,10 +115,13 @@ class DatabaseUserController extends Controller
     /**
      * @param string $user
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      * @throws \Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException
      */
     public function destroy(string $user)
     {
+        validate($user, [['string', 'max:255', 'regex:/^[a-z0-9_\.@:]+$/']], 'user');
+
         $this->manager->dropUser(DatabaseUser::fromSingleString($user));
 
         return api_response()->success()->response();
