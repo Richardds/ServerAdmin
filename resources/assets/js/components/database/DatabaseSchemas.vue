@@ -124,7 +124,7 @@
             },
             createSchema() {
                 this.createSchemaForm.start();
-                axios.post('/api/database/schemas', this.createSchemaForm.attributes).then(() => {
+                axios.post('/api/database/schemas', ServerAdmin.Utils.stripObjectNulls(this.createSchemaForm.attributes)).then(() => {
                     this.createSchemaForm.finish();
                     this.loadSchemas();
                 }).catch(error => {

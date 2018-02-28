@@ -49,7 +49,7 @@ export const Utils = new class {
         let newObject = {};
 
         Object.keys(object).forEach((key) => {
-            if (object[key] != null) {
+            if (object[key] != null && object[key] !== '') {
                 newObject[key] = object[key];
             }
         });

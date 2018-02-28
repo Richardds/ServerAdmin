@@ -2,6 +2,7 @@
 
 namespace Richardds\ServerAdmin\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Richardds\ServerAdmin\Core\Database\DatabaseManager;
 use Richardds\ServerAdmin\Core\Dns\DnsManager;
@@ -108,13 +109,13 @@ class ServiceController extends Controller
     public function getValidService(Request $request): Service
     {
         $this->validate($request, [
-            'service' => 'required|string|max:255',
+            'service' => ['required', 'string', 'max:255'],
         ]);
 
         $service = $request->get('service');
 
         if (!isset($this->services[$service])) {
-            throw new \Exception('Invalid service name.');
+            throw new Exception('Invalid service name.');
         }
 
         return new $this->services[$service];

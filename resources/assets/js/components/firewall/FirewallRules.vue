@@ -118,7 +118,7 @@
             },
             createRule() {
                 this.createRuleForm.start();
-                axios.post('/api/firewall/rules', this.createRuleForm.attributes).then(() => {
+                axios.post('/api/firewall/rules', ServerAdmin.Utils.stripObjectNulls(this.createRuleForm.attributes)).then(() => {
                     this.createRuleForm.finish();
                     this.loadRules();
                 }).catch(error => {

@@ -132,7 +132,7 @@
             },
             createTask() {
                 this.createTaskForm.start();
-                axios.post('/api/cron/tasks', this.createTaskForm.attributes).then(response => {
+                axios.post('/api/cron/tasks', ServerAdmin.Utils.stripObjectNulls(this.createTaskForm.attributes)).then(response => {
                     this.createTaskForm.finish();
                     this.loadTasks();
                 }).catch(error => {

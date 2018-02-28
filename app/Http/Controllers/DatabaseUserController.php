@@ -40,8 +40,8 @@ class DatabaseUserController extends Controller
     public function grantPrivileges(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|min:1|max:255',
-            'user' => 'required|min:1|max:255',
+            'name' => ['required', 'string', 'max:255'],
+            'user' => ['required', 'string', 'max:255'],
         ]);
 
         $this->manager->grantPrivileges($request->get('name'), DatabaseUser::fromSingleString($request->get('user')));
@@ -57,8 +57,8 @@ class DatabaseUserController extends Controller
     public function revokePrivileges(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|min:1|max:255',
-            'user' => 'required|min:1|max:255',
+            'name' => ['required', 'string', 'max:255'],
+            'user' => ['required', 'string', 'max:255'],
         ]);
 
         $this->manager->revokePrivileges($request->get('name'), DatabaseUser::fromSingleString($request->get('user')));
@@ -74,8 +74,8 @@ class DatabaseUserController extends Controller
     public function changePassword(Request $request)
     {
         $this->validate($request, [
-            'user' => 'required|min:1|max:255',
-            'password' => 'required|min:8|max:255',
+            'user' => ['required', 'string', 'max:255'],
+            'password' => ['required', 'string', 'max:255'],
         ]);
 
         $this->manager->changeUserPassword(DatabaseUser::fromSingleString($request->get('user')), $request->get('password'));
@@ -98,9 +98,9 @@ class DatabaseUserController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'user' => 'required|min:1|max:255',
-            'host' => 'required|min:1|max:255',
-            'password' => 'required|min:1|max:255',
+            'user' => ['required', 'string', 'max:255'],
+            'host' => ['required', 'string', 'max:255'],
+            'password' => ['required', 'string', 'max:255'],
         ]);
 
         $this->manager->createUser(new DatabaseUser(

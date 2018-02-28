@@ -9,11 +9,11 @@ use Richardds\ServerAdmin\MailUser;
 class MailUserController extends ModelController
 {
     protected $rules = [
-        'domain_id' => 'required|exists:mail_domains,id',
-        'name' => 'min:1|max:255',
-        'username' => 'required|min:1|max:255',
-        'password' => 'required|min:8|max:255',
-        'enabled' => 'boolean',
+        'domain_id' => ['required', 'exists:mail_domains,id'],
+        'name' => ['string', 'max:255'],
+        'username' => ['required', 'string', 'max:255'],
+        'password' => ['required', 'string', 'max:255'],
+        'enabled' => ['boolean'],
     ];
 
     /**

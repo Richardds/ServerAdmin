@@ -38,10 +38,10 @@ class FirewallRuleController extends ModelController
         parent::__construct(FirewallRule::class);
 
         $this->rules = [
-            'type' => ['required', Rule::in(FirewallRule::availableTypes())],
-            'protocol' => ['required', Rule::in(FirewallRule::availableProtocols())],
-            'destination' => ['nullable', new IPN()],
-            'source' => ['nullable', new IPN()],
+            'type' => ['required', 'string', Rule::in(FirewallRule::availableTypes())],
+            'protocol' => ['required', 'string', Rule::in(FirewallRule::availableProtocols())],
+            'destination' => ['nullable', 'string', new IPN()],
+            'source' => ['nullable', 'string', new IPN()],
             'port' => ['required', 'numeric', 'between:1,65535'],
             'portTo' => ['nullable', 'numeric', 'between:1,65535'],
             'enabled' => ['boolean'],

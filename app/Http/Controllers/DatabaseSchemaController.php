@@ -59,9 +59,9 @@ class DatabaseSchemaController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|min:1|max:255',
-            'character_set' => 'min:1|max:255',
-            'collation' => 'min:1|max:255',
+            'name' => ['required', 'string', 'max:255'],
+            'character_set' => ['nullable', 'string', 'max:255'],
+            'collation' => ['nullable', 'string', 'max:255'],
         ]);
 
         $name = $request->get('name');

@@ -64,12 +64,12 @@ class DnsRecordController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'zone_id' => 'required|exists:dns_zones,id',
-            'type' => 'required|' . Rule::in(DnsRecord::availableTypes()),
-            'name' => 'required|min:1|max:253',
-            'attrs' => 'required',
-            'ttl' => 'required|numeric',
-            'enabled' => 'boolean',
+            'zone_id' => ['required', 'exists:dns_zones,id'],
+            'type' => ['required', 'string', Rule::in(DnsRecord::availableTypes())],
+            'name' => ['string', 'max:253'],
+            'attrs' => ['required', 'array'],
+            'ttl' => ['required', 'numeric'],
+            'enabled' => ['boolean'],
         ]);
 
         $type = $request->get('type');
@@ -78,7 +78,7 @@ class DnsRecordController extends Controller
             $record = new DnsRecord([
                 'zone_id' => $request->get('zone_id'),
                 'type' => $type,
-                'name' => $request->get('name'),
+                'name' => $request->get('name', '@'),
                 'attrs' => self::createDnsRecordAttributes($type, $request->get('attrs')),
                 'ttl' => $request->get('ttl'),
                 'enabled' => $request->get('enabled', true),
@@ -103,9 +103,9 @@ class DnsRecordController extends Controller
     public function update(Request $request, DnsRecord $record)
     {
         $rules = [
-            'name' => 'min:1|max:253',
-            'ttl' => 'numeric',
-            'enabled' => 'boolean',
+            'name' => ['string', 'max:253'],
+            'ttl' => ['numeric'],
+            'enabled' => ['boolean'],
         ];
 
         $this->validate($request, $rules);

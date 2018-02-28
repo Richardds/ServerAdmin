@@ -8,7 +8,7 @@ use Richardds\ServerAdmin\MailDomain;
 class MailDomainController extends ModelController
 {
     protected $rules = [
-        'name' => 'required|min:1|max:255',
+        'name' => ['required', 'max:255'],
     ];
 
     /**

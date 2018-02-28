@@ -73,7 +73,7 @@ class DnsZoneController extends Controller
      */
     public function import(DnsZone $zone, Request $request)
     {
-        //
+        return api_response()->fail(new \Exception('Method not implemented.'));
     }
 
     /**
@@ -100,14 +100,14 @@ class DnsZoneController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|min:1|max:253|unique:dns_zones,name',
-            'admin' => 'min:1|max:253',
-            'serial' => 'required|numeric',
-            'refresh' => 'required|numeric',
-            'retry' => 'required|numeric',
-            'expire' => 'required|numeric',
-            'ttl' => 'required|numeric',
-            'enabled' => 'boolean',
+            'name' => ['required', 'max:253', 'unique:dns_zones,name'],
+            'admin' => ['string', 'min:3', 'max:253'],
+            'serial' => ['required', 'numeric'],
+            'refresh' => ['required', 'numeric'],
+            'retry' => ['required', 'numeric'],
+            'expire' => ['required', 'numeric'],
+            'ttl' => ['required', 'numeric'],
+            'enabled' => ['boolean'],
         ]);
 
         $zone = DnsZone::create([
@@ -143,14 +143,13 @@ class DnsZoneController extends Controller
     public function update(Request $request, DnsZone $zone)
     {
         $rules = [
-            'name' => 'min:1|max:253',
-            'admin' => 'min:1|max:253',
-            'serial' => 'numeric',
-            'refresh' => 'numeric',
-            'retry' => 'numeric',
-            'expire' => 'numeric',
-            'ttl' => 'numeric',
-            'enabled' => 'boolean',
+            'admin' => ['string', 'min:3', 'max:253'],
+            'serial' => ['numeric'],
+            'refresh' => ['numeric'],
+            'retry' => ['numeric'],
+            'expire' => ['numeric'],
+            'ttl' => ['numeric'],
+            'enabled' => ['boolean'],
         ];
 
         $this->validate($request, $rules);

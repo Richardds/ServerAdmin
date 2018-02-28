@@ -9,9 +9,9 @@ use Richardds\ServerAdmin\MailUser;
 class MailAliasController extends ModelController
 {
     protected $rules = [
-        'domain_id' => 'required|exists:mail_domains,id',
-        'user_id' => 'required|exists:mail_users,id',
-        'alias' => 'required|min:1|max:255',
+        'domain_id' => ['required', 'exists:mail_domains,id'],
+        'user_id' => ['required', 'exists:mail_users,id'],
+        'alias' => ['required', 'string', 'max:255'],
     ];
 
     /**

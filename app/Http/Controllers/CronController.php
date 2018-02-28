@@ -4,6 +4,7 @@ namespace Richardds\ServerAdmin\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Richardds\ServerAdmin\Core\Cron\CronManager;
+use Richardds\ServerAdmin\Core\SystemUser;
 use Richardds\ServerAdmin\Cron;
 use Richardds\ServerAdmin\Http\CrudAssistance;
 
@@ -20,14 +21,14 @@ class CronController extends Controller
      * @var array
      */
     protected $rules = [
-        'minute' => 'min:1|max:255',
-        'hour' => 'min:1|max:255',
-        'day' => 'min:1|max:255',
-        'month' => 'min:1|max:255',
-        'weekday' => 'min:1|max:255',
-        'command' => 'required|min:1|max:255',
-        'uid' => 'required|numeric',
-        'enabled' => 'boolean',
+        'minute' => ['string', 'max:255'],
+        'hour' => ['string', 'max:255'],
+        'day' => ['string', 'max:255'],
+        'month' => ['string', 'max:255'],
+        'weekday' => ['string', 'max:255'],
+        'command' => ['string', 'max:255'],
+        'uid' => ['numeric'],
+        'enabled' => ['boolean'],
     ];
 
     /**
@@ -71,7 +72,7 @@ class CronController extends Controller
             'month' => $request->get('month', '*'),
             'weekday' => $request->get('weekday', '*'),
             'command' => $request->get('command'),
-            'uid' => $request->get('uid'),
+            'uid' => $request->get('uid', SystemUser::getByName('serveradmin')->getUid()),
             'enabled' => $request->get('enabled', true),
         ]);
 
