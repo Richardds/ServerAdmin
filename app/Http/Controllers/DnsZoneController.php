@@ -51,8 +51,9 @@ class DnsZoneController extends Controller
      */
     public function export(DnsZone $zone)
     {
-        return response(Execute::output('cat ' . DnsManager::ZONES_CONFIG_FOLDER . '/' . $zone->name . '.db'),
-            200, [
+        $exportedZone = Execute::output('cat ' . DnsManager::ZONES_CONFIG_FOLDER . '/' . $zone->name . '.db');
+
+        return response($exportedZone, 200, [
             'Content-Type' => 'text/plain',
             'Content-Disposition' => "attachment; filename=\"{$zone->name}.txt\""
         ]);

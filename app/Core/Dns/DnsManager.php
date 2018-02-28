@@ -3,6 +3,7 @@
 namespace Richardds\ServerAdmin\Core\Dns;
 
 use Illuminate\Support\Facades\DB;
+use Richardds\ServerAdmin\Core\Commands\SystemInfo;
 use Richardds\ServerAdmin\Core\ConfigIo;
 use Richardds\ServerAdmin\Core\ConfigurableService;
 use Richardds\ServerAdmin\Core\Service;
@@ -51,7 +52,7 @@ class DnsManager extends Service implements ConfigurableService
 
         $zoneConfig->writeln("@	IN	SOA	{$zone->name} {$zone->admin} ({$zone->serial} {$zone->refresh} {$zone->retry} {$zone->expire} {$zone->ttl})");
         $zoneConfig->nextline();
-        $zoneConfig->writeln("@	IN	NS	ns.local."); // TODO: Hostname
+        $zoneConfig->writeln('@	IN	NS  ' . SystemInfo::hostname() . '.');
         $zoneConfig->nextline();
 
         $zoneRecords = $zone->dnsRecords()->enabled()->orderBy('type')->orderBy('name')->get();

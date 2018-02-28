@@ -20,7 +20,7 @@ class SystemInfo
             throw new InvalidCommandOutputException('Result of explode function is invalid');
         }
 
-        return intval($ex[0]);
+        return intval(trim($ex[0]));
     }
 
     /**
@@ -28,7 +28,7 @@ class SystemInfo
      */
     public static function hostname(): string
     {
-        return Execute::output('hostname');
+        return trim(Execute::output('hostname'));
     }
 
     /**
@@ -52,6 +52,6 @@ class SystemInfo
      */
     public static function id(): string
     {
-        return Execute::output('id');
+        return trim(Execute::output('id'));
     }
 }
