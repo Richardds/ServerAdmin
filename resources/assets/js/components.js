@@ -1,16 +1,18 @@
 // Elements
-Vue.component('sa-status', require('./components/Status.vue'));
-Vue.component('sa-modal', require('./components/Modal.vue'));
-Vue.component('sa-button', require('./components/Button.vue'));
+Vue.component('sa-status', require('./components/Status'));
+Vue.component('sa-modal', require('./components/Modal'));
+Vue.component('sa-button', require('./components/Button'));
+Vue.component('sa-icon', require('./components/Icon'));
 
 // Core
 Vue.component('sa-service-controls', require('./components/core/ServiceControls'));
+Vue.component('sa-server-controls', require('./components/core/ServerControls'));
 
 // DNS
-Vue.component('sa-dns-zones', require('./components/dns/DnsZones.vue'));
-Vue.component('sa-dns-zone', require('./components/dns/DnsZone.vue'));
-Vue.component('sa-dns-records', require('./components/dns/DnsRecords.vue'));
-Vue.component('sa-dns-record', require('./components/dns/DnsRecord.vue'));
+Vue.component('sa-dns-zones', require('./components/dns/DnsZones'));
+Vue.component('sa-dns-zone', require('./components/dns/DnsZone'));
+Vue.component('sa-dns-records', require('./components/dns/DnsRecords'));
+Vue.component('sa-dns-record', require('./components/dns/DnsRecord'));
 
 // Cron
 Vue.component('sa-tasks', require('./components/tasks/CronTasks'));

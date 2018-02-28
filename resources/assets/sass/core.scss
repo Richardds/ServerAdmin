@@ -10,6 +10,12 @@
 // Font awesome
 @import "~font-awesome/scss/font-awesome";
 
+.nav-main {
+    a {
+        font-size: 16px;
+    }
+}
+
 table.table {
     tr.disabled {
         color: lighten($text-color, 30%) !important;

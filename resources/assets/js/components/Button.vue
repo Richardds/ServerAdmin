@@ -1,7 +1,7 @@
 <template>
     <button :class="['btn', size ? 'btn-' + size : '', type ? 'btn-' + type : '']" :disabled="disabled || loading">
-        <i v-if="icon" :class="['fa', 'fa-' + (loading ? 'cog' : icon), {'fa-spin' : loading}]" aria-hidden="true"></i>
-        <slot></slot>
+        <sa-icon v-if="icon" :icon="(loading ? 'cog' : icon)" :spin="loading" />
+        <slot />
     </button>
 </template>
 

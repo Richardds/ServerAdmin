@@ -12,12 +12,12 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name') }}
+                    {{ config('app.name') }} <small>v{{ version() }}</small>
                 </a>
             </div>
             @if(Auth::check())
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <ul class="nav navbar-nav">
+                    <ul class="nav navbar-nav nav-main">
                         @include('components.menu.top_left')
                     </ul>
                     <ul class="nav navbar-nav navbar-right">

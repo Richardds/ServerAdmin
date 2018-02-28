@@ -4,6 +4,16 @@ use Carbon\Carbon;
 use Richardds\ServerAdmin\Http\ApiResponse;
 
 /**
+ * Return application version.
+ *
+ * @return string
+ */
+function version(): string
+{
+    return env('APP_VERSION', '0.0.0');
+}
+
+/**
  * @param \Carbon\Carbon $date
  * @return string
  */

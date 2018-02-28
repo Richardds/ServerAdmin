@@ -50,8 +50,8 @@ class SystemInfo
     /**
      * @return string
      */
-    public static function id(): string
+    public static function whoami(): string
     {
-        return trim(Execute::output('id'));
+        return trim(Execute::output('whoami'));
     }
 }
