@@ -3,11 +3,12 @@
 namespace Richardds\ServerAdmin\Core\Firewall;
 
 use Richardds\ServerAdmin\Core\Commands\ServiceCommand;
+use Richardds\ServerAdmin\Core\ConfigurableService;
 use Richardds\ServerAdmin\Core\Service;
 use Richardds\ServerAdmin\Facades\Execute;
 use Richardds\ServerAdmin\FirewallRule;
 
-class FirewallManager extends Service
+class FirewallManager extends Service implements ConfigurableService
 {
     const RULES_CONFIG_FILE = '/etc/ufw/user.rules';
 
@@ -22,17 +23,6 @@ class FirewallManager extends Service
     public function reload(): void
     {
         ServiceCommand::forceReload($this->name);
-    }
-
-    public function clearRules()
-    {
-        $rules = Execute::output("ufw status numbered", true);
-        $count = count(explode("\n", $rules)) - 6;
-
-        while ($count > 0) {
-            Execute::withoutOutput("echo y | ufw delete {$count}", true);
-            $count--;
-        }
     }
 
     public function createRule(FirewallRule $rule)
@@ -52,7 +42,7 @@ class FirewallManager extends Service
         Execute::withoutOutput($command, true);
     }
 
-    public function generateRules()
+    public function configure()
     {
         $rules = FirewallRule::whereEnabled(true)->get();
 
@@ -60,6 +50,17 @@ class FirewallManager extends Service
 
         foreach ($rules as $rule) {
             $this->createRule($rule);
+        }
+    }
+
+    public function clearRules()
+    {
+        $rules = Execute::output("ufw status numbered", true);
+        $count = count(explode("\n", $rules)) - 6;
+
+        while ($count > 0) {
+            Execute::withoutOutput("echo y | ufw delete {$count}", true);
+            $count--;
         }
     }
 }

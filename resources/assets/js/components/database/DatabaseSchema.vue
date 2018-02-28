@@ -7,14 +7,14 @@
         <td class="schema-size" :title="schema.size">{{ schemaSizeText }}</td>
 
         <td class="fit">
-            <sa-modal :visible="editUsersModal.enabled"
-                      @close="editUsersModal.close()"
+            <sa-modal :visible="editPrivilegesModal.enabled"
+                      @close="editPrivilegesModal.close()"
                       title="Schema privileges">
                 <sa-database-schema-users :schema="schema.name" :users="users" />
             </sa-modal>
-            <sa-button @click.native="editUsersModal.open()"
+            <sa-button @click.native="editPrivilegesModal.open()"
                        type="default"
-                       icon="users"
+                       icon="key"
                        size="sm" />
             <sa-button @click.native="destroySchema()"
                        :disabled="schema.protected"
@@ -31,7 +31,7 @@
         props: ['schema', 'users'],
         data() {
             return {
-                editUsersModal: new ServerAdmin.ModalForm(),
+                editPrivilegesModal: new ServerAdmin.ModalForm(),
                 destroySchemaForm: new ServerAdmin.Form({
                     'id': -1
                 }),

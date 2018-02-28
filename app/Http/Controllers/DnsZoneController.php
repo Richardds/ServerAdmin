@@ -121,7 +121,8 @@ class DnsZoneController extends Controller
             'enabled' => $request->get('enabled', true),
         ]);
 
-        $this->manager->generateZonesConfig();
+        $this->manager->configure();
+        $this->manager->reload();
 
         return api_response()->success(['id' => $zone->id])->response();
     }
@@ -156,7 +157,8 @@ class DnsZoneController extends Controller
         $this->updateModel($zone, $request, array_keys($rules));
         $zone->save();
 
-        $this->manager->generateZonesConfig();
+        $this->manager->configure();
+        $this->manager->reload();
 
         return api_response()->success($zone->toArray())->response();
     }
@@ -170,7 +172,8 @@ class DnsZoneController extends Controller
     {
         $zone->delete();
 
-        $this->manager->generateZonesConfig();
+        $this->manager->configure();
+        $this->manager->reload();
 
         return api_response()->success()->response();
     }

@@ -89,7 +89,8 @@ class DnsRecordController extends Controller
 
         $record->save();
 
-        $this->manager->generateZonesConfig();
+        $this->manager->configure();
+        $this->manager->reload();
 
         return api_response()->success(['id' => $record->id])->response();
     }
@@ -119,7 +120,8 @@ class DnsRecordController extends Controller
 
         $record->save();
 
-        $this->manager->generateZonesConfig();
+        $this->manager->configure();
+        $this->manager->reload();
 
         return api_response()->success($record->toArray())->response();
     }
@@ -133,7 +135,8 @@ class DnsRecordController extends Controller
     {
         $record->delete();
 
-        $this->manager->generateZonesConfig();
+        $this->manager->configure();
+        $this->manager->reload();
 
         return api_response()->success()->response();
     }

@@ -73,7 +73,7 @@ class FirewallRuleController extends ModelController
             'portTo' => $request->get('portTo'),
         ]);
 
-        $this->manager->generateRules();
+        $this->manager->configure();
 
         return api_response()->success(['id' => $firewallRule->id])->response();
     }
@@ -87,7 +87,7 @@ class FirewallRuleController extends ModelController
     {
         $ret = parent::update($request, $id);
 
-        $this->manager->generateRules();
+        $this->manager->configure();
 
         return $ret;
     }
@@ -102,7 +102,7 @@ class FirewallRuleController extends ModelController
     {
         $ret = parent::destroy($request, $id);
 
-        $this->manager->generateRules();
+        $this->manager->configure();
 
         return $ret;
     }

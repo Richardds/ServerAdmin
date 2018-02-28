@@ -103,7 +103,7 @@
             editTask() {
                 if (this.editMode && this.changed) {
                     this.updating = true;
-                    axios.put('/api/cron/tasks/' + this.task.id, this.task).then(response => {
+                    axios.put('/api/tasks/' + this.task.id, this.task).then(response => {
                         ServerAdmin.Utils.updateAttributes(this.task, response.data.data);
                         this.updating = false;
                         this.changed = false;
@@ -116,7 +116,7 @@
             },
             destroyTask() {
                 this.destroyTaskForm.start();
-                axios.delete('/api/cron/tasks/' + this.task.id).then(response => {
+                axios.delete('/api/tasks/' + this.task.id).then(response => {
                     this.destroyTaskForm.finish();
                     this.$emit('destroyTask');
                 }).catch(error => {
@@ -126,7 +126,7 @@
             toggleTask() {
                 this.toggleTaskForm.start();
                 this.toggleTaskForm.switch(this.task.enabled);
-                axios.patch('/api/cron/tasks/' + this.task.id, this.toggleTaskForm.attributes).then(response => {
+                axios.patch('/api/tasks/' + this.task.id, this.toggleTaskForm.attributes).then(response => {
                     ServerAdmin.Utils.updateAttributes(this.task, response.data.data);
                     this.toggleTaskForm.finish();
                 }).catch(error => {

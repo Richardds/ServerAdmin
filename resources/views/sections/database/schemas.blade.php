@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Database</div>
+                    <div class="panel-heading">MariaDB service</div>
 
                     <div class="panel-body">
                         <div class="row">
@@ -14,7 +14,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <a class="btn btn-default pull-right" href="{{ route('database_users') }}">
-                                    <i class="fa fa-users" aria-hidden="true"></i> Users
+                                    <i class="fa fa-users" aria-hidden="true"></i> Manage users
                                 </a>
                             </div>
                         </div>

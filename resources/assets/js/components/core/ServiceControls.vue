@@ -1,12 +1,14 @@
 <template>
     <div>
-        <sa-button @click.native="toggleService" :type="running ? 'danger' : 'success'"
+        <sa-button @click.native="toggleService()" :type="running ? 'danger' : 'success'"
                    :icon="running ? 'stop' : 'play'" :disabled="pending"
                    :loading="toggling">{{ running ? 'Stop' : 'Start' }}</sa-button>
-        <sa-button @click.native="restartService" type="warning" icon="bolt"
+        <sa-button @click.native="restartService()" type="warning" icon="bolt"
                    :disabled="!running || pending" :loading="restarting">Restart</sa-button>
-        <sa-button @click.native="reloadService" type="warning" icon="refresh"
+        <sa-button @click.native="reloadService()" type="warning" icon="refresh"
                    :disabled="!running || pending" :loading="reloading">Reload</sa-button>
+        <sa-button @click.native="reconfigureService()" type="info" icon="retweet"
+                   :disabled="!configurable || pending" :loading="reconfiguring">Reconfigure</sa-button>
     </div>
 </template>
 
@@ -16,9 +18,12 @@
         data() {
             return {
                 running: false,
+                configurable: false,
+                //
                 toggling: true,
                 restarting: false,
                 reloading: false,
+                reconfiguring: false,
             };
         },
         mounted() {
@@ -37,6 +42,7 @@
             },
             handleStatus(status) {
                 this.running = status.running;
+                this.configurable = status.configurable;
             },
             toggleService() {
                 this.toggling = true;
@@ -77,11 +83,21 @@
                     this.reloading = false;
                     console.error(error);
                 });
+            },
+            reconfigureService() {
+                this.reconfiguring = true;
+                axios.post('/api/service/reconfigure', {service: this.service}).then(response => {
+                    this.handleStatus(response.data.data);
+                    this.reconfiguring = false;
+                }).catch(error => {
+                    this.reconfiguring = false;
+                    console.error(error);
+                });
             }
         },
         computed: {
             pending() {
-                return this.toggling || this.restarting || this.reloading;
+                return this.toggling || this.restarting || this.reloading || this.reconfiguring;
             }
         }
     }

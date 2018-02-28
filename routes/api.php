@@ -8,6 +8,7 @@ Route::group(['prefix' => 'service'], function() {
     Route::post('stop', 'ServiceController@stop');
     Route::post('restart', 'ServiceController@restart');
     Route::post('reload', 'ServiceController@reload');
+    Route::post('reconfigure', 'ServiceController@reconfigure');
     Route::post('status', 'ServiceController@status');
 });
 
@@ -38,11 +39,9 @@ Route::group(['prefix' => 'dns'], function() {
 /**
  * Cron
  */
-Route::group(['prefix' => 'cron'], function() {
-    Route::apiResource('tasks', 'CronController', [
-        'only' => ['index', 'show', 'store', 'update', 'destroy']
-    ]);
-});
+Route::apiResource('tasks', 'CronController', [
+    'only' => ['index', 'show', 'store', 'update', 'destroy']
+]);
 
 /**
  * Database

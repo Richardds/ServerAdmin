@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">DNS</div>
+                    <div class="panel-heading">Bind service</div>
 
                     <div class="panel-body">
                         <sa-service-controls service="dns"></sa-service-controls>

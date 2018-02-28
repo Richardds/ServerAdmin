@@ -3,8 +3,8 @@
 namespace Richardds\ServerAdmin\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Richardds\ServerAdmin\Core\Cron\CronManager;
 use Richardds\ServerAdmin\Core\SystemUser;
+use Richardds\ServerAdmin\Core\Tasks\TaskManager;
 use Richardds\ServerAdmin\Cron;
 use Richardds\ServerAdmin\Http\CrudAssistance;
 
@@ -13,7 +13,7 @@ class CronController extends Controller
     use CrudAssistance;
 
     /**
-     * @var \Richardds\ServerAdmin\Core\Cron\CronManager;
+     * @var \Richardds\ServerAdmin\Core\Tasks\TaskManager;
      */
     private $manager;
 
@@ -33,9 +33,9 @@ class CronController extends Controller
 
     /**
      * CronController constructor.
-     * @param CronManager $manager
+     * @param TaskManager $manager
      */
-    public function __construct(CronManager $manager)
+    public function __construct(TaskManager $manager)
     {
         $this->middleware('auth');
         $this->manager = $manager;
@@ -46,7 +46,7 @@ class CronController extends Controller
      */
     public function cron_tasks()
     {
-        return view('sections.cron.tasks');
+        return view('sections.tasks.tasks');
     }
 
     /**
@@ -76,7 +76,8 @@ class CronController extends Controller
             'enabled' => $request->get('enabled', true),
         ]);
 
-        $this->manager->generate();
+        $this->manager->configure();
+        $this->manager->reload();
 
         return api_response()->success(['id' => $task->id])->response();
     }
@@ -101,7 +102,8 @@ class CronController extends Controller
         $this->updateModel($task, $request, array_keys($this->rules));
         $task->save();
 
-        $this->manager->generate();
+        $this->manager->configure();
+        $this->manager->reload();
 
         return api_response()->success($task->toArray())->response();
     }
@@ -115,7 +117,8 @@ class CronController extends Controller
     {
         $task->delete();
 
-        $this->manager->generate();
+        $this->manager->configure();
+        $this->manager->reload();
 
         return api_response()->success()->response();
     }

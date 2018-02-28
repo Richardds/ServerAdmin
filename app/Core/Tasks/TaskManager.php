@@ -1,17 +1,27 @@
 <?php
 
-namespace Richardds\ServerAdmin\Core\Cron;
+namespace Richardds\ServerAdmin\Core\Tasks;
 
 use Richardds\ServerAdmin\Core\ConfigIo;
+use Richardds\ServerAdmin\Core\ConfigurableService;
+use Richardds\ServerAdmin\Core\Service;
 use Richardds\ServerAdmin\Core\SystemUser;
 use Richardds\ServerAdmin\Cron;
+use Richardds\ServerAdmin\Facades\Execute;
 
-class CronManager
+class TaskManager extends Service implements ConfigurableService
 {
-    protected $cronConfigFolder = '/var/spool/cron/crontabs';
+    const CRON_CONFIG_FOLDER = '/var/spool/cron/crontabs';
 
-    public function generate()
+    public function __construct()
     {
+        parent::__construct('cron');
+    }
+
+    public function configure()
+    {
+        Execute::withoutOutput('rm -f ' . self::CRON_CONFIG_FOLDER . '/*', true);
+
         $tasksUsers = Cron::whereEnabled(true)->select('uid')->distinct()->get();
 
         foreach ($tasksUsers as $tasksUser) {
@@ -19,7 +29,7 @@ class CronManager
 
             $userTasks = Cron::whereEnabled(true)->where('uid', '=', $user->getUid())->get();
 
-            $cronConfig = new ConfigIo($this->cronConfigFolder . '/' . $user->getName());
+            $cronConfig = new ConfigIo(self::CRON_CONFIG_FOLDER . '/' . $user->getName());
             $cronConfig->truncate();
 
             foreach ($userTasks as $userTask) {

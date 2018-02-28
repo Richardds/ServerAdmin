@@ -68,7 +68,7 @@
             </tr>
             </thead>
             <tbody>
-            <sa-cron-task v-for="task in orderedTasks"
+            <sa-task v-for="task in orderedTasks"
                           :key="task.id"
                           :task="task"
                           :users="users"
@@ -121,7 +121,7 @@
         },
         methods: {
             loadTasks() {
-                axios.get('/api/cron/tasks').then(response => {
+                axios.get('/api/tasks').then(response => {
                     this.tasks = [];
                     for (let task of response.data.data) {
                         this.tasks.push(task);
@@ -132,7 +132,7 @@
             },
             createTask() {
                 this.createTaskForm.start();
-                axios.post('/api/cron/tasks', ServerAdmin.Utils.stripObjectNulls(this.createTaskForm.attributes)).then(response => {
+                axios.post('/api/tasks', ServerAdmin.Utils.stripObjectNulls(this.createTaskForm.attributes)).then(response => {
                     this.createTaskForm.finish();
                     this.loadTasks();
                 }).catch(error => {

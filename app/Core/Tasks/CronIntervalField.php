@@ -1,6 +1,6 @@
 <?php
 
-namespace Richardds\ServerAdmin\Core\Cron;
+namespace Richardds\ServerAdmin\Core\Tasks;
 
 class CronIntervalField
 {

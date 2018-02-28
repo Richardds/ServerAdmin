@@ -1,8 +1,8 @@
 <?php
 
 use Faker\Generator as Faker;
-use Richardds\ServerAdmin\Core\Cron\CronInterval;
-use Richardds\ServerAdmin\Core\Cron\CronIntervalField;
+use Richardds\ServerAdmin\Core\Tasks\CronInterval;
+use Richardds\ServerAdmin\Core\Tasks\CronIntervalField;
 use Richardds\ServerAdmin\Cron;
 
 /**

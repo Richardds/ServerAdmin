@@ -4,11 +4,13 @@ namespace Richardds\ServerAdmin\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
+use Richardds\ServerAdmin\Core\ConfigurableService;
 use Richardds\ServerAdmin\Core\Database\DatabaseManager;
 use Richardds\ServerAdmin\Core\Dns\DnsManager;
 use Richardds\ServerAdmin\Core\Firewall\FirewallManager;
 use Richardds\ServerAdmin\Core\Mail\MailManager;
 use Richardds\ServerAdmin\Core\Service;
+use Richardds\ServerAdmin\Core\Tasks\TaskManager;
 
 class ServiceController extends Controller
 {
@@ -17,6 +19,7 @@ class ServiceController extends Controller
         'database' => DatabaseManager::class,
         'mail' => MailManager::class,
         'firewall' => FirewallManager::class,
+        'tasks' => TaskManager::class,
     ];
 
     /**
@@ -88,6 +91,24 @@ class ServiceController extends Controller
     }
 
     /**
+     * Reconfigure service and return service status.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function reconfigure(Request $request)
+    {
+        $service = $this->getValidService($request);
+
+        if ($service instanceof ConfigurableService) {
+            $service->configure();
+        }
+
+        return api_response()->success($this->createServiceReport($service))->response();
+    }
+
+    /**
      * Get status of service.
      *
      * @param Request $request
@@ -125,6 +146,7 @@ class ServiceController extends Controller
     {
         return [
             'running' => $service->isRunning(),
+            'configurable' => $service instanceof ConfigurableService,
         ];
     }
 }

@@ -3,7 +3,7 @@
 namespace Richardds\ServerAdmin;
 
 use Illuminate\Database\Eloquent\Model;
-use Richardds\ServerAdmin\Core\Cron\CronInterval;
+use Richardds\ServerAdmin\Core\Tasks\CronInterval;
 
 /**
  * Richardds\ServerAdmin\Cron
