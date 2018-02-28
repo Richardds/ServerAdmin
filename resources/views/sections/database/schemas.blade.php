@@ -8,8 +8,16 @@
                     <div class="panel-heading">Database</div>
 
                     <div class="panel-body">
-                        <sa-service-controls service="database"></sa-service-controls>
-                        <a href="{{ route('database_users') }}">Users?</a>
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <sa-service-controls service="database"></sa-service-controls>
+                            </div>
+                            <div class="col-sm-3">
+                                <a class="btn btn-default pull-right" href="{{ route('database_users') }}">
+                                    <i class="fa fa-users" aria-hidden="true"></i> Users
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
