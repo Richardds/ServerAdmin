@@ -54,6 +54,7 @@ class DatabaseSchemaController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException
      */
     public function store(Request $request)
     {
@@ -67,7 +68,7 @@ class DatabaseSchemaController extends Controller
 
         $this->manager->createDatabase($name, $request->get('character_set'), $request->get('collation'));
 
-        return api_response()->success($this->manager->getDatabaseInfo($name))->response();
+        return api_response()->success($this->manager->getDatabaseInfo($name)->toArray())->response();
     }
 
     /**
