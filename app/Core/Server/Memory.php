@@ -146,6 +146,10 @@ class Memory
      */
     public function getAvailablePercentage(): float
     {
+        if ($this->total == 0) {
+            return 0;
+        }
+
         return ($this->total - $this->available) / $this->total * 100;
     }
 

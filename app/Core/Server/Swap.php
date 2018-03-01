@@ -85,6 +85,10 @@ class Swap
      */
     public function getAvailablePercentage(): float
     {
+        if ($this->total == 0) {
+            return 0;
+        }
+
         return ($this->total - $this->free) / $this->total * 100;
     }
 
