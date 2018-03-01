@@ -22,9 +22,9 @@ class ServerController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    public function stop(Request $request)
+    public function shutdown(Request $request)
     {
-        Server::stop();
+        Server::shutdown();
 
         return api_response()->success()->response();
     }

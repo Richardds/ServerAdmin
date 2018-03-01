@@ -9,7 +9,7 @@ class Server
     /**
      * @return void
      */
-    public static function stop(): void
+    public static function shutdown(): void
     {
         Execute::withoutOutput('shutdown now', true);
     }

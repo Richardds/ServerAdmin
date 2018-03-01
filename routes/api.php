@@ -16,7 +16,7 @@ Route::group(['prefix' => 'service'], function() {
  * Server
  */
 Route::group(['prefix' => 'server'], function() {
-    Route::post('stop', 'ServerController@stop');
+    Route::post('shutdown', 'ServerController@shutdown');
     Route::post('restart', 'ServerController@restart');
 });
 
