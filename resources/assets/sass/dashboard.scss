@@ -1,0 +1,12 @@
+table {
+    &.table-parameters {
+        th, td {
+            &.name {
+                width: 150px;
+            }
+            &.value {
+                @extend .numeric;
+            }
+        }
+    }
+}

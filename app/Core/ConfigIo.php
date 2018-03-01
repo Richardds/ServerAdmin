@@ -16,10 +16,14 @@ class ConfigIo
      * ConfigIo constructor.
      *
      * @param string $path
+     * @param int|null $mode
      */
-    public function __construct(string $path)
+    public function __construct(string $path, ?int $mode = 644)
     {
         $this->path = escapeshellarg($path);
+
+        Execute::withoutOutput("touch {$path}", true);
+        Execute::withoutOutput("chmod {$mode} {$path}", true);
     }
 
     /**

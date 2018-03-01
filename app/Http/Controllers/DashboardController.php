@@ -25,7 +25,10 @@ class DashboardController extends Controller
         $os = SystemInfo::os();
         $uptime = new Uptime(SystemInfo::uptime());
         $user = SystemUser::getByName(SystemInfo::whoami());
+        $memory = SystemInfo::memory();
+        $swap = SystemInfo::swap();
+        $processor = SystemInfo::processor();
 
-        return view('sections.dashboard.dashboard', compact('os', 'uptime', 'user'));
+        return view('sections.dashboard.dashboard', compact('os', 'uptime', 'user', 'memory', 'swap', 'processor'));
     }
 }

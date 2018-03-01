@@ -74,7 +74,7 @@ class DatabaseUserController extends Controller
     public function changePassword(Request $request)
     {
         $this->validate($request, [
-            'user' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_\.@:]+$/'],
+            'user' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_\.\-@]+$/'],
             'password' => ['required', 'string', 'max:255'],
         ]);
 
@@ -99,7 +99,7 @@ class DatabaseUserController extends Controller
     {
         $this->validate($request, [
             'user' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_]+$/'],
-            'host' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_]+$/'],
+            'host' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9_\.\-]+$/'],
             'password' => ['required', 'string', 'max:255'],
         ]);
 
@@ -120,7 +120,7 @@ class DatabaseUserController extends Controller
      */
     public function destroy(string $user)
     {
-        validate($user, [['string', 'max:255', 'regex:/^[a-z0-9_\.@:]+$/']], 'user');
+        validate($user, [['string', 'max:255', 'regex:/^[a-z0-9_\.\-@]+$/']], 'user');
 
         $this->manager->dropUser(DatabaseUser::fromSingleString($user));
 

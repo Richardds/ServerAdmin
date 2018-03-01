@@ -74,3 +74,15 @@ function validate(string $value, array $rules, ?string $name = 'value'): void
 {
     Validator::make([$name => $value], [$name => $rules])->validate();
 }
+
+/**
+ * @param string $value
+ * @param string $regex
+ * @return mixed
+ */
+function regex_single(string $value, string $regex)
+{
+    preg_match_all($regex, $value, $matches, PREG_SET_ORDER, 0);
+
+    return $matches[0][1];
+}

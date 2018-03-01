@@ -29,7 +29,7 @@ class TaskManager extends Service implements ConfigurableService
 
             $userTasks = Cron::enabled()->where('uid', '=', $user->getUid())->get();
 
-            $cronConfig = new ConfigIo(self::CRON_CONFIG_FOLDER . '/' . $user->getName());
+            $cronConfig = new ConfigIo(self::CRON_CONFIG_FOLDER . '/' . $user->getName(), 600);
             $cronConfig->truncate();
 
             foreach ($userTasks as $userTask) {
