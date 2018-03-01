@@ -82,7 +82,7 @@ class DnsMXRecordAttributes implements DnsRecordAttributes
      */
     public function toBindSyntax(DnsRecord $dnsRecord): string
     {
-        return sprintf("%s\t%d\tIN\tMX\t%d\t%s", $dnsRecord->name, $dnsRecord->ttl, $this->priority, $this->host);
+        return sprintf("%s\t%d\tIN\tMX\t%d\t%s.", $dnsRecord->name, $dnsRecord->ttl, $this->priority, $this->host);
     }
 
     /**

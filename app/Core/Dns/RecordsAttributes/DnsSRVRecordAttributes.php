@@ -178,7 +178,7 @@ class DnsSRVRecordAttributes implements DnsRecordAttributes
      */
     public function toBindSyntax(DnsRecord $dnsRecord): string
     {
-        return sprintf("%s.%s.%s\t%d\tIN\tSRV\t%d\t%d\t%d\t%s", $this->service, $this->protocol, $dnsRecord->name, $dnsRecord->ttl, $this->priority, $this->weight, $this->port, $this->host);
+        return sprintf("%s.%s.%s\t%d\tIN\tSRV\t%d\t%d\t%d\t%s.", $this->service, $this->protocol, $dnsRecord->name, $dnsRecord->ttl, $this->priority, $this->weight, $this->port, $this->host);
     }
 
     /**

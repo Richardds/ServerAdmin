@@ -58,7 +58,7 @@ class DnsCNAMERecordAttributes implements DnsRecordAttributes
      */
     public function toBindSyntax(DnsRecord $dnsRecord): string
     {
-        return sprintf("%s\t%d\tIN\tCNAME\t%s", $dnsRecord->name, $dnsRecord->ttl, $this->host);
+        return sprintf("%s\t%d\tIN\tCNAME\t%s.", $dnsRecord->name, $dnsRecord->ttl, $this->host);
     }
 
     /**
