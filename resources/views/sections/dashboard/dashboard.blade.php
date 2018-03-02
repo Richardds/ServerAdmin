@@ -60,7 +60,7 @@
                         <tbody>
                         <tr>
                             <th class="name">Model</th>
-                            <td class="value">{{ $processor->getModel() }} %</td>
+                            <td class="value">{{ $processor->getModel() }}</td>
                         </tr>
                         <tr>
                             <th class="name">Cache</th>
