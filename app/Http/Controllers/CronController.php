@@ -44,7 +44,7 @@ class CronController extends Controller
     /**
      * @return \Illuminate\View\View
      */
-    public function cron_tasks()
+    public function tasks()
     {
         return view('sections.tasks.tasks');
     }

@@ -10,11 +10,12 @@ Route::post('logout', 'AuthenticationController@logout')->name('logout');
 // Dashboard
 Route::get('dashboard', 'DashboardController@showDashboard')->name('dashboard');
 
+// Sites
+Route::get('sites', 'SiteController@sites')->name('sites');
+
 // Database
-Route::group(['prefix' => 'database'], function() {
-    Route::get('schemas', 'DatabaseSchemaController@databases')->name('database_schemas');
-    Route::get('users', 'DatabaseUserController@users')->name('database_users');
-});
+Route::get('database', 'DatabaseSchemaController@databases')->name('database');
+Route::get('database/users', 'DatabaseUserController@users')->name('database_users');
 
 // DNS
 Route::group(['prefix' => 'dns'], function() {
@@ -25,7 +26,7 @@ Route::group(['prefix' => 'dns'], function() {
 });
 
 // Cron
-Route::get('tasks', 'CronController@cron_tasks')->name('cron_tasks');
+Route::get('tasks', 'CronController@tasks')->name('tasks');
 
 // Mail
 Route::group(['prefix' => 'mail'], function() {
@@ -34,6 +35,4 @@ Route::group(['prefix' => 'mail'], function() {
 });
 
 // Firewall
-Route::group(['prefix' => 'firewall'], function() {
-    Route::get('rules', 'FirewallRuleController@rules')->name('firewall_rules');
-});
+Route::get('firewall', 'FirewallRuleController@rules')->name('firewall');

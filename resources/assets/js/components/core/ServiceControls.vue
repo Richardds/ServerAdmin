@@ -7,8 +7,8 @@
                    :disabled="!running || pending" :loading="restarting">Restart</sa-button>
         <sa-button @click.native="reloadService()" type="warning" icon="refresh"
                    :disabled="!running || pending" :loading="reloading">Reload</sa-button>
-        <sa-button @click.native="reconfigureService()" type="info" icon="retweet"
-                   :disabled="!configurable || pending" :loading="reconfiguring">Reconfigure</sa-button>
+        <sa-button @click.native="reconfigureService()" v-show="configurable" type="info" icon="retweet"
+                   :disabled="pending" :loading="reconfiguring">Reconfigure</sa-button>
     </div>
 </template>
 
