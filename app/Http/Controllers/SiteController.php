@@ -3,20 +3,28 @@
 namespace Richardds\ServerAdmin\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Richardds\ServerAdmin\Core\Sites\SitesManager;
 use Richardds\ServerAdmin\Http\CrudAssistance;
 use Richardds\ServerAdmin\Site;
+use Richardds\ServerAdmin\SiteSSL;
 
 class SiteController extends Controller
 {
     use CrudAssistance;
 
     /**
-     * SiteController constructor.
+     * @var \Richardds\ServerAdmin\Core\Sites\SitesManager
      */
-    public function __construct()
+    private $manager;
+
+    /**
+     * SiteController constructor.
+     * @param SitesManager $manager
+     */
+    public function __construct(SitesManager $manager)
     {
         $this->middleware('auth');
-        //$this->manager = $manager;
+        $this->manager = $manager;
     }
 
     /**
@@ -32,7 +40,7 @@ class SiteController extends Controller
      */
     public function index()
     {
-        return api_response()->success(Site::all()->toArray())->response();
+        return api_response()->success(Site::allWithSSL())->response();
     }
 
     /**
@@ -43,20 +51,33 @@ class SiteController extends Controller
     {
         $this->validate($request, [
             'name' => ['required', 'max:255', 'unique:sites,name'],
-            'enable_php' => ['boolean'],
-            'ssl_certificate' => ['string', 'max:255'],
-            'ssl_key' => ['string', 'max:255'],
+            'php_enabled' => ['boolean'],
             'enabled' => ['boolean'],
         ]);
 
         $site = Site::create([
             'name' => $request->get('name'),
-            'enable_php' => $request->get('enable_php', false),
+            'php_enabled' => $request->get('php_enabled', false),
             'enabled' => $request->get('enabled', true),
         ]);
 
-        //$this->manager->configure();
-        //$this->manager->reload();
+        if ($request->exists('ssl_certificate') || $request->exists('ssl_key')) {
+            $this->validate($request, [
+                'ssl_certificate' => ['required', 'string', 'max:255'],
+                'ssl_key' => ['required', 'string', 'max:255'],
+                'ssl_enabled' => ['boolean'],
+            ]);
+
+            SiteSSL::create([
+                'site_id' => $site->id,
+                'certificate' => $request->get('ssl_certificate'),
+                'key' => $request->get('ssl_key'),
+                'enabled' => $request->get('ssl_enabled', true),
+            ]);
+        }
+
+        $this->manager->configure();
+        $this->manager->reload();
 
         return api_response()->success(['id' => $site->id])->response();
     }
@@ -79,15 +100,33 @@ class SiteController extends Controller
     {
         $rules = [
             'name' => ['max:255', 'unique:sites,name'],
-            'enable_php' => ['boolean'],
-            'ssl_certificate' => ['string', 'max:255'],
-            'ssl_key' => ['string', 'max:255'],
+            'php_enabled' => ['boolean'],
             'enabled' => ['boolean'],
         ];
 
         $this->validate($request, $rules);
-        $this->updateModel($site, $request, array_keys($rules));
+        $this->updateModel($site, $request, array_keys(['name', 'php_enabled', 'enabled']));
         $site->save();
+
+        if ($request->exists('ssl_enabled')
+            || $request->exists('ssl_certificate')
+            || $request->exists('ssl_key')) {
+            $this->validate($request, [
+                'ssl_certificate' => ['required', 'string', 'max:255'],
+                'ssl_key' => ['required', 'string', 'max:255'],
+                'ssl_enabled' => ['boolean'],
+            ]);
+
+            $ssl = SiteSSL::whereSiteId($site->id)->first();
+
+            if (is_null($ssl)) {
+                // error
+            }
+
+            $this->updateModel($ssl, $request, array_keys(['ssl_enabled', 'ssl_certificate', 'ssl_key']));
+            $ssl->save();
+        }
+
 
         $this->manager->configure();
         $this->manager->reload();

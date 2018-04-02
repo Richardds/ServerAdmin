@@ -124,7 +124,7 @@
             },
             createDatabase() {
                 this.createDatabaseForm.start();
-                axios.post('/api/database/databases', ServerAdmin.Utils.stripObjectNulls(this.createDatabaseForm.attributes)).then(() => {
+                axios.post('/api/database/databases', ServerAdmin.Utils.stripUnfilled(this.createDatabaseForm.attributes)).then(() => {
                     this.createDatabaseForm.finish();
                     this.loadDatabases();
                 }).catch(error => {

@@ -131,7 +131,7 @@
             },
             createZone() {
                 this.createZoneForm.start();
-                axios.post('/api/dns/zones', ServerAdmin.Utils.stripObjectNulls(this.createZoneForm.attributes)).then(() => {
+                axios.post('/api/dns/zones', ServerAdmin.Utils.stripUnfilled(this.createZoneForm.attributes)).then(() => {
                     this.createZoneForm.finish();
                     this.loadZones();
                 }).catch(error => {

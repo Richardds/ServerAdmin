@@ -132,7 +132,7 @@
             },
             createTask() {
                 this.createTaskForm.start();
-                axios.post('/api/tasks', ServerAdmin.Utils.stripObjectNulls(this.createTaskForm.attributes)).then(response => {
+                axios.post('/api/tasks', ServerAdmin.Utils.stripUnfilled(this.createTaskForm.attributes)).then(response => {
                     this.createTaskForm.finish();
                     this.loadTasks();
                 }).catch(error => {

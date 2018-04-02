@@ -91,6 +91,14 @@ table.table {
     }
 }
 
+.label-badge {
+    font-size: $font-size-base;
+}
+
+.label-php {
+    @include label-variant(#8892BF);
+}
+
 /**
  * Sections's imports
  */

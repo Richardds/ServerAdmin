@@ -45,7 +45,13 @@ export const Utils = new class {
         return ((date.getFullYear() * 100 + date.getMonth() + 1) * 100 + date.getDate()) * 100 + _.min([(i), 99])
     }
 
-    stripObjectNulls(object) {
+    /**
+     * Strip nulls and empty strings from object.
+     *
+     * @param object
+     * @returns {{}}
+     */
+    stripUnfilled(object) {
         let newObject = {};
 
         Object.keys(object).forEach((key) => {

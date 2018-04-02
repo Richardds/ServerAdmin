@@ -205,7 +205,7 @@
             },
             createRecord() {
                 this.createRecordForm.start();
-                axios.post('/api/dns/records', ServerAdmin.Utils.stripObjectNulls(this.createRecordForm.attributes)).then(() => {
+                axios.post('/api/dns/records', ServerAdmin.Utils.stripUnfilled(this.createRecordForm.attributes)).then(() => {
                     this.createRecordForm.finish();
                     this.resetAttrs();
                     this.loadRecords();

@@ -35,7 +35,7 @@ Route::group(['prefix' => 'data'], function() {
  * Sites
  */
 Route::apiResource('sites', 'SiteController', [
-    'only' => ['index', 'show', 'store', 'destroy']
+    'only' => ['index', 'show', 'store', 'update', 'destroy']
 ]);
 
 /**

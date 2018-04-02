@@ -1,9 +1,24 @@
 <template>
     <tr>
-
-        <td class="site-name">{{ uppercaseName }}</td>
-        <td class="site-pho">{{ site.php_enabled }}</td>
-        <td class="site-ssl">FUCC</td>
+        <td class="site-name">
+            <a :href="(ssl_enabled ? 'https' : 'http') + '://' + site.name" target="_blank">{{ uppercaseName }}</a>
+        </td>
+        <td class="site-php">
+            <template v-if="php_enabled">
+                <span class="label label-badge label-php"><sa-icon icon="puzzle-piece" /> PHP Enabled</span>
+            </template>
+            <template v-else>
+                <span class="label label-badge label-default"><sa-icon icon="puzzle-piece" /> PHP Disabled</span>
+            </template>
+        </td>
+        <td class="site-ssl">
+            <template v-if="ssl_enabled">
+                <span class="label label-badge label-success"><sa-icon icon="lock" /> SSL Enabled</span>
+            </template>
+            <template v-else>
+                <span class="label label-badge label-default"><sa-icon icon="unlock" /> SSL Disabled</span>
+            </template>
+        </td>
 
         <td class="fit">
             <sa-button @click.native="toggleSite()"
@@ -60,6 +75,12 @@
         computed: {
             uppercaseName() {
                 return this.site.name.toUpperCase();
+            },
+            php_enabled() {
+                return this.site.php_enabled;
+            },
+            ssl_enabled() {
+                return this.site.ssl_certificate && this.site.ssl_key;
             },
         },
     }

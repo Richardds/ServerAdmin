@@ -11,6 +11,37 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="addSiteSSL" class="col-md-3 control-label">Enable SSL</label>
+                    <div class="col-md-8">
+                        <input type="checkbox" id="addSiteSSL" @click="toggleSSLAttributes()">
+                    </div>
+                </div>
+                <div v-show="createSiteFormSSL">
+                    <div class="form-group">
+                        <label for="addSiteCertificate" class="col-md-3 control-label">Certificate</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="addSiteCertificate" v-model="createSiteForm.attributes.ssl_certificate" />
+                                <span class="input-group-btn">
+                                    <sa-button @click.native="browse()" icon="ellipsis-h" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="addSiteKey" class="col-md-3 control-label">Key</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="addSiteKey" v-model="createSiteForm.attributes.ssl_key" />
+                                <span class="input-group-btn">
+                                    <sa-button @click.native="browse()" icon="ellipsis-h" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <div class="col-md-offset-3 col-md-8">
                         <sa-button @click.native="createSite()"
                                    type="default"
@@ -55,8 +86,11 @@
         data() {
             return {
                 sites: [],
+                createSiteFormSSL: false,
                 createSiteForm: new ServerAdmin.ModalForm({
                     name: '',
+                    ssl_certificate: '',
+                    ssl_key: '',
                 }),
             };
         },
@@ -76,12 +110,18 @@
             },
             createSite() {
                 this.createSiteForm.start();
-                axios.post('/api/sites', this.createSiteForm.attributes).then(() => {
+                axios.post('/api/sites', ServerAdmin.Utils.stripUnfilled(this.createSiteForm.attributes)).then(() => {
                     this.createSiteForm.finish();
                     this.loadSites();
                 }).catch(error => {
                     this.createSiteForm.crash(error);
                 });
+            },
+            toggleSSLAttributes() {
+                this.createSiteFormSSL = !this.createSiteFormSSL;
+            },
+            browse() {
+                // TODO
             },
         },
         computed: {

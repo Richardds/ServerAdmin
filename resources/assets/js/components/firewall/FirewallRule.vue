@@ -66,7 +66,7 @@
             editRule() {
                 if (this.editMode && this.changed) {
                     this.updating = true;
-                    axios.put('/api/firewall/rules/' + this.rule.id, ServerAdmin.Utils.stripObjectNulls(this.rule)).then(response => {
+                    axios.put('/api/firewall/rules/' + this.rule.id, ServerAdmin.Utils.stripUnfilled(this.rule)).then(response => {
                         ServerAdmin.Utils.updateAttributes(this.rule, response.data.data);
                         this.updating = false;
                         this.changed = false;

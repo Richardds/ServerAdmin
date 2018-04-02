@@ -7,10 +7,10 @@ use Richardds\ServerAdmin\Site;
  * @var $factory Illuminate\Database\Eloquent\Factory
  */
 $factory->define(Site::class, function (Faker $faker) {
-    // TODO: SSL support
+    // TODO: SiteSSL support
 
     return [
         'name' => $faker->domainName,
-        'enable_php' => false, // TODO: PHP support
+        'php_enabled' => false, // TODO: PHP support
     ];
 });

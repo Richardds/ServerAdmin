@@ -4,9 +4,12 @@ namespace Richardds\ServerAdmin\Core\Sites;
 
 use Richardds\ServerAdmin\Core\ConfigurableService;
 use Richardds\ServerAdmin\Core\Service;
+use Richardds\ServerAdmin\Site;
 
 class SitesManager extends Service implements ConfigurableService
 {
+    const SITES_CONFIG_FOLDER_ENABLED = '/etc/nginx/sites-enabled';
+    const ZONES_CONFIG_FOLDER_AVAILABLE = '/etc/nginx/sites-available';
 
     public function __construct()
     {
@@ -15,6 +18,10 @@ class SitesManager extends Service implements ConfigurableService
 
     public function configure()
     {
-        // TODO: Configure nginx
+        $sites = Site::allWithSSL();
+
+        foreach ($sites as $site) {
+            // TODO: Write config
+        }
     }
 }
