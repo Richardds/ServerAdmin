@@ -2,7 +2,7 @@
 
 namespace Richardds\ServerAdmin\Core\Database;
 
-interface SchemaPermission {
+interface DatabasePermission {
     public const SELECT = 'SELECT';
     public const INSERT = 'INSERT';
     public const UPDATE = 'UPDATE';

@@ -1,13 +1,13 @@
 table {
-    &.table-database-schemas {
+    &.table-databases {
         th, td {
-            &.schema-name {
+            &.database-name {
                 //
             }
-            &.schema-character-set, &.schema-collation {
+            &.database-character-set, &.database-collation {
                 width: 200px;
             }
-            &.schema-tables, &.schema-size {
+            &.database-tables, &.database-size {
                 @extend .numeric;
                 width: 100px;
             }

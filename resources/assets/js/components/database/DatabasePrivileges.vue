@@ -2,17 +2,17 @@
     <div class="form-horizontal">
         <table class="table table-striped table-controls">
             <tbody>
-            <sa-database-schema-user v-for="user in orderedGrantedUsers"
+            <sa-database-privileges v-for="user in orderedGrantedUsers"
                                      v-if="user.required"
                                      :key="user.id"
-                                     :schema="schema"
+                                     :database="database"
                                      :user="user"
                                      @revokePrivileges="loadPrivileges()"/>
             </tbody>
             <tfoot>
             <tr>
                 <td>
-                    <select class="form-control" id="schemaCollation" v-model="grantPrivilegesForm.attributes.user">
+                    <select class="form-control" id="databaseCollation" v-model="grantPrivilegesForm.attributes.user">
                         <option v-for="user in users">{{ user.user }}@{{ user.host }}</option>
                     </select>
                 </td>
@@ -30,12 +30,12 @@
 
 <script>
     export default {
-        props: ['schema', 'users'],
+        props: ['database', 'users'],
         data() {
             return {
                 grantedUsers: [],
                 grantPrivilegesForm: new ServerAdmin.Form({
-                    name: this.schema,
+                    name: this.database,
                     user: -1,
                 }),
             };
@@ -45,7 +45,7 @@
         },
         methods: {
             loadPrivileges() {
-                axios.get('/api/database/schemas/' + this.schema).then(response => {
+                axios.get('/api/database/databases/' + this.database).then(response => {
                     this.grantedUsers = [];
                     for (let user of response.data.data.access) {
                         this.grantedUsers.push(user);

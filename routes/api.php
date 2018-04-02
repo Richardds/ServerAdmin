@@ -65,7 +65,7 @@ Route::group(['prefix' => 'database'], function() {
     Route::patch('grant', 'DatabaseUserController@grantPrivileges');
     Route::patch('revoke', 'DatabaseUserController@revokePrivileges');
     Route::patch('userPassword', 'DatabaseUserController@changePassword');
-    Route::apiResource('schemas', 'DatabaseSchemaController', [
+    Route::apiResource('databases', 'DatabaseSchemaController', [
         'only' => ['index', 'show', 'store', 'destroy']
     ]);
     Route::apiResource('users', 'DatabaseUserController', [

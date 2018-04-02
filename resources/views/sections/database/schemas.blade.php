@@ -24,7 +24,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Schemas</div>
 
-                    <sa-database-schemas></sa-database-schemas>
+                    <sa-databases></sa-databases>
                 </div>
             </div>
         </div>

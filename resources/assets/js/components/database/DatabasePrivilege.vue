@@ -12,12 +12,12 @@
 
 <script>
     export default {
-        props: ['schema', 'user'],
+        props: ['database', 'user'],
         data() {
             return {
                 grantedUsers: [],
                 revokePrivilegesForm: new ServerAdmin.Form({
-                    name: this.schema,
+                    name: this.database,
                     user: this.user.user + '@' + this.user.host,
                 }),
             };

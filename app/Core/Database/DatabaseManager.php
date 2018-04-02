@@ -39,8 +39,8 @@ class DatabaseManager extends Service
      */
     public function dropDatabase(string $name): void
     {
-        if (SchemaInfo::isProtectedSchema($name)) {
-            throw new InvalidParameterException('Cannot delete protected schema', ['schema' => $name]);
+        if (DatabaseInfo::isProtectedDatabase($name)) {
+            throw new InvalidParameterException('Cannot delete protected database.', ['database' => $name]);
         }
 
         DB::statement("DROP DATABASE {$name};");
@@ -109,22 +109,22 @@ class DatabaseManager extends Service
 
     /**
      * @param string $name
-     * @return SchemaInfo
+     * @return DatabaseInfo
      * @throws InvalidParameterException
      */
-    public function getDatabaseInfo(string $name): SchemaInfo
+    public function getDatabaseInfo(string $name): DatabaseInfo
     {
-        return SchemaInfo::load($name);
+        return DatabaseInfo::load($name);
     }
 
     /**
      * @param string $name
-     * @return SchemaInfo
+     * @return DatabaseInfo
      * @throws InvalidParameterException
      */
-    public function getFullDatabaseInfo(string $name): SchemaInfo
+    public function getFullDatabaseInfo(string $name): DatabaseInfo
     {
-        return SchemaInfo::load($name, true);
+        return DatabaseInfo::load($name, true);
     }
 
     /**

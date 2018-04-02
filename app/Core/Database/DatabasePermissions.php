@@ -6,30 +6,30 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\DB;
 use Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException;
 
-class SchemaPermissions implements Arrayable
+class DatabasePermissions implements Arrayable
 {
     /**
      * @var array
      */
     private static $requiredPermissions = [
-        SchemaPermission::SELECT,
-        SchemaPermission::INSERT,
-        SchemaPermission::UPDATE,
-        SchemaPermission::DELETE,
-        SchemaPermission::CREATE,
-        SchemaPermission::DROP,
-        SchemaPermission::REFERENCES,
-        SchemaPermission::INDEX,
-        SchemaPermission::ALTER,
-        SchemaPermission::CREATE_TMP_TABLE,
-        SchemaPermission::LOCK_TABLES,
-        SchemaPermission::CREATE_VIEW,
-        SchemaPermission::SHOW_VIEW,
-        SchemaPermission::CREATE_ROUTINE,
-        SchemaPermission::ALTER_ROUTINE,
-        SchemaPermission::EXECUTE,
-        SchemaPermission::EVENT,
-        SchemaPermission::TRIGGER,
+        DatabasePermission::SELECT,
+        DatabasePermission::INSERT,
+        DatabasePermission::UPDATE,
+        DatabasePermission::DELETE,
+        DatabasePermission::CREATE,
+        DatabasePermission::DROP,
+        DatabasePermission::REFERENCES,
+        DatabasePermission::INDEX,
+        DatabasePermission::ALTER,
+        DatabasePermission::CREATE_TMP_TABLE,
+        DatabasePermission::LOCK_TABLES,
+        DatabasePermission::CREATE_VIEW,
+        DatabasePermission::SHOW_VIEW,
+        DatabasePermission::CREATE_ROUTINE,
+        DatabasePermission::ALTER_ROUTINE,
+        DatabasePermission::EXECUTE,
+        DatabasePermission::EVENT,
+        DatabasePermission::TRIGGER,
     ];
 
     /**
@@ -44,11 +44,11 @@ class SchemaPermissions implements Arrayable
 
     /**
      * @param string $name
-     * @return SchemaPermissions
+     * @return DatabasePermissions
      */
     public static function load(string $name)
     {
-        $schemPermissions = new SchemaPermissions($name);
+        $schemPermissions = new DatabasePermissions($name);
         $schemPermissions->reload();
 
         return $schemPermissions;

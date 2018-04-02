@@ -3,8 +3,8 @@
 namespace Richardds\ServerAdmin\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Richardds\ServerAdmin\Core\Database\DatabaseInfo;
 use Richardds\ServerAdmin\Core\Database\DatabaseManager;
-use Richardds\ServerAdmin\Core\Database\SchemaInfo;
 
 class DatabaseSchemaController extends Controller
 {
@@ -39,7 +39,7 @@ class DatabaseSchemaController extends Controller
     public function index()
     {
         /**
-         * @var SchemaInfo[] $databases
+         * @var DatabaseInfo[] $databases
          */
         $databases = [];
         $databaseNames = $this->manager->getDatabases();

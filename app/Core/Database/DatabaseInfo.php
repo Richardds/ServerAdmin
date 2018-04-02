@@ -6,7 +6,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\DB;
 use Richardds\ServerAdmin\Core\Exceptions\InvalidParameterException;
 
-class SchemaInfo implements Arrayable
+class DatabaseInfo implements Arrayable
 {
     private static $protected_tables = [
         'information_schema',
@@ -48,25 +48,25 @@ class SchemaInfo implements Arrayable
     private $protected;
 
     /**
-     * @var SchemaPermissions
+     * @var DatabasePermissions
      */
     private $permissions;
 
     /**
      * @param string $name
      * @param bool $fetchAll
-     * @return SchemaInfo
+     * @return DatabaseInfo
      * @throws InvalidParameterException
      */
-    public static function load(string $name, bool $fetchAll = false): SchemaInfo
+    public static function load(string $name, bool $fetchAll = false): DatabaseInfo
     {
-        $schemaInfo = new SchemaInfo($name);
-        $schemaInfo->reload($fetchAll);
+        $databaseInfo = new DatabaseInfo($name);
+        $databaseInfo->reload($fetchAll);
 
-        return $schemaInfo;
+        return $databaseInfo;
     }
 
-    public static function isProtectedSchema(string $name): bool
+    public static function isProtectedDatabase(string $name): bool
     {
         if (!self::$loaded) {
             $loaded_protected_tables = env('DB_PROTECTED');
@@ -82,7 +82,7 @@ class SchemaInfo implements Arrayable
     }
 
     /**
-     * SchemaInfo constructor.
+     * DatabaseInfo constructor.
      * @param string $name
      */
     private function __construct(string $name) {
@@ -90,7 +90,7 @@ class SchemaInfo implements Arrayable
     }
 
     /**
-     * Fetch latest schema info.
+     * Fetch latest database info.
      *
      * @param bool $fetchAll
      * @throws InvalidParameterException
@@ -110,20 +110,20 @@ class SchemaInfo implements Arrayable
         ]);
 
         if (is_null($detailsResult)) {
-            throw new InvalidParameterException('Schema does not exist', ['schema' => $this->name]);
+            throw new InvalidParameterException('Database does not exist', ['database' => $this->name]);
         }
 
         $this->character_set = $detailsResult->DEFAULT_CHARACTER_SET_NAME;
         $this->collation = $detailsResult->DEFAULT_COLLATION_NAME;
         $this->tables_count = $countResult->count;
         $this->size = $sizeResult->size ?? 0;
-        $this->protected = SchemaInfo::isProtectedSchema($detailsResult->SCHEMA_NAME);
+        $this->protected = DatabaseInfo::isProtectedDatabase($detailsResult->SCHEMA_NAME);
 
         if ($fetchAll) {
             if (isset($this->permissions)) {
                 $this->permissions->reload();
             } else {
-                $this->permissions = SchemaPermissions::load($this->name);
+                $this->permissions = DatabasePermissions::load($this->name);
             }
         }
     }
@@ -185,9 +185,9 @@ class SchemaInfo implements Arrayable
     }
 
     /**
-     * @return SchemaPermissions
+     * @return DatabasePermissions
      */
-    public function getPermissions(): SchemaPermissions
+    public function getPermissions(): DatabasePermissions
     {
         return $this->permissions;
     }
