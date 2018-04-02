@@ -32,6 +32,13 @@ Route::group(['prefix' => 'data'], function() {
 });
 
 /**
+ * Sites
+ */
+Route::apiResource('sites', 'SiteController', [
+    'only' => ['index', 'show', 'store', 'destroy']
+]);
+
+/**
  * DNS
  */
 Route::group(['prefix' => 'dns'], function() {

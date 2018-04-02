@@ -1,0 +1,93 @@
+<template>
+    <div>
+        <sa-modal :visible="createSiteForm.enabled"
+                  @close="createSiteForm.close()"
+                  title="Create site">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label for="addSiteName" class="col-md-3 control-label">Name</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="addSiteName" v-model="createSiteForm.attributes.name" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-8">
+                        <sa-button @click.native="createSite()"
+                                   type="default"
+                                   icon="plus"
+                                   :loading="createSiteForm.loading">Create</sa-button>
+                    </div>
+                </div>
+            </div>
+        </sa-modal>
+
+        <table class="table table-striped table-controls table-sites">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>PHP</th>
+                <th>SSL</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <sa-site v-for="site in orderedSites"
+                         :key="site.id"
+                         :site="site"
+                         @destroySite="loadSites()" />
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="7" class="text-right">
+                    <sa-button @click.native="createSiteForm.open()"
+                               type="default"
+                               icon="plus"
+                               size="sm" />
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                sites: [],
+                createSiteForm: new ServerAdmin.ModalForm({
+                    name: '',
+                }),
+            };
+        },
+        mounted() {
+            this.loadSites();
+        },
+        methods: {
+            loadSites() {
+                axios.get('/api/sites').then(response => {
+                    this.sites = [];
+                    for (let site of response.data.data) {
+                        this.sites.push(site);
+                    }
+                }).catch(error => {
+                    console.error(error);
+                });
+            },
+            createSite() {
+                this.createSiteForm.start();
+                axios.post('/api/sites', this.createSiteForm.attributes).then(() => {
+                    this.createSiteForm.finish();
+                    this.loadSites();
+                }).catch(error => {
+                    this.createSiteForm.crash(error);
+                });
+            },
+        },
+        computed: {
+            orderedSites() {
+                return _.sortBy(this.sites, 'name');
+            }
+        },
+    }
+</script>

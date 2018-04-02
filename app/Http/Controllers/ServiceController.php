@@ -10,11 +10,13 @@ use Richardds\ServerAdmin\Core\Dns\DnsManager;
 use Richardds\ServerAdmin\Core\Firewall\FirewallManager;
 use Richardds\ServerAdmin\Core\Mail\MailManager;
 use Richardds\ServerAdmin\Core\Service;
+use Richardds\ServerAdmin\Core\Sites\SitesManager;
 use Richardds\ServerAdmin\Core\Tasks\TaskManager;
 
 class ServiceController extends Controller
 {
     private $services = [
+        'www' => SitesManager::class,
         'dns' => DnsManager::class,
         'database' => DatabaseManager::class,
         'mail' => MailManager::class,

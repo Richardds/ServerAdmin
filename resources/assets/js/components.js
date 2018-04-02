@@ -8,6 +8,10 @@ Vue.component('sa-icon', require('./components/Icon'));
 Vue.component('sa-service-controls', require('./components/core/ServiceControls'));
 Vue.component('sa-server-controls', require('./components/core/ServerControls'));
 
+// Sites
+Vue.component('sa-sites', require('./components/sites/Sites'));
+Vue.component('sa-site', require('./components/sites/Site'));
+
 // DNS
 Vue.component('sa-dns-zones', require('./components/dns/DnsZones'));
 Vue.component('sa-dns-zone', require('./components/dns/DnsZone'));

@@ -25,7 +25,7 @@ class CreateUsersTable extends Migration
         // Create default user
         User::create([
             'username' => 'admin',
-            'password' => bcrypt('secret')
+            'password' => 'secret'
         ]);
     }
 
