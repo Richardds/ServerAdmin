@@ -81,6 +81,14 @@ class User extends Authenticatable
     ];
 
     /**
+     * @return \Illuminate\Database\Eloquent\Model|null|object|static
+     */
+    public static function admin()
+    {
+        return static::where('username', '=', 'admin')->first();
+    }
+
+    /**
      * @param string $password
      */
     public function setPasswordAttribute(string $password): void
