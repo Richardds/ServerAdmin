@@ -11,6 +11,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="addSitePHP" class="col-md-3 control-label">Enable PHP</label>
+                    <div class="col-md-8">
+                        <input type="checkbox" id="addSitePHP" @click="togglePHPAttributes()">
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="addSiteSSL" class="col-md-3 control-label">Enable SSL</label>
                     <div class="col-md-8">
                         <input type="checkbox" id="addSiteSSL" @click="toggleSSLAttributes()">
@@ -89,6 +95,7 @@
                 createSiteFormSSL: false,
                 createSiteForm: new ServerAdmin.ModalForm({
                     name: '',
+                    php_enabled: false,
                     ssl_certificate: '',
                     ssl_key: '',
                 }),
@@ -116,6 +123,9 @@
                 }).catch(error => {
                     this.createSiteForm.crash(error);
                 });
+            },
+            togglePHPAttributes() {
+                this.createSiteForm.php_enabled = !this.createSiteForm.php_enabled;
             },
             toggleSSLAttributes() {
                 this.createSiteFormSSL = !this.createSiteFormSSL;

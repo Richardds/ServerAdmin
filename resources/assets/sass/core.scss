@@ -99,6 +99,10 @@ table.table {
     @include label-variant(#8892BF);
 }
 
+input[type="password"] {
+    font-family: Verdana, sans-serif;
+}
+
 /**
  * Sections's imports
  */

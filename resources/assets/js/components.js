@@ -26,7 +26,7 @@ Vue.component('sa-task', require('./components/tasks/CronTask'));
 Vue.component('sa-databases', require('./components/database/Databases'));
 Vue.component('sa-database', require('./components/database/Database'));
 Vue.component('sa-database-privileges', require('./components/database/DatabasePrivileges'));
-Vue.component('sa-database-privilege', require('./components/database/DatabaseUser'));
+Vue.component('sa-database-privilege', require('./components/database/DatabasePrivilege'));
 Vue.component('sa-database-users', require('./components/database/DatabaseUsers'));
 Vue.component('sa-database-user', require('./components/database/DatabaseUser'));
 

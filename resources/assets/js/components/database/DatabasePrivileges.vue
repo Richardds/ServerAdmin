@@ -2,7 +2,7 @@
     <div class="form-horizontal">
         <table class="table table-striped table-controls">
             <tbody>
-            <sa-database-privileges v-for="user in orderedGrantedUsers"
+            <sa-database-privilege v-for="user in orderedGrantedUsers"
                                      v-if="user.required"
                                      :key="user.id"
                                      :database="database"
