@@ -85,9 +85,9 @@ class Site extends Model
         $site = Site::findOrFail($id);
         $site_array = $site->toArray();
         $ssl = $site->ssl;
+        $site_array['ssl_enabled'] = !is_null($ssl) && $ssl->enabled;
 
         if (!is_null($ssl)) {
-            $site_array['ssl_enabled'] = $ssl->enabled;
             $site_array['ssl_certificate'] = $ssl->certificate;
             $site_array['ssl_key'] = $ssl->key;
         }
