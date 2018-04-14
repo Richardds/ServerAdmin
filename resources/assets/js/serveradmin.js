@@ -129,13 +129,17 @@ export class ToggleForm extends Form {
     }
 }
 
-/**
- * TODO: ...
- */
-export class EditForm extends Form {
-    constructor(defaultAttributes) {
-        super(defaultAttributes);
-        this.editing = false;
-        this.changed = false;
+export class ToggleAttributeForm extends Form {
+    constructor(name) {
+        let obj = {};
+        obj[name] = false;
+
+        super(obj);
+
+        this.attribute_name = name;
+    }
+
+    switch(currentState) {
+        this.attributes[this.attribute_name] = !currentState;
     }
 }

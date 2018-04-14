@@ -40,7 +40,7 @@ class SiteController extends Controller
      */
     public function index()
     {
-        return api_response()->success(Site::allWithSSL())->response();
+        return api_response()->success(Site::withSslAll())->response();
     }
 
     /**
@@ -99,39 +99,47 @@ class SiteController extends Controller
     public function update(Request $request, Site $site)
     {
         $rules = [
-            'name' => ['max:255', 'unique:sites,name'],
             'php_enabled' => ['boolean'],
             'enabled' => ['boolean'],
         ];
 
         $this->validate($request, $rules);
-        $this->updateModel($site, $request, array_keys(['name', 'php_enabled', 'enabled']));
+        $this->updateModel($site, $request, ['php_enabled', 'enabled']);
         $site->save();
 
         if ($request->exists('ssl_enabled')
             || $request->exists('ssl_certificate')
             || $request->exists('ssl_key')) {
             $this->validate($request, [
-                'ssl_certificate' => ['required', 'string', 'max:255'],
-                'ssl_key' => ['required', 'string', 'max:255'],
                 'ssl_enabled' => ['boolean'],
+                'ssl_certificate' => ['string', 'max:255'],
+                'ssl_key' => ['string', 'max:255'],
             ]);
 
             $ssl = SiteSSL::whereSiteId($site->id)->first();
 
             if (is_null($ssl)) {
-                // error
+                SiteSSL::create([
+                    'site_id' => $site->id,
+                    'certificate' => $request->get('ssl_certificate'),
+                    'key' => $request->get('ssl_key'),
+                    'enabled' => $request->get('ssl_enabled', true),
+                ]);
+            } else {
+                $this->updateModel($ssl, $request, [
+                    'ssl_enabled' => 'enabled',
+                    'ssl_certificate' => 'certificate',
+                    'ssl_key' => 'key'
+                ]);
+                $ssl->save();
             }
-
-            $this->updateModel($ssl, $request, array_keys(['ssl_enabled', 'ssl_certificate', 'ssl_key']));
-            $ssl->save();
         }
 
 
         $this->manager->configure();
         $this->manager->reload();
 
-        return api_response()->success($site->toArray())->response();
+        return api_response()->success(Site::withSsl($site->id))->response();
     }
 
     /**

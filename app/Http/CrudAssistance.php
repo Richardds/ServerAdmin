@@ -38,9 +38,10 @@ trait CrudAssistance
      */
     protected function updateModel(Model $model, Request $request, array $attributes)
     {
-        foreach ($attributes as $attribute) {
-            if ($request->has($attribute)) {
-                $model->setAttribute($attribute, $request->get($attribute));
+        foreach ($attributes as $original => $attribute) {
+            $real_attribute = !is_numeric($original) ? $original : $attribute;
+            if ($request->has($real_attribute)) {
+                $model->setAttribute($attribute, $request->get($real_attribute));
             }
         }
     }

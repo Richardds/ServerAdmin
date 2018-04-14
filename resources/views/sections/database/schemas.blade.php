@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="panel panel-default">
-                    <div class="panel-heading">Schemas</div>
+                    <div class="panel-heading">Databases</div>
 
                     <sa-databases></sa-databases>
                 </div>

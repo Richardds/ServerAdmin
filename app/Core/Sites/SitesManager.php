@@ -18,7 +18,7 @@ class SitesManager extends Service implements ConfigurableService
 
     public function configure()
     {
-        $sites = Site::allWithSSL();
+        $sites = Site::withSslAll();
 
         foreach ($sites as $site) {
             // TODO: Write config

@@ -26,23 +26,13 @@
                     <div class="form-group">
                         <label for="addSiteCertificate" class="col-md-3 control-label">Certificate</label>
                         <div class="col-md-8">
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="addSiteCertificate" v-model="createSiteForm.attributes.ssl_certificate" />
-                                <span class="input-group-btn">
-                                    <sa-button @click.native="browse()" icon="ellipsis-h" />
-                                </span>
-                            </div>
+                            <input type="text" class="form-control" id="addSiteCertificate" v-model="createSiteForm.attributes.ssl_certificate" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="addSiteKey" class="col-md-3 control-label">Key</label>
                         <div class="col-md-8">
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="addSiteKey" v-model="createSiteForm.attributes.ssl_key" />
-                                <span class="input-group-btn">
-                                    <sa-button @click.native="browse()" icon="ellipsis-h" />
-                                </span>
-                            </div>
+                            <input type="text" class="form-control" id="addSiteKey" v-model="createSiteForm.attributes.ssl_key" />
                         </div>
                     </div>
                 </div>
@@ -125,7 +115,8 @@
                 });
             },
             togglePHPAttributes() {
-                this.createSiteForm.php_enabled = !this.createSiteForm.php_enabled;
+                this.createSiteForm.attributes.php_enabled = !this.createSiteForm.attributes.php_enabled;
+                console.log(this.createSiteForm.attributes.php_enabled);
             },
             toggleSSLAttributes() {
                 this.createSiteFormSSL = !this.createSiteFormSSL;
