@@ -26,5 +26,9 @@
                 </span>
             @endif
         </form>
+
+        <div class="text-center">
+            Open source project by <a href="https://github.com/Richardds" target="_blank">Richard Boldiš</a>
+        </div>
     </div>
 @endsection
