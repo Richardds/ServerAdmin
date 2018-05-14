@@ -1,7 +1,7 @@
 <template>
     <tr>
         <td class="site-name">
-            <a :href="(ssl_enabled ? 'https' : 'http') + '://' + site.name" target="_blank">{{ uppercaseName }}</a>
+            <a :href="(this.site.ssl_enabled ? 'https' : 'http') + '://' + site.name" target="_blank">{{ uppercaseName }}</a>
         </td>
         <td class="site-php">
             <div @click="togglePhpEnabled()">

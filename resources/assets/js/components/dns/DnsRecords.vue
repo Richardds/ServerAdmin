@@ -126,11 +126,22 @@
             </div>
         </sa-modal>
 
+        <!-- TODO -->
         <sa-modal :visible="importZoneFileModal.enabled"
                   @close="importZoneFileModal.close()"
                   title="Import zone">
             <div class="form-horizontal">
-
+                <div class="form-group">
+                    <label for="importZoneFile" class="col-md-3 control-label">Zone file</label>
+                    <div class="col-md-8">
+                        <input type="file" class="form-control" id="importZoneFile" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-8">
+                        <sa-button icon="upload" >Import</sa-button>
+                    </div>
+                </div>
             </div>
         </sa-modal>
 

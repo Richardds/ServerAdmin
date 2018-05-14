@@ -40,7 +40,7 @@
         methods: {
             destroyDatabase() {
                 this.destroyDatabaseForm.start();
-                axios.delete('/api/database/databases' + this.database.name).then(() => {
+                axios.delete('/api/database/databases/' + this.database.name).then(() => {
                     this.destroyDatabaseForm.finish();
                     this.$emit('destroyDatabase');
                 }).catch(error => {

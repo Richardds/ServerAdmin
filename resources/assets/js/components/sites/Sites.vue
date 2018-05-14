@@ -116,13 +116,9 @@
             },
             togglePHPAttributes() {
                 this.createSiteForm.attributes.php_enabled = !this.createSiteForm.attributes.php_enabled;
-                console.log(this.createSiteForm.attributes.php_enabled);
             },
             toggleSSLAttributes() {
                 this.createSiteFormSSL = !this.createSiteFormSSL;
-            },
-            browse() {
-                // TODO
             },
         },
         computed: {
