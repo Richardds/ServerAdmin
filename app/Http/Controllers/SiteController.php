@@ -77,6 +77,7 @@ class SiteController extends Controller
         }
 
         $this->manager->configure();
+        $this->manager->makeDemoWebsite($site);
         $this->manager->reload();
 
         return api_response()->success(['id' => $site->id])->response();

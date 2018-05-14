@@ -3,6 +3,8 @@
 namespace Richardds\ServerAdmin\Core\Sites;
 
 use DB;
+use Illuminate\Support\Facades\View;
+use Richardds\ServerAdmin\Core\Commands\Command;
 use Richardds\ServerAdmin\Core\ConfigIo;
 use Richardds\ServerAdmin\Core\ConfigurableService;
 use Richardds\ServerAdmin\Core\Service;
@@ -40,7 +42,7 @@ class SitesManager extends Service implements ConfigurableService
             }
 
             $siteConfig->writeln("location / {");
-            $siteConfig->writeln("try_files \$uri =404;");
+            $siteConfig->writeln("try_files \$uri \$uri/index.html =404;");
             $siteConfig->writeln("}");
 
             if ($site['php_enabled']) {
@@ -77,5 +79,14 @@ class SitesManager extends Service implements ConfigurableService
                 Execute::withoutOutput("rm {$file->getRealPath()}", true);
             }
         }
+    }
+
+    public function makeDemoWebsite(Site $site)
+    {
+        $filename = "/var/www/{$site->name}/public/index.html";
+
+        Execute::withoutOutput(Command::create("cat >> {$filename}",
+            View::make('others.demo', compact('site'))->render()), true);
+        Execute::withoutOutput("chown www-data:www-data {$filename}", true);
     }
 }
