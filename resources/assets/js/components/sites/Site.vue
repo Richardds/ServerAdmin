@@ -1,7 +1,7 @@
 <template>
     <tr>
         <td class="site-name">
-            <a :href="(this.site.ssl_enabled ? 'https' : 'http') + '://' + site.name" target="_blank">{{ uppercaseName }}</a>
+            <a :href="(site.ssl_enabled ? 'https' : 'http') + '://' + site.name" target="_blank">{{ uppercaseName }}</a>
         </td>
         <td class="site-php">
             <div @click="togglePhpEnabled()">
@@ -15,7 +15,7 @@
         </td>
         <td class="site-ssl">
             <div @click="editSiteSslVisible = true">
-                <template v-if="this.site.ssl_enabled">
+                <template v-if="site.ssl_enabled">
                     <span class="label label-badge label-success"><sa-icon icon="lock" /> SSL Enabled</span>
                 </template>
                 <template v-else>
@@ -135,7 +135,7 @@
                     this.updatingSsl = false;
                     console.log(error);
                 });
-                this.editSiteSslVisible = !editSiteSslVisible;
+                this.editSiteSslVisible = !this.editSiteSslVisible;
             },
         },
         computed: {
